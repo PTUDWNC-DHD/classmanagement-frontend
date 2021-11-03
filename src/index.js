@@ -1,17 +1,42 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+
+
+//import layout
+import MainLayout from './components/Layout/MainLayout';
+
+//import pages
+import HomePage from './page/home';
+import ClassroomPage from './page/classroom';
+import NotFound from './page/notfound';
+
+
+const App = () => {
+  return (
+    <Switch>
+      <Route exact path='/'>
+        <MainLayout>
+          <HomePage/>
+        </MainLayout>
+      </Route>
+      <Route exact path='/classroom'>
+        <MainLayout>
+          <ClassroomPage/>
+        </MainLayout>
+      </Route>
+      {/* wrong url route to 404 page */}
+      <Route path='/notfound' component={NotFound}></Route>
+      <Redirect to='/notfound'></Redirect>
+    </Switch>
+  )
+}
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      {App()}
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

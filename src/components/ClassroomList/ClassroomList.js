@@ -37,7 +37,7 @@ const ClassroomList = (props) => {
   } else if (!isLoaded) {
     return(
       <Typography sx={classes.Loading} variant="h4" align="center">
-        Loading...
+        Loading....
       </Typography>
     );
   } else {

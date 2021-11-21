@@ -1,9 +1,8 @@
-import {Container, Stack, Grid, Typography} from '@mui/material'
+import { useState, useEffect } from 'react';
 
+import { Container, Stack, Grid, Typography } from '@mui/material'
 
-import {useState, useEffect } from 'react';
-import ClassroomCard from './ClassroomCard/ClassroomCard'
-import AddClassroomPopup from '../AddClassroomPopup/AddClassroomPopup'
+import { ClassroomCard, AddClassroomPopup } from '../components'
 
 import classes from './style'
 

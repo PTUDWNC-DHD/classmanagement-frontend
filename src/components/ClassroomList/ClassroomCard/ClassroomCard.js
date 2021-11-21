@@ -1,5 +1,7 @@
 import { Card, CardHeader, CardMedia, CardContent, Avatar, IconButton, Typography, Stack } from '@mui/material';
+
 import { MoreVert, FolderOpenRounded } from '@mui/icons-material';
+
 import { red } from '@mui/material/colors';
 
 import classes from './style'

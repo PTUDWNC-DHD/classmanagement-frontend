@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Drawer, JoinedClasses, Login, Main } from "./components";
+
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { IsUserRedirect, ProtectedRoute } from "./routes/Routes";
-import { useLocalContext } from "./context/context";
+
 import db from "./lib/firebase";
+
+import { useLocalContext } from "./context/context";
+
+import { IsUserRedirect, ProtectedRoute } from "./routes/Routes";
+
+import { Drawer, JoinedClasses, Login, Main } from "./components/components";
+
+
+
 function App() {
   const { loggedInMail } = useLocalContext();
 

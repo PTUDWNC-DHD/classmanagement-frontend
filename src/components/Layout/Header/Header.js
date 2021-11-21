@@ -1,5 +1,9 @@
-import { MenuRounded, NotificationsNoneRounded } from '@mui/icons-material';
 import { Avatar, IconButton, Stack} from '@mui/material';
+
+import { MenuRounded, NotificationsNoneRounded } from '@mui/icons-material';
+
+
+
 
 const Header = (props) => {
   const logo = {
@@ -10,7 +14,6 @@ const Header = (props) => {
     img: '/avatar.jpg',
     title: 'Temp Avatar'
   }
-
 
   return(
     <div>

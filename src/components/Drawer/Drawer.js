@@ -1,18 +1,16 @@
 import React from "react";
-import clsx from "clsx";
-import { makeStyles } from "@material-ui/core/styles";
-import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
-import List from "@material-ui/core/List";
-import Divider from "@material-ui/core/Divider";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
 
-import { Header } from "..";
-import { Menu } from "@material-ui/icons";
-import { IconButton } from "@material-ui/core";
+import clsx from "clsx";
+
+import { SwipeableDrawer, List, Divider, ListItem, ListItemIcon, ListItemText, IconButton} from "@mui/material";
+
+import { Menu, Inbox, Mail } from "@mui/icons-material";
+
+import { makeStyles } from "@mui/styles";
+
+import { Header } from "../components";
+
+
 const useStyles = makeStyles({
   list: {
     width: 250,
@@ -53,7 +51,7 @@ export default function SwipeableTemporaryDrawer() {
         {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
           <ListItem button key={text}>
             <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              {index % 2 === 0 ? <Inbox /> : <Mail />}
             </ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
@@ -64,7 +62,7 @@ export default function SwipeableTemporaryDrawer() {
         {["All mail", "Trash", "Spam"].map((text, index) => (
           <ListItem button key={text}>
             <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              {index % 2 === 0 ? <Inbox /> : <Mail />}
             </ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>

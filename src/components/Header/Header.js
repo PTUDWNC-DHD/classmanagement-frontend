@@ -1,15 +1,13 @@
-import {
-  AppBar,
-  Avatar,
-  Menu,
-  MenuItem,
-  Toolbar,
-  Typography,
-} from "@material-ui/core";
-import { Add, Apps } from "@material-ui/icons";
 import React from "react";
-import { CreateClass, JoinClass } from "..";
+
 import { useLocalContext } from "../../context/context";
+
+import { AppBar, Avatar, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
+
+import { Add, Apps } from "@mui/icons-material";
+
+import { CreateClass, JoinClass } from "../components";
+
 import { useStyles } from "./style";
 
 const Header = ({ children }) => {

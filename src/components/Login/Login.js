@@ -1,8 +1,14 @@
-import { Button } from "@material-ui/core";
 import React from "react";
-import logo from "../../assets/logo.png";
+
 import { useLocalContext } from "../../context/context";
+
+import { Button } from "@mui/material";
+
 import "./style.css";
+
+import logo from "../../assets/logo.png";
+
+
 const Login = () => {
   const { login, loggedInUser } = useLocalContext();
 
@@ -11,7 +17,7 @@ const Login = () => {
     <div className="login">
       <img className="login__logo" src={logo} alt="Classroom" />
 
-      <Button variant="contained" color="default" onClick={() => login()}>
+      <Button variant="contained" color="primary" onClick={() => login()}>
         Login Now!
       </Button>
     </div>

@@ -1,10 +1,19 @@
-import { Avatar, Button, TextField } from "@material-ui/core";
 import React, { useState } from "react";
-import db, { storage } from "../../lib/firebase";
-import "./style.css";
+
 import firebase from "firebase";
+
+import db, { storage } from "../../lib/firebase";
+
 import { useLocalContext } from "../../context/context";
-import { Announcment } from "..";
+
+import { Avatar, Button, TextField } from "@mui/material";
+
+import { Announcement } from "../components";
+
+import "./style.css";
+
+
+
 const Main = ({ classData }) => {
   const { loggedInMail } = useLocalContext();
 
@@ -27,7 +36,7 @@ const Main = ({ classData }) => {
         .child(image.name)
         .getDownloadURL()
         .then((url) => {
-          db.collection("announcments")
+          db.collection("announcements")
             .doc("classes")
             .collection(classData.id)
             .add({
@@ -113,7 +122,7 @@ const Main = ({ classData }) => {
                 )}
               </div>
             </div>
-            <Announcment classData={classData} />
+            <Announcement classData={classData} />
           </div>
         </div>
       </div>

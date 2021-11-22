@@ -1,12 +1,11 @@
 import React, { useContext, useState } from "react";
+import bcrypt from "bcrypt";
 import { auth, googleProvider } from "../../lib/firebase";
 
 import AuthContext from '../../context/AuthContext'
 
 import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox } from "@mui/material";
 import { Link, Grid, Box, Container, Typography } from "@mui/material";
-
-import { LockOutlined } from '@mui/icons-material'
 
 
 
@@ -15,56 +14,54 @@ const LoginForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = (event, loginType) => {
-    //function fetch to get login checking from server
-    const fetchLoginAPI = () => {
-      
-      fetch(process.env.REACT_APP_API_URL+'/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          username: username,
-          password: password
+  //function fetch to get login checking from server
+  const fetchLoginAPI = (usernameToFetch, passwordToFetch) => {
+    console.log('usernameToFetch:', usernameToFetch)
+    console.log('passwordToFetch:', passwordToFetch)
+    fetch(process.env.REACT_APP_API_URL+'/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: usernameToFetch,
+        password: passwordToFetch
+      })
+    })
+    .then((res) => {
+      if (res.status === 401) {
+        console.log(res.json())
+        window.alert('Login failed !!!')
+      } else {
+        res.json().then((result) => {
+          if (result.user) {
+            setCurrentUser(result)
+            setIsLoggedIn(true)
+            window.alert('Login successfully !!!');
+          } else {
+            window.alert(`Login failed: ${result.errors[0]}`);
+          }
         })
-      })
-      .then((res) => {
-        if (res.status === 401) {
-          window.alert('Login failed !!!');
-        } else {
-          res.json().then((result) => {
-            if (result.user) {
-              setCurrentUser(result)
-              setIsLoggedIn(true)
-              window.alert('Login successfully !!!');
-            } else {
-              window.alert(`Login failed: ${result.errors[0]}`);
-            }
-          })
-        }
-      })
-      .catch((error) => {
-        console.log('Login by account error: ', error)
-      })
-    }
+      }
+    })
+    .catch((error) => {
+      console.log('Login by account error: ', error)
+    })
+  }
+
+  const handleLogin = (event, loginType) => {    
     //switch two type of login
     switch (loginType) {
       case 'account':
         event.preventDefault();
-        fetchLoginAPI()
+        fetchLoginAPI(username, password)
         break;
       case 'google':
+        const saltRounds = 10
+        const hashPassword = bcrypt.hashSync(process.env.REACT_APP_LOGIN_BY_MAIL_SECRET, saltRounds)
         auth.signInWithPopup(googleProvider)
         .then((res) => {
-          console.log(res.user.email)
-          if (res.user) {
-            setUsername(res.user.email)
-            setPassword(process.env.LOGIN_BY_MAIL_SECRET)
-          }
-          console.log('username:', username)
-          console.log('password:', password)
-          fetchLoginAPI()
+          fetchLoginAPI(res.user.email, hashPassword)
         })
         .catch((error) => {
           console.log('Get account information by firebase error: ', error)

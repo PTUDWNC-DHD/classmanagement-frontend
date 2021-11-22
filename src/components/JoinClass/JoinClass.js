@@ -14,11 +14,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const JoinClass = () => {
-  const {
-    joinClassDialog,
-    setJoinClassDialog,
-    loggedInUser,
-  } = useLocalContext();
+  // const {
+  //   joinClassDialog,
+  //   setJoinClassDialog,
+  //   loggedInUser,
+  // } = useLocalContext();
 
   const [classCode, setClassCode] = useState("");
   const [email, setemail] = useState("");
@@ -63,15 +63,15 @@ const JoinClass = () => {
     <div>
       <Dialog
         fullScreen
-        open={joinClassDialog}
-        onClose={() => setJoinClassDialog(false)}
+        //open={joinClassDialog}
+        //onClose={() => setJoinClassDialog(false)}
         TransitionComponent={Transition}
       >
         <div className="joinClass">
           <div className="joinClass__wrapper">
             <div
               className="joinClass__wraper2"
-              onClick={() => setJoinClassDialog(false)}
+              //onClick={() => setJoinClassDialog(false)}
             >
               <Close className="joinClass__svg" />
               <div className="joinClass__topHead">Join Class</div>
@@ -87,17 +87,17 @@ const JoinClass = () => {
           </div>
           <div className="joinClass__form">
             <p className="joinClass__formText">
-              You're currently signed in as {loggedInUser?.email}
+              You're currently signed in as
             </p>
             <div className="joinClass__loginInfo">
               <div className="joinClass__classLeft">
-                <Avatar src={loggedInUser?.photoURL} />
+                <Avatar  />
                 <div className="joinClass__loginText">
                   <div className="joinClass__loginName">
-                    {loggedInUser?.displayName}
+                    
                   </div>
                   <div className="joinClass__loginEmail">
-                    {loggedInUser?.email}
+                    
                   </div>
                 </div>
               </div>
@@ -125,7 +125,7 @@ const JoinClass = () => {
                 label="Class Code"
                 variant="outlined"
                 value={classCode}
-                onChange={(e) => setClassCode(e.target.value)}
+                //onChange={(e) => setClassCode(e.target.value)}
                 error={error}
                 helperText={error && "No class was found"}
               />
@@ -134,7 +134,7 @@ const JoinClass = () => {
                 label="Owner's email"
                 variant="outlined"
                 value={email}
-                onChange={(e) => setemail(e.target.value)}
+                //onChange={(e) => setemail(e.target.value)}
               />
             </div>
           </div>

@@ -41,7 +41,7 @@ export function IsRegisterRedirect({ registeredPath, children, ...rest }) {
   );
 }
 
-export function ProtectedRoute({ children, ...rest }) {
+export function ProtectedRoute({ children, component, ...rest }) {
   const { isLoggedIn } = useContext(AuthContext);
   
   return (
@@ -49,6 +49,9 @@ export function ProtectedRoute({ children, ...rest }) {
       {...rest}
       render={({ location }) => {
         if (isLoggedIn) {
+          if (component){
+            return component
+          }
           return children;
         }
         if (!isLoggedIn) {

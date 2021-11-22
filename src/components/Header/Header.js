@@ -1,7 +1,5 @@
 import React from "react";
 
-import { useLocalContext } from "../../context/context";
-
 import { AppBar, Avatar, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
 
 import { Add, Apps } from "@mui/icons-material";
@@ -18,21 +16,21 @@ const Header = ({ children }) => {
   const handleClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
 
-  const {
-    setCreateClassDialog,
-    setJoinClassDialog,
-    loggedInUser,
-    logout,
-  } = useLocalContext();
+  // const {
+  //   setCreateClassDialog,
+  //   setJoinClassDialog,
+  //   loggedInUser,
+  //   logout,
+  // } = useLocalContext();
 
   const handleCreate = () => {
-    handleClose();
-    setCreateClassDialog(true);
+    // handleClose();
+    // setCreateClassDialog(true);
   };
 
   const handleJoin = () => {
-    handleClose();
-    setJoinClassDialog(true);
+    // handleClose();
+    // setJoinClassDialog(true);
   };
   return (
     <div className={classes.root}>
@@ -63,8 +61,8 @@ const Header = ({ children }) => {
             </Menu>
             <div>
               <Avatar
-                onClick={() => logout()}
-                src={loggedInUser?.photoURL}
+                // onClick={() => logout()}
+                // src={loggedInUser?.photoURL}
                 className={classes.icon}
               />
             </div>

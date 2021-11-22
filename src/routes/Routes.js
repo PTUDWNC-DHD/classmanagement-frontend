@@ -3,7 +3,7 @@ import { Redirect, Route } from "react-router-dom";
 
 import AuthContext from '../context/AuthContext'
 
-export function IsUserRedirect({ loggedInPath, children, ...rest }) {
+export function IsLoggedInRedirect({ loggedInPath, children, ...rest }) {
   const { isLoggedIn } = useContext(AuthContext);
   
   return (
@@ -15,6 +15,25 @@ export function IsUserRedirect({ loggedInPath, children, ...rest }) {
         }
         if (isLoggedIn) {
           return <Redirect to={{ pathname: loggedInPath }} />;
+        }
+        return null;
+      }}
+    />
+  );
+}
+
+export function IsRegisterRedirect({ registeredPath, children, ...rest }) {
+  const { isRegistered } = useContext(AuthContext);
+  
+  return (
+    <Route
+      {...rest}
+      render={() => {
+        if (!isRegistered) {
+          return children;
+        }
+        if (isRegistered) {
+          return <Redirect to={{ pathname: registeredPath }} />;
         }
         return null;
       }}

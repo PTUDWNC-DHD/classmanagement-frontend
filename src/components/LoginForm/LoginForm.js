@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs";
 import { auth, googleProvider } from "../../lib/firebase";
 
 import AuthContext from '../../context/AuthContext'
@@ -7,6 +7,7 @@ import AuthContext from '../../context/AuthContext'
 import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox } from "@mui/material";
 import { Link, Grid, Box, Container, Typography } from "@mui/material";
 
+import { LockOutlined } from "@mui/icons-material"
 
 
 const LoginForm = () => {
@@ -30,7 +31,6 @@ const LoginForm = () => {
     })
     .then((res) => {
       if (res.status === 401) {
-        console.log(res.json())
         window.alert('Login failed !!!')
       } else {
         res.json().then((result) => {
@@ -58,7 +58,7 @@ const LoginForm = () => {
         break;
       case 'google':
         const saltRounds = 10
-        const hashPassword = bcrypt.hashSync(process.env.REACT_APP_LOGIN_BY_MAIL_SECRET, saltRounds)
+        const hashPassword = bcryptjs.hashSync(process.env.REACT_APP_LOGIN_BY_MAIL_SECRET, saltRounds)
         auth.signInWithPopup(googleProvider)
         .then((res) => {
           fetchLoginAPI(res.user.email, hashPassword)

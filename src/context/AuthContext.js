@@ -6,6 +6,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
   const [createClassDialog, setCreateClassDialog] = useState(false);
@@ -14,6 +15,8 @@ export const AuthProvider = ({ children }) => {
   const value = {
     isLoggedIn,
     setIsLoggedIn,
+    isRegistered,
+    setIsRegistered,
     currentUser,
     setCurrentUser,
     createClassDialog,

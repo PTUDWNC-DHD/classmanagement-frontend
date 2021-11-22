@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
-import { Redirect } from "react-router-dom";
-import { auth, googleProvider } from "../../lib/firebase";
+
+import AuthContext from '../../context/AuthContext'
 
 import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox } from "@mui/material";
 import { Link, Grid, Box, Container, Typography } from "@mui/material";
@@ -10,6 +10,8 @@ import { LockOutlined } from '@mui/icons-material'
 
 
 const RegisterForm = () => {
+  const {setIsRegistered} = useContext(AuthContext)
+
   const [fullname, setFullname] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -19,12 +21,6 @@ const RegisterForm = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log('register debug: ', {
-      username: username,
-      name: fullname,
-      email: email,
-      password: password
-    });
     //call fetch to get register checking from server
     fetch(process.env.REACT_APP_API_URL+'/api/user', {
       method: 'POST',
@@ -44,10 +40,9 @@ const RegisterForm = () => {
       } else {
         res.json().then((result) => {
           if (result.username) {
+            setIsRegistered(true)
             window.alert('Your account was registered successfully !!!')
-            return <Redirect to="/"/>
           } else {
-            console.log(result)
             window.alert(`Register failed: ${result.errors[0]}`);
           }
         })

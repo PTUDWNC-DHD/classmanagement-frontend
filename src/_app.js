@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import { AuthProvider } from './context/AuthContext'
 
-import { IsUserRedirect, ProtectedRoute } from "./routes/Routes";
+import { IsLoggedInRedirect, IsRegisterRedirect, ProtectedRoute } from "./routes/Routes";
 
 import { Drawer, JoinedClasses, LoginForm, Main, RegisterForm } from "./components/components";
 
@@ -45,20 +45,25 @@ function App() {
   return (
     <Router>
       <Switch>
-        <IsUserRedirect
+        <IsLoggedInRedirect
           loggedInPath="/"
           path="/signin"
           exact
         >
           <LoginForm />
-        </IsUserRedirect>
+        </IsLoggedInRedirect>
 
         <ProtectedRoute path="/" exact>
           <div>This is home page</div>
         </ProtectedRoute>
-        <Route path="/register" exact>
+
+        <IsRegisterRedirect
+          registeredPath="/signin"
+          path="/register"
+          exact
+        >
           <RegisterForm />
-        </Route>
+        </IsRegisterRedirect>
         {/* {createdClasses.map((item, index) => (
           <Route key={index} exact path={`/${item.id}`}>
             <Drawer />

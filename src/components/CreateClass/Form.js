@@ -2,8 +2,6 @@ import React, { useState } from "react";
 
 import { v4 as uuidV4 } from "uuid";
 
-import db from "../../lib/firebase";
-
 import { useLocalContext } from "../../context/context";
 
 import { Button, DialogActions, TextField } from "@mui/material";
@@ -22,20 +20,20 @@ const Form = () => {
     e.preventDefault();
     const id = uuidV4();
 
-    db.collection("CreatedClasses")
-      .doc(loggedInMail)
-      .collection("classes")
-      .doc(id)
-      .set({
-        owner: loggedInMail,
-        className: className,
-        section: Section,
-        room: Room,
-        id: id,
-      })
-      .then(() => {
-        setCreateClassDialog(false);
-      });
+    // db.collection("CreatedClasses")
+    //   .doc(loggedInMail)
+    //   .collection("classes")
+    //   .doc(id)
+    //   .set({
+    //     owner: loggedInMail,
+    //     className: className,
+    //     section: Section,
+    //     room: Room,
+    //     id: id,
+    //   })
+    //   .then(() => {
+    //     setCreateClassDialog(false);
+    //   });
   };
   return (
     <div className="form">

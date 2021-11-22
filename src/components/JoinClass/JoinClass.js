@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 
-import db from "../../lib/firebase";
-
 import { useLocalContext } from "../../context/context";
 
 import { Avatar, Button, Dialog, Slide, TextField } from "@mui/material";
@@ -31,35 +29,35 @@ const JoinClass = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    db.collection("CreatedClasses")
-      .doc(email)
-      .collection("classes")
-      .doc(classCode)
-      .get()
-      .then((doc) => {
-        if (doc.exists && doc.owner !== loggedInUser.email) {
-          setClassExists(true);
-          setJoinedData(doc.data());
-          setError(false);
-        } else {
-          setError(true);
-          setClassExists(false);
-          return;
-        }
-      });
+    // db.collection("CreatedClasses")
+    //   .doc(email)
+    //   .collection("classes")
+    //   .doc(classCode)
+    //   .get()
+    //   .then((doc) => {
+    //     if (doc.exists && doc.owner !== loggedInUser.email) {
+    //       setClassExists(true);
+    //       setJoinedData(doc.data());
+    //       setError(false);
+    //     } else {
+    //       setError(true);
+    //       setClassExists(false);
+    //       return;
+    //     }
+    //   });
 
-    if (classExists === true) {
-      db.collection("JoinedClasses")
-        .doc(loggedInUser.email)
-        .collection("classes")
-        .doc(classCode)
-        .set({
-          joinedData,
-        })
-        .then(() => {
-          setJoinClassDialog(false);
-        });
-    }
+    // if (classExists === true) {
+    //   db.collection("JoinedClasses")
+    //     .doc(loggedInUser.email)
+    //     .collection("classes")
+    //     .doc(classCode)
+    //     .set({
+    //       joinedData,
+    //     })
+    //     .then(() => {
+    //       setJoinClassDialog(false);
+    //     });
+    // }
   };
   return (
     <div>

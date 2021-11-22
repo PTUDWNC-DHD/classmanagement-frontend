@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-import db from "../../lib/firebase";
-
 import { Avatar } from "@mui/material";
 
 import "./style.css";
@@ -13,14 +11,14 @@ const Announcement = ({ classData }) => {
 
   useEffect(() => {
     if (classData) {
-      let unsubscribe = db
-        .collection("announcements")
-        .doc("classes")
-        .collection(classData.id)
-        .onSnapshot((snap) => {
-          setAnnouncement(snap.docs.map((doc) => doc.data()));
-        });
-      return () => unsubscribe();
+      // let unsubscribe = db
+      //   .collection("announcements")
+      //   .doc("classes")
+      //   .collection(classData.id)
+      //   .onSnapshot((snap) => {
+      //     setAnnouncement(snap.docs.map((doc) => doc.data()));
+      //   });
+      // return () => unsubscribe();
     }
   }, [classData]);
   console.log(announcement);

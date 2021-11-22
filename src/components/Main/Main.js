@@ -2,8 +2,6 @@ import React, { useState } from "react";
 
 import firebase from "firebase";
 
-import db, { storage } from "../../lib/firebase";
-
 import { useLocalContext } from "../../context/context";
 
 import { Avatar, Button, TextField } from "@mui/material";
@@ -28,25 +26,25 @@ const Main = ({ classData }) => {
   };
 
   const handleUpload = () => {
-    const uploadImage = storage.ref(`images/${image.name}`).put(image);
+    // const uploadImage = storage.ref(`images/${image.name}`).put(image);
 
-    uploadImage.on("state_changed", () => {
-      storage
-        .ref("images")
-        .child(image.name)
-        .getDownloadURL()
-        .then((url) => {
-          db.collection("announcements")
-            .doc("classes")
-            .collection(classData.id)
-            .add({
-              timstamp: firebase.firestore.FieldValue.serverTimestamp(),
-              imageUrl: url,
-              text: inputValue,
-              sender: loggedInMail,
-            });
-        });
-    });
+    // uploadImage.on("state_changed", () => {
+    //   storage
+    //     .ref("images")
+    //     .child(image.name)
+    //     .getDownloadURL()
+    //     .then((url) => {
+    //       db.collection("announcements")
+    //         .doc("classes")
+    //         .collection(classData.id)
+    //         .add({
+    //           timstamp: firebase.firestore.FieldValue.serverTimestamp(),
+    //           imageUrl: url,
+    //           text: inputValue,
+    //           sender: loggedInMail,
+    //         });
+    //     });
+    // });
   };
   return (
     <div className="main">

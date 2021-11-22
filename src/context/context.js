@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-import { auth, provider } from "../lib/firebase";
+import { auth, googleProvider } from "../lib/firebase";
 
 
 
@@ -17,7 +17,7 @@ export function ContextProvider({ children }) {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [loggedInMail, setLoggedInMail] = useState(null);
 
-  const login = () => auth.signInWithPopup(provider);
+  const login = () => auth.signInWithPopup(googleProvider);
 
   const logout = () => auth.signOut();
 

@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Redirect, Route } from "react-router-dom";
 
-export function IsUserRedirect({ user, loggedInPath, children, ...rest }) {
+import AuthContext from '../context/AuthContext'
+
+export function IsUserRedirect({ loggedInPath, children, ...rest }) {
+  const { isLoggedIn } = useContext(AuthContext);
+  
   return (
     <Route
       {...rest}
       render={() => {
-        if (!user) {
+        if (!isLoggedIn) {
           return children;
         }
-        if (user) {
+        if (isLoggedIn) {
           return <Redirect to={{ pathname: loggedInPath }} />;
         }
         return null;
@@ -18,15 +22,17 @@ export function IsUserRedirect({ user, loggedInPath, children, ...rest }) {
   );
 }
 
-export function ProtectedRoute({ user, children, ...rest }) {
+export function ProtectedRoute({ children, ...rest }) {
+  const { isLoggedIn } = useContext(AuthContext);
+  
   return (
     <Route
       {...rest}
       render={({ location }) => {
-        if (user) {
+        if (isLoggedIn) {
           return children;
         }
-        if (!user) {
+        if (!isLoggedIn) {
           return (
             <Redirect
               to={{

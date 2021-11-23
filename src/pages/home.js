@@ -6,7 +6,7 @@ import { Drawer, ClassroomList } from "../components/components";
 const HomePage = (props) => {
   return (
     <Fragment>
-      <div>Drawer here</div>
+      <Drawer />
       <ClassroomList />
     </Fragment>
   )

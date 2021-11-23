@@ -37,25 +37,11 @@ function App() {
           <HomePage />
         </ProtectedRoute>
 
-        <ProtectedRoute path="classroom/:id" exact component={ClassroomPage}>
+        <ProtectedRoute path="/classroom/:id" exact>
+          <ClassroomPage />
         </ProtectedRoute>
 
         
-        {/* {createdClasses.map((item, index) => (
-          <Route key={index} exact path={`/${item.id}`}>
-            <Drawer />
-            <Main classData={item} />
-          </Route>
-        ))}
-        {joinedClasses.map((item, index) => (
-          <Route key={index} exact path={`/${item.id}`}>
-            <Drawer />
-            <Main classData={item} />
-          </Route>
-        ))}
-        
-
-         */}
       </Switch>
     </Router>
   );

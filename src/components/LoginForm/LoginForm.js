@@ -17,8 +17,6 @@ const LoginForm = () => {
 
   //function fetch to get login checking from server
   const fetchLoginAPI = (usernameToFetch, passwordToFetch) => {
-    console.log('usernameToFetch:', usernameToFetch)
-    console.log('passwordToFetch:', passwordToFetch)
     fetch(process.env.REACT_APP_API_URL+'/api/login', {
       method: 'POST',
       headers: {

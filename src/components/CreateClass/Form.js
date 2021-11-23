@@ -1,40 +1,45 @@
-import React, { useState } from "react";
-
-import { v4 as uuidV4 } from "uuid";
-
-import { useLocalContext } from "../../context/context";
+import React, { useState, useContext } from "react";
 
 import { Button, DialogActions, TextField } from "@mui/material";
+
+import AuthContext from "../../context/AuthContext";
 
 
 
 const Form = () => {
+  const { currentUser, setCreateClassDialog, fetchClassrooms } = useContext(AuthContext);
+
   const [className, setClassName] = useState("");
-  const [Section, setSection] = useState("");
-  const [Room, setRoom] = useState("");
-  const [Subject, setSubject] = useState("");
 
-  const { loggedInMail, setCreateClassDialog } = useLocalContext();
-
-  const addClass = (e) => {
+  const handleCreateClass = (e) => {
     e.preventDefault();
-    const id = uuidV4();
 
-    // db.collection("CreatedClasses")
-    //   .doc(loggedInMail)
-    //   .collection("classes")
-    //   .doc(id)
-    //   .set({
-    //     owner: loggedInMail,
-    //     className: className,
-    //     section: Section,
-    //     room: Room,
-    //     id: id,
-    //   })
-    //   .then(() => {
-    //     setCreateClassDialog(false);
-    //   });
-  };
+    fetch(process.env.REACT_APP_API_URL+'/api/class', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer '+ currentUser.token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: className,
+      })
+    })
+    .then((res) => res.json())
+    .then((result) => {
+      if (result.errors) {
+        window.alert(`Create class failed: ${result.errors[0]}`);
+      } else {
+        window.alert('Create class successfully !!!');
+      }
+      setCreateClassDialog(false);
+      fetchClassrooms()
+    })
+    .catch((error) => {
+      console.log('Create class error: ', error)
+      setCreateClassDialog(false);
+    })
+  }
+
   return (
     <div className="form">
       <p className="class__title">Create Class</p>
@@ -48,33 +53,10 @@ const Form = () => {
           value={className}
           onChange={(e) => setClassName(e.target.value)}
         />
-        <TextField
-          id="filled-basic"
-          label="Section"
-          className="form__input"
-          variant="filled"
-          value={Section}
-          onChange={(e) => setSection(e.target.value)}
-        />
-        <TextField
-          id="filled-basic"
-          label="Subject"
-          className="form__input"
-          variant="filled"
-          value={Subject}
-          onChange={(e) => setSubject(e.target.value)}
-        />
-        <TextField
-          id="filled-basic"
-          label="Room"
-          className="form__input"
-          variant="filled"
-          value={Room}
-          onChange={(e) => setRoom(e.target.value)}
-        />
+        
       </div>
       <DialogActions>
-        <Button onClick={addClass} color="primary">
+        <Button onClick={handleCreateClass} color="primary">
           Create
         </Button>
       </DialogActions>

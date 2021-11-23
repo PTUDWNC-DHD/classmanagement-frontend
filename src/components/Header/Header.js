@@ -1,14 +1,21 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import { AppBar, Avatar, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
 
 import { Add, Apps } from "@mui/icons-material";
+
+import AuthContext from "../../context/AuthContext";
 
 import { CreateClass, JoinClass } from "../components";
 
 import { useStyles } from "./style";
 
 const Header = ({ children }) => {
+  const { 
+    setIsLoggedIn,
+    setCurrentUser,
+    setCreateClassDialog,
+    setJoinClassDialog, } = useContext(AuthContext);
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -16,22 +23,20 @@ const Header = ({ children }) => {
   const handleClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
 
-  // const {
-  //   setCreateClassDialog,
-  //   setJoinClassDialog,
-  //   loggedInUser,
-  //   logout,
-  // } = useLocalContext();
-
   const handleCreate = () => {
-    // handleClose();
-    // setCreateClassDialog(true);
+    handleClose();
+    setCreateClassDialog(true);
   };
 
   const handleJoin = () => {
-    // handleClose();
-    // setJoinClassDialog(true);
+    handleClose();
+    //setJoinClassDialog(true);
   };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    setIsLoggedIn(false);
+  }
   return (
     <div className={classes.root}>
       <AppBar className={classes.appBar} position="static">
@@ -61,8 +66,8 @@ const Header = ({ children }) => {
             </Menu>
             <div>
               <Avatar
-                // onClick={() => logout()}
-                // src={loggedInUser?.photoURL}
+                onClick={() => handleLogout()}
+                src={'./avatar.jpg'}
                 className={classes.icon}
               />
             </div>

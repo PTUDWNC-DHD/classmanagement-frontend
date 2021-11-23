@@ -4,10 +4,11 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import { AuthProvider } from './context/AuthContext'
 
-import { IsLoggedInRedirect, IsRegisterRedirect, ProtectedRoute } from "./routes/Routes";
+import { IsJoinedRedirect, IsLoggedInRedirect, IsRegisterRedirect, ProtectedRoute } from "./routes/Routes";
 
 import HomePage from "./pages/home";
 import ClassroomPage from "./pages/classroom";
+import JoinPage from "./pages/join";
 
 import { LoginForm, RegisterForm } from "./components/components";
 
@@ -33,15 +34,31 @@ function App() {
           <RegisterForm />
         </IsRegisterRedirect>
 
-        <ProtectedRoute path="/" exact>
+        <IsLoggedInRedirect
+          loggedInPath="/join-infor"
+          path="/join/:id"
+          exact
+        >
+          <LoginForm />
+        </IsLoggedInRedirect>
+
+        <IsJoinedRedirect joinedPath="/" path="/join-infor" exact>
+          <JoinPage />
+        </IsJoinedRedirect>
+
+        <ProtectedRoute redirectPath="/signin" path="/" exact>
           <HomePage />
         </ProtectedRoute>
 
-        <ProtectedRoute path="/classroom/:id" exact>
+        <ProtectedRoute redirectPath="/signin" path="/classroom/:id" exact>
           <ClassroomPage />
         </ProtectedRoute>
 
         
+
+        
+
+
       </Switch>
     </Router>
   );

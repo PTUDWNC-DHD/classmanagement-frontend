@@ -52,6 +52,7 @@ const Form = () => {
           variant="filled"
           value={className}
           onChange={(e) => setClassName(e.target.value)}
+          required
         />
         
       </div>

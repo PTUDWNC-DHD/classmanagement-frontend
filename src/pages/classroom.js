@@ -7,7 +7,7 @@ const ClassroomPage = (props) => {
   const { classroomId } = useLocation();
   return (
     <Fragment>
-      <div>Drawer here classroom page</div>
+      <Drawer />
       <ClassroomDetail classroomId={classroomId}/>
     </Fragment>
   )

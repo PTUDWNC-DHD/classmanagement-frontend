@@ -4,7 +4,7 @@ export { default as CreateClass } from "./CreateClass/CreateClass";
 export { default as JoinClass } from "./JoinClass/JoinClass";
 
 export { default as LoginForm } from "./LoginForm/LoginForm";
-export { default as JoinedClasses } from "./ClassroomList/JoinedClasses/JoinedClasses";
+export { default as ClassroomCard } from "./ClassroomList/ClassroomCard/ClassroomCard";
 export { default as Announcement } from "./Announcement/Announcement";
 export { default as RegisterForm } from "./RegisterForm/RegisterForm";
 export { default as ClassroomList } from "./ClassroomList/ClassroomList";

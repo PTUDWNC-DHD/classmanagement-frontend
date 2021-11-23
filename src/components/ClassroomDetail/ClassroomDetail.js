@@ -7,6 +7,8 @@ import { Avatar, Button, TextField, Typography } from "@mui/material";
 
 import { Announcement } from "../components";
 
+import './style.css'
+
 
 
 const ClassroomDetail = (props) => {

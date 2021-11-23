@@ -6,7 +6,7 @@ import { Add, Apps } from "@mui/icons-material";
 
 import AuthContext from "../../context/AuthContext";
 
-import { CreateClass, JoinClass } from "../components";
+import { CreateClass } from "../components";
 
 import { useStyles } from "./style";
 
@@ -75,7 +75,6 @@ const Header = ({ children }) => {
         </Toolbar>
       </AppBar>
       <CreateClass />
-      <JoinClass />
     </div>
   );
 };

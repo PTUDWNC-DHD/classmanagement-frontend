@@ -4,7 +4,7 @@ import { Container, Stack, Grid, Typography } from '@mui/material'
 
 import AuthContext from '../../context/AuthContext'
 
-import { JoinedClasses } from '../components'
+import { ClassroomCard } from '../components'
 
 import classes from './style'
 
@@ -31,7 +31,7 @@ const ClassroomList = (props) => {
             {currentUser.classrooms?.map((classroomItem, index) =>{
               return(
                 <Grid sx={classes.GridRow} item key={index}>
-                  <JoinedClasses classData={classroomItem}/>
+                  <ClassroomCard classData={classroomItem}/>
                 </Grid>
               )
             })}

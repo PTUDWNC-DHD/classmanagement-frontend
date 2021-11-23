@@ -1,146 +1,90 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 
-import { useLocalContext } from "../../context/context";
+import { Button, DialogActions, TextField, Checkbox } from "@mui/material";
 
-import { Avatar, Button, Dialog, Slide, TextField } from "@mui/material";
-
-import { Close } from "@mui/icons-material";
+import AuthContext from "../../context/AuthContext";
 
 import "./style.css";
 
+const JoinClass = (props) => {
+  const { currentUser, setIsJoined, fetchClassrooms } = useContext(AuthContext);
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+  const [displayName, setDisplayName] = useState('');
+  const [isStudent, setIsStudent] = useState(false);
+  const [studentId, setStudentId] = useState('');
 
-const JoinClass = () => {
-  // const {
-  //   joinClassDialog,
-  //   setJoinClassDialog,
-  //   loggedInUser,
-  // } = useLocalContext();
-
-  const [classCode, setClassCode] = useState("");
-  const [email, setemail] = useState("");
-  const [error, setError] = useState();
-  const [joinedData, setJoinedData] = useState();
-  const [classExists, setClassExists] = useState(false);
-
-  const handleSubmit = (e) => {
+  const handleJoinClass = (e) => {
     e.preventDefault();
+    if (displayName){
+      fetch(process.env.REACT_APP_API_URL+'/api/join/' + props.joinCode, {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer '+ currentUser.token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: displayName,
+          code: studentId,
+          isStudent: isStudent
+        })
+      })
+      .then((res) => res.json())
+      .then((result) => {
+        if (result.errors) {
+          window.alert(`Join class failed: ${result.errors[0]}`);
+        } else {
+          window.alert('Join class successfully !!!');
+        }
+        setIsJoined(true);
+        fetchClassrooms()
+      })
+      .catch((error) => {
+        console.log('Join class error: ', error)
+        setIsJoined(true);
+      })
+    }
+    else{
+      window.alert('Please enter your display name in class !!!');
+    }
+  }
 
-    // db.collection("CreatedClasses")
-    //   .doc(email)
-    //   .collection("classes")
-    //   .doc(classCode)
-    //   .get()
-    //   .then((doc) => {
-    //     if (doc.exists && doc.owner !== loggedInUser.email) {
-    //       setClassExists(true);
-    //       setJoinedData(doc.data());
-    //       setError(false);
-    //     } else {
-    //       setError(true);
-    //       setClassExists(false);
-    //       return;
-    //     }
-    //   });
-
-    // if (classExists === true) {
-    //   db.collection("JoinedClasses")
-    //     .doc(loggedInUser.email)
-    //     .collection("classes")
-    //     .doc(classCode)
-    //     .set({
-    //       joinedData,
-    //     })
-    //     .then(() => {
-    //       setJoinClassDialog(false);
-    //     });
-    // }
-  };
   return (
-    <div>
-      <Dialog
-        fullScreen
-        //open={joinClassDialog}
-        //onClose={() => setJoinClassDialog(false)}
-        TransitionComponent={Transition}
-      >
-        <div className="joinClass">
-          <div className="joinClass__wrapper">
-            <div
-              className="joinClass__wraper2"
-              //onClick={() => setJoinClassDialog(false)}
-            >
-              <Close className="joinClass__svg" />
-              <div className="joinClass__topHead">Join Class</div>
-            </div>
-            <Button
-              className="joinClass__btn"
-              variant="contained"
-              color="primary"
-              onClick={handleSubmit}
-            >
-              Join
-            </Button>
-          </div>
-          <div className="joinClass__form">
-            <p className="joinClass__formText">
-              You're currently signed in as
-            </p>
-            <div className="joinClass__loginInfo">
-              <div className="joinClass__classLeft">
-                <Avatar  />
-                <div className="joinClass__loginText">
-                  <div className="joinClass__loginName">
-                    
-                  </div>
-                  <div className="joinClass__loginEmail">
-                    
-                  </div>
-                </div>
-              </div>
-              <Button variant="outlined" color="primary">
-                Logout
-              </Button>
-            </div>
-          </div>
-          <div className="joinClass__form">
-            <div
-              style={{ fontSize: "1.25rem", color: "#3c4043" }}
-              className="joinClass__formText"
-            >
-              Class Code
-            </div>
-            <div
-              style={{ color: "#3c4043", marginTop: "-5px" }}
-              className="joinClass__formText"
-            >
-              Ask your teacher for the class code, then enter it here.
-            </div>
-            <div className="joinClass__loginInfo">
-              <TextField
-                id="outlined-basic"
-                label="Class Code"
-                variant="outlined"
-                value={classCode}
-                //onChange={(e) => setClassCode(e.target.value)}
-                error={error}
-                helperText={error && "No class was found"}
-              />
-              <TextField
-                id="outlined-basic"
-                label="Owner's email"
-                variant="outlined"
-                value={email}
-                //onChange={(e) => setemail(e.target.value)}
-              />
-            </div>
-          </div>
+    <div className="form">
+      <p className="class__title">Join Class</p>
+
+      <div className="form__inputs">
+        <TextField
+          id="displayname"
+          label="Display Name (required)"
+          className="form__input"
+          variant="filled"
+          value={displayName}
+          onChange={(e) => setDisplayName(e.target.value)}
+          required
+        />
+        <div className="class__checkboxWrapper">
+          <Checkbox color="primary" onChange={() => setIsStudent(!isStudent)} />
+          <p>
+            I am student
+          </p>
         </div>
-      </Dialog>
+        <TextField
+          id="studentid"
+          label="Student ID (if you are student)"
+          className="form__input"
+          variant="filled"
+          value={studentId}
+          onChange={(e) => setStudentId(e.target.value)}
+          disabled={!isStudent}
+        />
+      </div>
+      <DialogActions>
+        <Button onClick={handleJoinClass} color="primary">
+          Join class
+        </Button>
+      </DialogActions>
     </div>
   );
 };
+
 export default JoinClass;

@@ -10,3 +10,5 @@ export { default as RegisterForm } from "./RegisterForm/RegisterForm";
 export { default as ClassroomList } from "./ClassroomList/ClassroomList";
 export { default as ClassroomDetail } from "./ClassroomDetail/ClassroomDetail";
 export { default as InvitePopup } from "./InvitePopup/InvitePopup";
+export { default as MemberList } from "./MemberList/MemberList";
+export { default as AccountDetail } from './AccountDetail/AccountDetail';

@@ -5,7 +5,7 @@ import AuthContext from '../../context/AuthContext'
 
 import { Avatar, Button, TextField, Typography } from "@mui/material";
 
-import { Announcement } from "../components";
+import { InvitePopup } from "../components";
 
 import './style.css'
 
@@ -21,10 +21,15 @@ const ClassroomDetail = (props) => {
   const [showInput, setShowInput] = useState(false);
   const [inputValue, setInput] = useState("");
   const [image, setImage] = useState(null);
+  const [showInvitePopup, setShowInvitePopup] = useState(false);
 
   const handleUpload = (e) => {}
 
   const handleChange = (e) => {}
+
+  const handleOpenInvitePopup = (e) => {
+    setShowInvitePopup(true);
+  }
 
   const fetchClassroom = () => {
     setIsLoading(true);
@@ -72,11 +77,18 @@ const ClassroomDetail = (props) => {
                   {classroom.name}
                 </h1>
                 <div className="main__section main__overflow">
-                  {classroom.section || 'empty section'}
+                  {classroom.subject}
                 </div>
                 <div className="main__wrapper2">
-                  <em className="main__code">Class Code :</em>
-                  <div className="main__id">{classroom._id}</div>
+                  <em className="main__code">Class Invite Code :</em>
+                  <div className="main__id">{classroom.invite}</div>
+                  <Button
+                    onClick={handleOpenInvitePopup}
+                    color="primary"
+                    variant="contained"
+                  >
+                    Invite
+                  </Button>
                 </div>
               </div>
             </div>
@@ -133,9 +145,13 @@ const ClassroomDetail = (props) => {
                   )}
                 </div>
               </div>
-              <Announcement classData={classroom} />
             </div>
           </div>
+          {showInvitePopup && <InvitePopup 
+            invite={classroom.invite} 
+            showInvitePopup={showInvitePopup} 
+            setShowInvitePopup={setShowInvitePopup}
+          />}
         </div>
       </div>
     )

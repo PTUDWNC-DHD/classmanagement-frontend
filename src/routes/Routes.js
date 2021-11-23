@@ -7,12 +7,15 @@ export function IsLoggedInRedirect({ loggedInPath, children, ...rest }) {
   const { isLoggedIn } = useContext(AuthContext);
 
   const url = window.location.href;
-  const joinPath = '/join/';
+  const joinPath = '/classrooms/invitation/'
   const joinPathIndex = url.indexOf(joinPath);
+  console.log('login path: ', joinPath);
+  console.log('index: ',joinPathIndex);
   let joinCode = '';
   if (joinPathIndex > 0){
-    joinCode = url.slice(joinPathIndex + joinPath.length)
+    joinCode = url.slice(joinPathIndex + joinPath.length)    
   }
+  console.log('joinCode: ',joinCode);
 
   return (
     <Route

@@ -35,14 +35,14 @@ function App() {
         </IsRegisterRedirect>
 
         <IsLoggedInRedirect
-          loggedInPath="/join-infor"
-          path="/join/:id"
+          loggedInPath="/classrooms/join"
+          path="/classrooms/invitation/:id"
           exact
         >
           <LoginForm />
         </IsLoggedInRedirect>
 
-        <IsJoinedRedirect joinedPath="/" path="/join-infor" exact>
+        <IsJoinedRedirect joinedPath="/" path="/classrooms/join" exact>
           <JoinPage />
         </IsJoinedRedirect>
 

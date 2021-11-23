@@ -40,6 +40,7 @@ const JoinClass = (props) => {
       })
       .catch((error) => {
         console.log('Join class error: ', error)
+        window.alert(`Join class failed: ${error}`);
         setIsJoined(true);
       })
     }

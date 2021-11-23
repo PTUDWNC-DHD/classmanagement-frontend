@@ -9,3 +9,4 @@ export { default as Announcement } from "./Announcement/Announcement";
 export { default as RegisterForm } from "./RegisterForm/RegisterForm";
 export { default as ClassroomList } from "./ClassroomList/ClassroomList";
 export { default as ClassroomDetail } from "./ClassroomDetail/ClassroomDetail";
+export { default as InvitePopup } from "./InvitePopup/InvitePopup";

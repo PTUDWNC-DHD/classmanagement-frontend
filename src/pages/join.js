@@ -7,7 +7,6 @@ const JoinPage = (props) => {
   const { joinCode } = useLocation();
   return (
     <Fragment>
-      <div>Join class page {joinCode} </div>
       <JoinClass joinCode={joinCode} />
     </Fragment>
   )

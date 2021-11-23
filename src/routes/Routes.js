@@ -9,8 +9,7 @@ export function IsLoggedInRedirect({ loggedInPath, children, ...rest }) {
   const url = window.location.href;
   const joinPath = '/classrooms/invitation/'
   const joinPathIndex = url.indexOf(joinPath);
-  console.log('login path: ', joinPath);
-  console.log('index: ',joinPathIndex);
+
   let joinCode = '';
   if (joinPathIndex > 0){
     joinCode = url.slice(joinPathIndex + joinPath.length)    
@@ -24,10 +23,9 @@ export function IsLoggedInRedirect({ loggedInPath, children, ...rest }) {
         if (!isLoggedIn) {
           return children;
         }
-        if (isLoggedIn) {
+        else {
           return <Redirect to={{ pathname: loggedInPath, joinCode: joinCode }} />;
         }
-        return null;
       }}
     />
   );
@@ -43,10 +41,9 @@ export function IsRegisterRedirect({ registeredPath, children, ...rest }) {
         if (!isRegistered) {
           return children;
         }
-        if (isRegistered) {
+        else {
           return <Redirect to={{ pathname: registeredPath }} />;
         }
-        return null;
       }}
     />
   );
@@ -62,10 +59,9 @@ export function IsJoinedRedirect({ joinedPath, children, ...rest }) {
         if (!isJoined) {
           return children;
         }
-        if (isJoined) {
+        else {
           return <Redirect to={{ pathname: joinedPath }} />;
         }
-        return null;
       }}
     />
   );
@@ -81,7 +77,7 @@ export function ProtectedRoute({ children, redirectPath, ...rest }) {
         if (isLoggedIn) {
           return children;
         }
-        if (!isLoggedIn) {
+        else {
           return (
             <Redirect
               to={{
@@ -91,7 +87,6 @@ export function ProtectedRoute({ children, redirectPath, ...rest }) {
             />
           );
         }
-        return null;
       }}
     />
   );

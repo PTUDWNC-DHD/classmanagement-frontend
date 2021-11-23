@@ -1,12 +1,12 @@
 import { Fragment } from 'react'
 
 
-import { Drawer, ClassroomList } from "../components/components";
+import { Header, ClassroomList } from "../components/components";
 
 const HomePage = (props) => {
   return (
     <Fragment>
-      <Drawer />
+      <Header />
       <ClassroomList />
     </Fragment>
   )

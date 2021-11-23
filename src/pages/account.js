@@ -1,12 +1,12 @@
 import { Fragment } from 'react'
 
 
-import { Drawer, AccountDetail } from "../components/components";
+import { Header, AccountDetail } from "../components/components";
 
 const AccountPage = (props) => {
   return (
     <Fragment>
-      <Drawer />
+      <Header />
       <AccountDetail />
     </Fragment>
   )

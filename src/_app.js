@@ -20,47 +20,41 @@ function App() {
     <Router>
       <Switch>
         <IsLoggedInRedirect
+          exact path="/signin"
           loggedInPath="/"
-          path="/signin"
-          exact
         >
           <LoginForm />
         </IsLoggedInRedirect>
 
         <IsRegisterRedirect
+          exact path="/register"
           registeredPath="/signin"
-          path="/register"
-          exact
         >
           <RegisterForm />
         </IsRegisterRedirect>
 
         <IsLoggedInRedirect
+          exact path="/classrooms/invitation/:id"
           loggedInPath="/classrooms/join"
-          path="/classrooms/invitation/:id"
-          exact
         >
           <LoginForm />
         </IsLoggedInRedirect>
 
-        <IsJoinedRedirect joinedPath="/" path="/classrooms/join" exact>
+        <IsJoinedRedirect exact path="/classrooms/join" joinedPath="/">
           <JoinPage />
         </IsJoinedRedirect>
 
-        <ProtectedRoute redirectPath="/signin" path="/" exact>
+        <ProtectedRoute exact path="/" redirectPath="/signin">
           <HomePage />
         </ProtectedRoute>
 
-        <ProtectedRoute redirectPath="/signin" path="/classroom/:id" exact>
+        <ProtectedRoute exact path="/classroom/:id" redirectPath="/signin">
           <ClassroomPage />
         </ProtectedRoute>
 
-        <ProtectedRoute redirectPath="/signin" path="/account" exact>
+        <ProtectedRoute exact path="/account" redirectPath="/signin">
           <AccountPage />
         </ProtectedRoute>
-
-        
-
 
       </Switch>
     </Router>

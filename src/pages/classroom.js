@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import { Tab, Tabs, Box, Typography } from '@mui/material'
 
-import { Drawer, ClassroomDetail, MemberList } from "../components/components";
+import { Header, ClassroomDetail, MemberList } from "../components/components";
 
 
 function TabPanel(props) {
@@ -50,7 +50,7 @@ const ClassroomPage = (props) => {
 
   return (
     <Fragment>
-      <Drawer />
+      <Header />
       <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">

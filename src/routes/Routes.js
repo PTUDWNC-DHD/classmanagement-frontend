@@ -4,7 +4,7 @@ import { Redirect, Route } from "react-router-dom";
 import AuthContext from '../context/AuthContext'
 
 export function IsLoggedInRedirect({ loggedInPath, children, ...rest }) {
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, isEmailNotRegistered } = useContext(AuthContext);
 
   const url = window.location.href;
   const joinPath = '/classrooms/invitation/'
@@ -21,6 +21,9 @@ export function IsLoggedInRedirect({ loggedInPath, children, ...rest }) {
       {...rest}
       render={() => {
         if (!isLoggedIn) {
+          if (isEmailNotRegistered) {
+            return <Redirect to={{ pathname: '/register' }} />;
+          }
           return children;
         }
         else {

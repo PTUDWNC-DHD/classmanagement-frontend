@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
   const [isJoined, setIsJoined] = useState(false);
+  const [isEmailNotRegistered, setIsEmailNotRegistered] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
   const [createClassDialog, setCreateClassDialog] = useState(false);
@@ -40,6 +41,7 @@ export const AuthProvider = ({ children }) => {
     isLoggedIn, setIsLoggedIn,
     isRegistered, setIsRegistered,
     isJoined, setIsJoined,
+    isEmailNotRegistered, setIsEmailNotRegistered,
     currentUser, setCurrentUser,
     createClassDialog, setCreateClassDialog,
     joinClassDialog, setJoinClassDialog,

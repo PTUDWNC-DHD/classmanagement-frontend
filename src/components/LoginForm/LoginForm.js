@@ -11,7 +11,7 @@ import { LockOutlined } from "@mui/icons-material"
 
 
 const LoginForm = () => {
-  const {setCurrentUser, setIsLoggedIn} = useContext(AuthContext)
+  const {setCurrentUser, setIsLoggedIn, setIsEmailNotRegistered} = useContext(AuthContext)
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -29,7 +29,12 @@ const LoginForm = () => {
     })
     .then((res) => {
       if (res.status === 401) {
-        window.alert('Login failed !!!')
+        if (usernameToFetch.indexOf('@') > 0){
+          window.alert('Login failed ! Your email is not registered. Register now !!!')
+          setIsEmailNotRegistered(true);
+        }else {
+          window.alert('Login failed !!!')
+        }
       } else {
         res.json().then((result) => {
           if (result.user) {

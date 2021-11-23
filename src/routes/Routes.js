@@ -5,7 +5,18 @@ import AuthContext from '../context/AuthContext'
 
 export function IsLoggedInRedirect({ loggedInPath, children, ...rest }) {
   const { isLoggedIn } = useContext(AuthContext);
-  
+
+  const url = window.location.href;
+  const joinPath = '/classrooms/invitation/'
+  const joinPathIndex = url.indexOf(joinPath);
+  console.log('login path: ', joinPath);
+  console.log('index: ',joinPathIndex);
+  let joinCode = '';
+  if (joinPathIndex > 0){
+    joinCode = url.slice(joinPathIndex + joinPath.length)    
+  }
+  console.log('joinCode: ',joinCode);
+
   return (
     <Route
       {...rest}
@@ -14,7 +25,7 @@ export function IsLoggedInRedirect({ loggedInPath, children, ...rest }) {
           return children;
         }
         if (isLoggedIn) {
-          return <Redirect to={{ pathname: loggedInPath }} />;
+          return <Redirect to={{ pathname: loggedInPath, joinCode: joinCode }} />;
         }
         return null;
       }}
@@ -41,9 +52,28 @@ export function IsRegisterRedirect({ registeredPath, children, ...rest }) {
   );
 }
 
-export function ProtectedRoute({ children, ...rest }) {
-  const { isLoggedIn } = useContext(AuthContext);
+export function IsJoinedRedirect({ joinedPath, children, ...rest }) {
+  const { isJoined } = useContext(AuthContext);
   
+  return (
+    <Route
+      {...rest}
+      render={() => {
+        if (!isJoined) {
+          return children;
+        }
+        if (isJoined) {
+          return <Redirect to={{ pathname: joinedPath }} />;
+        }
+        return null;
+      }}
+    />
+  );
+}
+
+export function ProtectedRoute({ children, redirectPath, ...rest }) {
+  const { isLoggedIn } = useContext(AuthContext);
+
   return (
     <Route
       {...rest}
@@ -55,7 +85,7 @@ export function ProtectedRoute({ children, ...rest }) {
           return (
             <Redirect
               to={{
-                pathname: "signin",
+                pathname: redirectPath,
                 state: { from: location },
               }}
             />

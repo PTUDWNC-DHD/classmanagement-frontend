@@ -1,39 +1,23 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import { Container, Stack, Grid, Typography } from '@mui/material'
 
-import { ClassroomCard, AddClassroomPopup } from '../components'
+import AuthContext from '../../context/AuthContext'
+
+import { ClassroomCard } from '../components'
 
 import classes from './style'
 
 const ClassroomList = (props) => {
-  const [error, setError] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [classrooms, setClassrooms] = useState([]);
-
-  const FetchClassrooms = () => {
-    setIsLoaded(false);
-    fetch(process.env.REACT_APP_API_URL + '/classrooms')
-      .then(res => res.json())
-      .then(
-        (result) => {
-          setIsLoaded(true);
-          setClassrooms(result);
-        },
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        }
-      )
-  }
+  const { currentUser, isLoading, isError, fetchClassrooms } = useContext(AuthContext)
 
   useEffect(() => {
-    FetchClassrooms();
+    fetchClassrooms();
   }, [])
   
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  } else if (!isLoaded) {
+  if (isError) {
+    return <div>Error: {isError.message}</div>;
+  } else if (isLoading) {
     return(
       <Typography sx={classes.Loading} variant="h4" align="center">
         Loading....
@@ -42,17 +26,12 @@ const ClassroomList = (props) => {
   } else {
     return(
       <div>
-        <Stack direction="row" justifyContent="center" alignItems="space-between" spacing={0}>
-          <p>Create classroom</p>
-          <AddClassroomPopup fetch={FetchClassrooms} />
-        </Stack>
-        
         <Container>
           <Grid container direction="row" justifyContent="center" alignItems="center" spacing={5}>
-            {classrooms?.map((classroomItem, index) =>{
+            {currentUser.classrooms?.map((classroomItem, index) =>{
               return(
                 <Grid sx={classes.GridRow} item key={index}>
-                  <ClassroomCard data={classroomItem}/>
+                  <ClassroomCard classData={classroomItem}/>
                 </Grid>
               )
             })}

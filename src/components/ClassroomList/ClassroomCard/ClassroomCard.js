@@ -1,59 +1,89 @@
-import { Card, CardHeader, CardMedia, CardContent, Avatar, IconButton, Typography, Stack } from '@mui/material';
+import React, { useState, useEffect, useContext } from "react";
+import { Link } from "react-router-dom";
 
-import { MoreVert, FolderOpenRounded } from '@mui/icons-material';
+import { Avatar, Typography } from "@mui/material";
 
-import { red } from '@mui/material/colors';
+import { FolderOpen, PermContactCalendar, TrainRounded } from "@mui/icons-material";
 
-import classes from './style'
+import AuthContext from '../../../context/AuthContext'
 
-const ClassroomCard = (props) => {
-  const defaultClassroomCardBg = {
-    img: '/defaultClassroomCardBg.jpg',
-    title: 'Temp Bg'
+import "./style.css";
+
+
+const ClassroomCard = ({ classData }) => {
+  const { currentUser } = useContext(AuthContext)
+
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [classroom, setClassroom] = useState(classData);
+
+  const fetchClassrooms = () => {
+    setIsLoading(true);
+    fetch(process.env.REACT_APP_API_URL + '/api/user/' + classroom.ownerId, { 
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer '+ currentUser.token,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then((res) => res.json())
+    .then((result) => {
+        setClassroom({...classroom, 
+          owner: result.name
+        })
+        setIsLoading(false);
+      },
+      (error) => {
+        setError(error);
+        setIsLoading(false);
+      }
+    )
   }
 
-  return(
-    <Card sx={classes.Card}>
-      <CardHeader
-        
-        title={props.data.name}
-        subheader={props.data.subject}
-        action={
-          <IconButton aria-label="settings">
-            <MoreVert />
-          </IconButton>
-        }
-        />
-      <CardMedia
-        component="img"
-        height="194"
-        image={defaultClassroomCardBg.img}
-        alt={defaultClassroomCardBg.title}
-      />
-      {
-        props.data.teacher &&
-        <CardHeader
-          avatar={
-            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-              N
-            </Avatar>
-          }
-          title={props.data.teacher.name}
-          
-        />
-      }
-      <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          {props.data.description}
-        </Typography>
-        <Stack direction="row" justifyContent="flex-end" alignItems="flex-end" spacing={0}>
-          <IconButton>
-            <FolderOpenRounded/>
-          </IconButton>
-        </Stack>
-      </CardContent>
-    </Card>
-  )
-}
+  useEffect(() => {
+    fetchClassrooms();
+  }, [])
+  
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  } else if (isLoading) {
+    return(
+      <Typography variant="h4" align="center">
+        Loading....
+      </Typography>
+    );
+  } else {
+    return (
+      <li className="joined__list">
+        <div className="joined__wrapper">
+          <div className="joined__container">
+            <div className="joined__imgWrapper" />
+            <div className="joined__image" />
+            <div className="joined__content">
+              <Link 
+                className="joined__title" 
+                to={{
+                  pathname: `/classroom/${classroom._id}`,
+                  classroomId: classroom._id
+                }} 
+              >
+                <h2>{classroom.name}</h2>
+              </Link>
+              <p className="joined__owner">{classroom.owner}</p>
+            </div>
+          </div>
+          <Avatar
+            className="joined__avatar"
+            src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/s75-c-fbw=1/photo.jpg"
+          />
+        </div>
+        <div className="joined__bottom">
+          <PermContactCalendar />
+          <FolderOpen />
+        </div>
+      </li>
+    )
+  }
+};
 
 export default ClassroomCard;

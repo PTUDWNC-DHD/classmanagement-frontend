@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-
-import { useLocalContext } from "../../context/context";
+import React, { useState, useContext } from "react";
 
 import { Button, Checkbox, Dialog, DialogActions, DialogContent } from "@mui/material";
+
+import AuthContext from '../../context/AuthContext'
 
 import Form from "./Form";
 
@@ -10,7 +10,7 @@ import "./style.css";
 
 
 const CreateClass = () => {
-  const { createClassDialog, setCreateClassDialog } = useLocalContext();
+  const { createClassDialog, setCreateClassDialog } = useContext(AuthContext);
   const [check, setChecked] = useState(false);
   const [showForm, setShowForm] = useState(false);
   return (

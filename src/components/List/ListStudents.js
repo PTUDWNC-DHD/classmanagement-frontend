@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Avatar, ListItemAvatar, ListItemText, Table, TableBody, TableCell, TableHead, TableRow } from "@material-ui/core";
 import Title from './Title';
+import { ListItem } from '@material-ui/core';
 
 // Generate Order Data
 function createData(id, date, name, shipTo, paymentMethod, amount) {
@@ -50,26 +51,26 @@ function preventDefault(event) {
 export default function Orders() {
   return (
     <React.Fragment>
-      <Title>Teachers</Title>
+      <Title> Teachers</Title>
       <Table size="small">
         <TableBody>
           {rows.map((row) => (
             <TableRow key={row.id}>
-              <TableCell><ListItemAvatar><Avatar>H</Avatar></ListItemAvatar></TableCell>
-              <TableCell><ListItemText>{row.name}</ListItemText></TableCell>
+              <TableCell><ListItem><ListItemAvatar><Avatar>H</Avatar></ListItemAvatar>
+              <ListItemText>{row.name}</ListItemText></ListItem></TableCell>
               
             </TableRow>
           ))}
         </TableBody>
       </Table>
-      <Title>Students</Title>
+      <Title> Students</Title>
       <Table size="small">
         
         <TableBody>
           {rows.map((row) => (
             <TableRow key={row.id}>
-              <TableCell><ListItemAvatar><Avatar>H</Avatar></ListItemAvatar></TableCell>
-              <TableCell><ListItemText>{row.name}</ListItemText></TableCell>
+              <TableCell><ListItem><ListItemAvatar><Avatar>H</Avatar></ListItemAvatar>
+              <ListItemText>{row.name}</ListItemText></ListItem></TableCell>
               
             </TableRow>
           ))}

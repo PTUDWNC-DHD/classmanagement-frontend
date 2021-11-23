@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { Link } from "react-router-dom"
 
 import { AppBar, Avatar, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
 
@@ -37,6 +38,7 @@ const Header = ({ children }) => {
     setCurrentUser(null);
     setIsLoggedIn(false);
   }
+
   return (
     <div className={classes.root}>
       <AppBar className={classes.appBar} position="static">
@@ -65,11 +67,12 @@ const Header = ({ children }) => {
               <MenuItem onClick={handleCreate}>Create Class</MenuItem>
             </Menu>
             <div>
-              <Avatar
-                onClick={() => handleLogout()}
-                src={'./avatar.jpg'}
-                className={classes.icon}
-              />
+              <Link exact to='/account'>
+                <Avatar
+                  src={'./avatar.jpg'}
+                  className={classes.icon}
+                />
+              </Link>
             </div>
           </div>
         </Toolbar>

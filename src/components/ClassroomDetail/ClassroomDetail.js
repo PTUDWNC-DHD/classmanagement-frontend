@@ -59,7 +59,7 @@ const ClassroomDetail = (props) => {
     return <div>Error: {error.message}</div>;
   } else if (isLoading) {
     return(
-      <Typography variant="h4" align="center">
+      <Typography align="center">
         Loading....
       </Typography>
     );

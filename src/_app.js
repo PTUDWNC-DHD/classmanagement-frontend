@@ -9,6 +9,7 @@ import { IsJoinedRedirect, IsLoggedInRedirect, IsRegisterRedirect, ProtectedRout
 import HomePage from "./pages/home";
 import ClassroomPage from "./pages/classroom";
 import JoinPage from "./pages/join";
+import AccountPage from "./pages/account";
 
 import { LoginForm, RegisterForm } from "./components/components";
 
@@ -54,7 +55,9 @@ function App() {
           <ClassroomPage />
         </ProtectedRoute>
 
-        
+        <ProtectedRoute redirectPath="/signin" path="/account" exact>
+          <AccountPage />
+        </ProtectedRoute>
 
         
 

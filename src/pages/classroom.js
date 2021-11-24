@@ -2,7 +2,7 @@ import { Fragment, useState } from 'react'
 import { useLocation } from "react-router-dom";
 import PropTypes from 'prop-types';
 
-import {Drawer,Container,Paper,Grid,CssBaseline, Tab, Tabs, Box, Typography } from '@mui/material'
+import {Container,Paper,Grid,CssBaseline, Tab, Tabs, Box, Typography } from '@mui/material'
 
 import { Header, ClassroomDetail, MemberList } from "../components/components";
 
@@ -20,7 +20,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          {children}
         </Box>
       )}
     </div>

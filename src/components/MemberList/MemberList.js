@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useContext, useState } from 'react';
 
-import { CircularProgress, Avatar, ListItemAvatar, ListItemText, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { CircularProgress, Avatar, ListItemAvatar, ListItemText, Table, TableBody, TableCell, TableRow } from "@mui/material";
 
 import AuthContext from '../../context/AuthContext'
 
@@ -16,7 +16,7 @@ const MemberList = (props) => {
   const [students, setStudents] = useState([]);
   const [teachers, setTeachers] = useState([]);
 
-  const fetchClassroom = () => {
+  useEffect(() => {
     setIsLoading(true);
     fetch(process.env.REACT_APP_API_URL + '/api/class/' + props.classroomId + '/users', { 
       method: 'GET',
@@ -41,10 +41,6 @@ const MemberList = (props) => {
       setError(error);
       setIsLoading(false);
     })
-  }
-
-  useEffect(() => {
-    fetchClassroom();
   }, [])
 
   if (error) {
@@ -61,6 +57,7 @@ const MemberList = (props) => {
         <Title>Teachers</Title>
         <Table size="small" >
           <TableBody>
+            {!teachers.length && <p>Class has no teacher</p>}
             {teachers.map((teacher) => (
               <TableRow key={teacher.userId}>
                 <TableCell><ListItemAvatar><Avatar src={'./avatar.jpg'}></Avatar></ListItemAvatar></TableCell>
@@ -75,7 +72,9 @@ const MemberList = (props) => {
         <Table size="small">
           
           <TableBody>
-            {students.map((student) => (
+            {!students.length && <p>Class has no student</p>}
+            {
+            students.map((student) => (
               <TableRow key={student.userId}>
                 <TableCell><ListItemAvatar><Avatar src={'./avatar.jpg'}></Avatar></ListItemAvatar></TableCell>
                 <TableCell><ListItemText><h4>{student.name}</h4></ListItemText></TableCell>

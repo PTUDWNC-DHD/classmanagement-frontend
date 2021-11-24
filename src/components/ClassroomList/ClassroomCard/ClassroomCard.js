@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 
-import { CircularProgress,Avatar, Typography } from "@mui/material";
+import { CircularProgress,Avatar } from "@mui/material";
 
-import { FolderOpen, PermContactCalendar, TrainRounded } from "@mui/icons-material";
+import { FolderOpen, PermContactCalendar } from "@mui/icons-material";
 
 import AuthContext from '../../../context/AuthContext'
 

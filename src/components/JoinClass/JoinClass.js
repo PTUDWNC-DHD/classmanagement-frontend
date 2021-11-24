@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 
-import { Button, DialogActions, TextField, Checkbox } from "@mui/material";
+import { Button, TextField, Checkbox, FormControlLabel } from "@mui/material";
 
 import AuthContext from "../../context/AuthContext";
 
@@ -51,7 +51,7 @@ const JoinClass = (props) => {
 
   return (
     <div className="form">
-      <p className="class__title">Join Class</p>
+      <p className="class__title">Join Class Diaglog</p>
 
       <div className="form__inputs">
         <TextField
@@ -63,12 +63,10 @@ const JoinClass = (props) => {
           onChange={(e) => setDisplayName(e.target.value)}
           required
         />
-        <div className="class__checkboxWrapper">
-          <Checkbox color="primary" onChange={() => setIsStudent(!isStudent)} />
-          <p>
-            I am student
-          </p>
-        </div>
+        <FormControlLabel
+            control={<Checkbox color="primary" onChange={() => setIsStudent(!isStudent)} />}
+            label="I am student"
+        />
         <TextField
           id="studentid"
           label="Student ID (if you are student)"
@@ -78,12 +76,11 @@ const JoinClass = (props) => {
           onChange={(e) => setStudentId(e.target.value)}
           disabled={!isStudent}
         />
-      </div>
-      <DialogActions>
         <Button onClick={handleJoinClass} color="primary">
           Join class
         </Button>
-      </DialogActions>
+      </div>
+      
     </div>
   );
 };

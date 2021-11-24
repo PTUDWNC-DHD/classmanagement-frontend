@@ -13,31 +13,34 @@ const Form = () => {
 
   const handleCreateClass = (e) => {
     e.preventDefault();
-
-    fetch(process.env.REACT_APP_API_URL+'/api/class', {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer '+ currentUser.token,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: className,
+    if (!className){
+      window.alert('Please enter class name !!!');
+    } else {
+      fetch(process.env.REACT_APP_API_URL+'/api/class', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer '+ currentUser.token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: className,
+        })
       })
-    })
-    .then((res) => res.json())
-    .then((result) => {
-      if (result.errors) {
-        window.alert(`Create class failed: ${result.errors[0]}`);
-      } else {
-        window.alert('Create class successfully !!!');
-      }
-      setCreateClassDialog(false);
-      fetchClassrooms()
-    })
-    .catch((error) => {
-      console.log('Create class error: ', error)
-      setCreateClassDialog(false);
-    })
+      .then((res) => res.json())
+      .then((result) => {
+        if (result.errors) {
+          window.alert(`Create class failed: ${result.errors[0]}`);
+        } else {
+          window.alert('Create class successfully !!!');
+        }
+        setCreateClassDialog(false);
+        fetchClassrooms()
+      })
+      .catch((error) => {
+        console.log('Create class error: ', error)
+        setCreateClassDialog(false);
+      })
+    }
   }
 
   return (

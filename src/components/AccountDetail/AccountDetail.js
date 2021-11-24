@@ -1,9 +1,8 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext } from 'react';
 
-import { CircularProgress,Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField, Avatar, Typography, CardActions } from '@mui/material';
+import { Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField, Avatar, Typography, CardActions } from '@mui/material';
 
 import AuthContext from '../../context/AuthContext'
-import { EastTwoTone } from '@mui/icons-material';
 
 const AccountDetail = (props) => {
   const { currentUser } = useContext(AuthContext)

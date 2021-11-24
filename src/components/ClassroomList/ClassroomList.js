@@ -1,6 +1,6 @@
-import { useState, useEffect, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 
-import { CircularProgress, Container, Stack, Grid, Typography } from '@mui/material'
+import { CircularProgress, Container, Grid } from '@mui/material'
 
 import AuthContext from '../../context/AuthContext'
 

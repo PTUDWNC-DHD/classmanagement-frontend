@@ -1,12 +1,8 @@
 import { Fragment, useState } from "react";
 
-import clsx from "clsx";
-
 import { SwipeableDrawer, List, Divider, ListItem, ListItemIcon, ListItemText, IconButton} from "@mui/material";
 
 import { Menu, Inbox, Mail } from "@mui/icons-material";
-
-import { makeStyles } from "@mui/styles";
 
 import { HeaderBar } from "../components";
 

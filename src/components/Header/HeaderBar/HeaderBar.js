@@ -15,8 +15,8 @@ const HeaderBar = ({ children }) => {
   const { 
     setIsLoggedIn,
     setCurrentUser,
-    setCreateClassDialog,
-    setJoinClassDialog } = useContext(AuthContext);
+    setCreateClassDialog
+    } = useContext(AuthContext);
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = useState(null);

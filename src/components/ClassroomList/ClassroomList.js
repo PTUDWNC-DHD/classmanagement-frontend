@@ -1,12 +1,14 @@
-import { useState, useEffect, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 
-import { Container, Stack, Grid, Typography } from '@mui/material'
+import { CircularProgress, Container, Grid } from '@mui/material'
 
 import AuthContext from '../../context/AuthContext'
 
 import { ClassroomCard } from '../components'
 
 import classes from './style'
+
+import "./ClassroomCard/style.css";
 
 const ClassroomList = (props) => {
   const { currentUser, isLoading, isError, fetchClassrooms } = useContext(AuthContext)
@@ -19,9 +21,9 @@ const ClassroomList = (props) => {
     return <div>Error: {isError.message}</div>;
   } else if (isLoading) {
     return(
-      <Typography sx={classes.Loading} variant="h4" align="center">
-        Loading....
-      </Typography>
+      <div className="center-parent">
+      <CircularProgress  />
+      </div>
     );
   } else {
     return(

@@ -3,7 +3,9 @@ import { useState, useEffect, useContext } from 'react';
 
 import AuthContext from '../../context/AuthContext'
 
-import { Avatar, Button, TextField, Typography } from "@mui/material";
+import { CircularProgress, Avatar, Button, TextField, IconButton } from "@mui/material";
+
+import { ContentCopy } from '@mui/icons-material'
 
 import { InvitePopup } from "../components";
 
@@ -31,6 +33,10 @@ const ClassroomDetail = (props) => {
     setShowInvitePopup(true);
   }
 
+  const handleCopyInviteCode = (e) => {
+    navigator.clipboard.writeText(process.env.REACT_APP_API_URL + process.env.REACT_APP_INVITE_LINK + classroom.invite)
+  }
+
   const fetchClassroom = () => {
     setIsLoading(true);
     fetch(process.env.REACT_APP_API_URL + '/api/class/' + props.classroomId, { 
@@ -52,16 +58,17 @@ const ClassroomDetail = (props) => {
   }
 
   useEffect(() => {
-    fetchClassroom();
+    fetchClassroom(classroom);
+    console.log(currentUser, classroom)
   }, [])
   
   if (error) {
     return <div>Error: {error.message}</div>;
   } else if (isLoading) {
     return(
-      <Typography align="center">
-        Loading....
-      </Typography>
+      <div className="center-parent">
+      <CircularProgress  />
+      </div>
     );
   } else {
     return (
@@ -79,17 +86,28 @@ const ClassroomDetail = (props) => {
                 <div className="main__section main__overflow">
                   {classroom.subject}
                 </div>
-                <div className="main__wrapper2">
-                  <em className="main__code">Class Invite Code :</em>
-                  <div className="main__id">{classroom.invite}</div>
-                  <Button
-                    onClick={handleOpenInvitePopup}
-                    color="primary"
-                    variant="contained"
-                  >
-                    Invite
-                  </Button>
-                </div>
+                { currentUser.user._id === classroom.ownerId && (
+                  <div className="main__wrapper2">
+                    <em className="main__code">Class Invite Code:</em>
+                    <div className="main__id">
+                      {classroom.invite}
+                    </div>
+                    <div>
+                    <em className="main__code">Copy Link Invite:</em>
+                      <IconButton edge="end" color="inherit" aria-label="copy" onClick={handleCopyInviteCode}>
+                        <ContentCopy />
+                      </IconButton>
+                    </div>
+                    <Button
+                      onClick={handleOpenInvitePopup}
+                      color="primary"
+                      variant="contained"
+                    >
+                      Invite
+                    </Button>
+                  </div>
+                  )
+                }
               </div>
             </div>
           </div>

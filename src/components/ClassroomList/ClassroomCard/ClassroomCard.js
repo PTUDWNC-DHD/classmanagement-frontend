@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 
-import { Avatar, Typography } from "@mui/material";
+import { CircularProgress,Avatar } from "@mui/material";
 
-import { FolderOpen, PermContactCalendar, TrainRounded } from "@mui/icons-material";
+import { FolderOpen, PermContactCalendar } from "@mui/icons-material";
 
 import AuthContext from '../../../context/AuthContext'
 
@@ -48,9 +48,9 @@ const ClassroomCard = ({ classData }) => {
     return <div>Error: {error.message}</div>;
   } else if (isLoading) {
     return(
-      <Typography variant="h4" align="center">
-        Loading....
-      </Typography>
+      <div className="center-parent">
+      <CircularProgress  />
+      </div>
     );
   } else {
     return (

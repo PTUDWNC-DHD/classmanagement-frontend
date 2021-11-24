@@ -1,8 +1,4 @@
-import React, { useEffect, useState } from "react";
-
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-
-import { AuthProvider } from './context/AuthContext'
 
 import { IsJoinedRedirect, IsLoggedInRedirect, IsRegisterRedirect, ProtectedRoute } from "./routes/Routes";
 
@@ -34,7 +30,7 @@ function App() {
         </IsRegisterRedirect>
 
         <IsLoggedInRedirect
-          exact path="/classrooms/invitation/:id"
+          exact path={process.env.REACT_APP_INVITE_LINK + ":id"}
           loggedInPath="/classrooms/join"
         >
           <LoginForm />

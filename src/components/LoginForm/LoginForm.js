@@ -55,7 +55,7 @@ const LoginForm = () => {
   const handleLogin = (event, loginType) => {    
     //switch two type of login
     switch (loginType) {
-      case 'account':
+      case 'account': default:
         event.preventDefault();
         fetchLoginAPI(username, password)
         break;

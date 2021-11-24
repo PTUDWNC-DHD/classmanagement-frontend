@@ -7,14 +7,13 @@ export function IsLoggedInRedirect({ loggedInPath, children, ...rest }) {
   const { isLoggedIn, isEmailNotRegistered } = useContext(AuthContext);
 
   const url = window.location.href;
-  const joinPath = '/classrooms/invitation/'
+  const joinPath = process.env.REACT_APP_INVITE_LINK;
   const joinPathIndex = url.indexOf(joinPath);
 
   let joinCode = '';
   if (joinPathIndex > 0){
     joinCode = url.slice(joinPathIndex + joinPath.length)    
   }
-  console.log('joinCode: ',joinCode);
 
   return (
     <Route

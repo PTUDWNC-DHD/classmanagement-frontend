@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useContext, useState } from 'react';
 
-import { Avatar, ListItemAvatar, ListItemText, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { CircularProgress, Avatar, ListItemAvatar, ListItemText, Table, TableBody, TableCell, TableRow } from "@mui/material";
 
 import AuthContext from '../../context/AuthContext'
 
@@ -16,7 +16,7 @@ const MemberList = (props) => {
   const [students, setStudents] = useState([]);
   const [teachers, setTeachers] = useState([]);
 
-  const fetchClassroom = () => {
+  useEffect(() => {
     setIsLoading(true);
     fetch(process.env.REACT_APP_API_URL + '/api/class/' + props.classroomId + '/users', { 
       method: 'GET',
@@ -41,43 +41,43 @@ const MemberList = (props) => {
       setError(error);
       setIsLoading(false);
     })
-  }
-
-  useEffect(() => {
-    fetchClassroom();
   }, [])
 
   if (error) {
     return <div>Error: {error.message}</div>;
   } else if (isLoading) {
     return(
-      <Typography variant="h4" align="center">
-        Loading....
-      </Typography>
+      <div className="center-parent">
+      <CircularProgress  />
+      </div>
     );
   } else {
     return (
       <Fragment>
         <Title>Teachers</Title>
-        <Table size="small">
+        <Table size="small" >
           <TableBody>
+            {!teachers.length && <p>Class has no teacher</p>}
             {teachers.map((teacher) => (
               <TableRow key={teacher.userId}>
-                <TableCell><ListItemAvatar><Avatar>T</Avatar></ListItemAvatar></TableCell>
-                <TableCell><ListItemText>{teacher.name}</ListItemText></TableCell>
+                <TableCell><ListItemAvatar><Avatar src={'./avatar.jpg'}></Avatar></ListItemAvatar></TableCell>
+                <TableCell><ListItemText><h4>{teacher.name}</h4></ListItemText></TableCell>
                 
               </TableRow>
             ))}
           </TableBody>
         </Table>
+        <br/><br/>
         <Title>Students</Title>
         <Table size="small">
           
           <TableBody>
-            {students.map((student) => (
+            {!students.length && <p>Class has no student</p>}
+            {
+            students.map((student) => (
               <TableRow key={student.userId}>
-                <TableCell><ListItemAvatar><Avatar>S</Avatar></ListItemAvatar></TableCell>
-                <TableCell><ListItemText>{student.name}</ListItemText></TableCell>
+                <TableCell><ListItemAvatar><Avatar src={'./avatar.jpg'}></Avatar></ListItemAvatar></TableCell>
+                <TableCell><ListItemText><h4>{student.name}</h4></ListItemText></TableCell>
                 
               </TableRow>
             ))}

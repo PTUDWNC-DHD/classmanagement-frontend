@@ -1,0 +1,9 @@
+
+.center-parent {
+  display: flex;
+  justify-content: center;
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+
+

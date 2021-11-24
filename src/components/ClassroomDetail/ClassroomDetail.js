@@ -39,7 +39,7 @@ const ClassroomDetail = (props) => {
 
   const fetchClassroom = () => {
     setIsLoading(true);
-    fetch(process.env.REACT_APP_API_URL + '/api/class/' + props.classroomId, { 
+    fetch(process.env.REACT_APP_CLIENT_URL + '/api/class/' + props.classroomId, { 
       method: 'GET',
       headers: {
         'Authorization': 'Bearer '+ currentUser.token,

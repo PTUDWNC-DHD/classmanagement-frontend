@@ -4,7 +4,7 @@ import {Typography} from '@mui/material';
 
 function Title(props) {
   return (
-    <Typography component="h2" color="primary" gutterBottom>
+    <Typography component="h1" variant="h5" color="primary" gutterBottom>
       {props.children}
     </Typography>
   );

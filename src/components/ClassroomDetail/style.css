@@ -137,6 +137,12 @@
   width: 50vw;
   margin-top: 20px;
 }
+.center-parent {
+  display: flex;
+  justify-content: center;
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
 @media only screen and (max-width: 842px) {
   .main__status {
     display: none;

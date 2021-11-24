@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from 'react';
 
 import AuthContext from '../../context/AuthContext'
 
-import { Avatar, Button, TextField, Typography } from "@mui/material";
+import { CircularProgress, Avatar, Button, TextField, Typography } from "@mui/material";
 
 import { InvitePopup } from "../components";
 
@@ -59,9 +59,9 @@ const ClassroomDetail = (props) => {
     return <div>Error: {error.message}</div>;
   } else if (isLoading) {
     return(
-      <Typography align="center">
-        Loading....
-      </Typography>
+      <div className="center-parent">
+      <CircularProgress  />
+      </div>
     );
   } else {
     return (

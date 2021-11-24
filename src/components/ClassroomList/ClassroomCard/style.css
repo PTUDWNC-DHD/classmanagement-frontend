@@ -4,6 +4,12 @@
   padding-left: 1.5rem;
   padding-top: 1.5rem;
 }
+.center-parent {
+  display: flex;
+  justify-content: center;
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
 ul,
 ol {
   list-style: none;

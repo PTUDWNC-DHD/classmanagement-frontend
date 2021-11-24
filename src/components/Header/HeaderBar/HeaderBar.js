@@ -46,11 +46,12 @@ const HeaderBar = ({ children }) => {
           <div className={classes.headerWrapper}>
 
             {children}
-            
+            <Link to='/'>
             <img
               src="https://www.gstatic.com/images/branding/googlelogo/svg/googlelogo_clr_74x24px.svg"
               alt="Classroom"
             />
+            </Link>
             <Typography className={classes.title}>
               Classroom
             </Typography>

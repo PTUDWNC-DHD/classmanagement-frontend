@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from 'react';
 
-import { Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField, Avatar, Typography, CardActions } from '@mui/material';
+import { CircularProgress,Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField, Avatar, Typography, CardActions } from '@mui/material';
 
 import AuthContext from '../../context/AuthContext'
 import { EastTwoTone } from '@mui/icons-material';
@@ -14,7 +14,8 @@ const AccountDetail = (props) => {
   const [hasChanged, setHasChanged] = useState(false)
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
+  
+  
   const handleSaveDetail = (e) => {
     e.preventDefault();
 
@@ -56,7 +57,7 @@ const AccountDetail = (props) => {
     setEmail(e.target.value)
     setHasChanged(true)
   }
-
+  
   return (
     <form autoComplete="off" noValidate >
       <Card >
@@ -68,7 +69,7 @@ const AccountDetail = (props) => {
               flexDirection: 'column'
             }}
           >
-            <Avatar>A</Avatar>
+            <Avatar src={'./avatar.jpg'}></Avatar>
             <Typography
               color="textPrimary"
               gutterBottom

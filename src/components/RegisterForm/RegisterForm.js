@@ -10,7 +10,7 @@ import { LockOutlined } from '@mui/icons-material'
 
 
 const RegisterForm = () => {
-  const {setIsRegistered} = useContext(AuthContext)
+  const { setIsRegistered, setIsEmailNotRegistered } = useContext(AuthContext)
 
   const [fullname, setFullname] = useState('');
   const [username, setUsername] = useState('');
@@ -40,6 +40,7 @@ const RegisterForm = () => {
       } else {
         res.json().then((result) => {
           if (result.username) {
+            setIsEmailNotRegistered(false)
             setIsRegistered(true)
             window.alert('Your account was registered successfully !!!')
           } else {

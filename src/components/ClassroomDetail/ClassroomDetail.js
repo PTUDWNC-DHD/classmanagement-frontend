@@ -34,12 +34,12 @@ const ClassroomDetail = (props) => {
   }
 
   const handleCopyInviteCode = (e) => {
-    navigator.clipboard.writeText(process.env.REACT_APP_API_URL + process.env.REACT_APP_INVITE_LINK + classroom.invite)
+    navigator.clipboard.writeText(process.env.REACT_APP_CLIENT_URL + process.env.REACT_APP_INVITE_LINK + classroom.invite)
   }
 
   const fetchClassroom = () => {
     setIsLoading(true);
-    fetch(process.env.REACT_APP_CLIENT_URL + '/api/class/' + props.classroomId, { 
+    fetch(process.env.REACT_APP_API_URL + '/api/class/' + props.classroomId, { 
       method: 'GET',
       headers: {
         'Authorization': 'Bearer '+ currentUser.token,

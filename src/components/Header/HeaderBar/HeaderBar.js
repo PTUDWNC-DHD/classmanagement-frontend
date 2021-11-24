@@ -12,7 +12,8 @@ import { CreateClass } from "../../components";
 import { useStyles } from "./style";
 
 const HeaderBar = ({ children }) => {
-  const { 
+  const {
+    currentUser,
     setIsLoggedIn,
     setCurrentUser,
     setCreateClassDialog
@@ -70,7 +71,9 @@ const HeaderBar = ({ children }) => {
             </Menu>
             <div>
               <Link to='/account'>
-                <Avatar className={classes.icon} src={'./avatar.jpg'}/>
+                <Avatar className={classes.icon}>
+                  {currentUser.user.name.charAt(0)}
+                </Avatar>
               </Link>
             </div>
             <Logout className={classes.icon} onClick={handleLogout} />

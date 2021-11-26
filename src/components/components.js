@@ -10,3 +10,4 @@ export { default as ClassroomDetail } from "./ClassroomDetail/ClassroomDetail";
 export { default as InvitePopup } from "./InvitePopup/InvitePopup";
 export { default as MemberList } from "./MemberList/MemberList";
 export { default as AccountDetail } from './AccountDetail/AccountDetail';
+export { default as Grade} from './Grade/Grade';

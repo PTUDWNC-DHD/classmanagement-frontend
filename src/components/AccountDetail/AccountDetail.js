@@ -3,7 +3,7 @@ import { useState, useContext } from 'react';
 import { Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField, Avatar, Typography, CardActions } from '@mui/material';
 
 import AuthContext from '../../context/AuthContext'
-
+import swal from 'sweetalert';
 const AccountDetail = (props) => {
   const { currentUser } = useContext(AuthContext)
 
@@ -37,7 +37,12 @@ const AccountDetail = (props) => {
         setError(result.errors);
         setIsLoading(false);
       } else {
-        window.alert('Update information successfully !!!')
+        swal({
+          title: "Good job!",
+          text: "Update information successfully !!!",
+          icon: "success",
+          button: "Close",
+        });
         setIsLoading(false);
       }
     })

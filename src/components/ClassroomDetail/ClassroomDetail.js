@@ -116,6 +116,7 @@ const ClassroomDetail = (props) => {
               <p>Upcoming</p>
               <p className="main__subText">No work due</p>
             </div>
+            
             <div className="main__announcements">
               <div className="main__announcementsWrapper">
                 <div className="main__ancContent">
@@ -164,13 +165,21 @@ const ClassroomDetail = (props) => {
                 </div>
               </div>
             </div>
+            
           </div>
           {showInvitePopup && <InvitePopup 
             invite={classroom.invite} 
             showInvitePopup={showInvitePopup} 
             setShowInvitePopup={setShowInvitePopup}
           />}
+          <div className="main__announce">
+          <div className="main__status">
+              <p>Grade Structure</p>
+              <p className="main__subText">No Grade Structure</p>
+            </div>
+            </div>
         </div>
+        
       </div>
     )
   }

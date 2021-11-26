@@ -4,9 +4,9 @@ import { auth, googleProvider } from "../../lib/firebase";
 
 import AuthContext from '../../context/AuthContext'
 
-import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox } from "@mui/material";
-import { Link, Grid, Box, Container, Typography } from "@mui/material";
-
+import { Image, Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox } from "@mui/material";
+import { Paper, Link, Grid, Box, Container, Typography } from "@mui/material";
+import swal from 'sweetalert';
 import { LockOutlined } from "@mui/icons-material"
 
 
@@ -30,19 +30,40 @@ const LoginForm = () => {
     .then((res) => {
       if (res.status === 401) {
         if (usernameToFetch.indexOf('@') > 0){
-          window.alert('Login failed ! Your email is not registered. Register now !!!')
+          swal({
+          title: "Login failed !!!",
+          text: "Your email is not registered",
+          icon: "error",
+          button: "Register now !!!",
+        });
           setIsEmailNotRegistered(true);
         }else {
-          window.alert('Login failed !!!')
+          swal({
+            title: "Error!",
+            text: "Login failed !!!",
+            icon: "error",
+            button: "Cancel",
+          });
         }
       } else {
         res.json().then((result) => {
           if (result.user) {
             setCurrentUser(result)
             setIsLoggedIn(true)
-            window.alert('Login successfully !!!');
+            swal({
+              title: "Good job!",
+              text: "Login successfully !!!",
+              icon: "success",
+              button: "Next",
+            });
           } else {
-            window.alert(`Login failed: ${result.errors[0]}`);
+            swal({
+            title: "Error!",
+            text: "Login failed !!!",
+            icon: "error",
+            button: "Cancel",
+          });
+            
           }
         })
       }
@@ -89,8 +110,27 @@ const LoginForm = () => {
 
   return (
     <Container component="main" maxWidth="xs">
-        <CssBaseline />
+      <CssBaseline />
+      <Box sx={{ width: '100%' }}>
+        <Box sx={{ display: 'flex' }}>
         <Box
+          component="main"
+          sx={{
+            backgroundColor: (theme) =>
+              theme.palette.mode === 'light'
+                ? theme.palette.grey[0]
+                : theme.palette.grey[0],
+            flexGrow: 1,
+            height: '100vh',
+            overflow: 'auto',
+          }}
+        >
+          
+          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                <Box
           sx={{
             marginTop: 8,
             display: 'flex',
@@ -98,9 +138,8 @@ const LoginForm = () => {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlined />
-          </Avatar>
+          <Avatar src="../logo512.png"  variant="square"/>
+          
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
@@ -115,6 +154,7 @@ const LoginForm = () => {
               autoComplete="username"
               onChange={(e)=>{setUsername(e.target.value)}}
               autoFocus
+              color="success"
             />
             <TextField
               margin="normal"
@@ -126,6 +166,7 @@ const LoginForm = () => {
               id="password"
               onChange={(e)=>{setPassword(e.target.value)}}
               autoComplete="current-password"
+              color="success"
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -136,17 +177,18 @@ const LoginForm = () => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              color="success"
             >
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs>
+              <Grid item xs >
                 <Link href="#" variant="body2">
                   Forgot password?
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="/register" variant="body2">
+                <Link href="/register" variant="body2" >
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
@@ -157,12 +199,21 @@ const LoginForm = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
             onClick={(e) => {handleLogin(e, 'google')}}
+            color="success"
           >
             Login with Google Account
           </Button>
         </Box>
+                </Paper>
+              </Grid>
+            </Grid>
+            
+          </Container>
+        </Box>
+        </Box>
+        </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
-      </Container>
+    </Container>
   );
 }
 

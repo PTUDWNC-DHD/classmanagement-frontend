@@ -77,13 +77,13 @@ function Grade() {
 
     const [documentDescription,setDocDesc] =useState("Add Description"); 
 
-    const [questionType,setType] =useState("radio");
+    const [questionType,setType] =useState("text");
     const [questionRequired,setRequired] =useState("true"); 
     let { id } = useParams();
     
     console.log(id)
     useEffect(()=>{
-        var newQuestion = {questionText: "Question",answer:false,answerKey:"",questionType:"radio", options : [{optionText: "Option 1"}], open: true, required:false}
+        var newQuestion = {questionText: "Question",answer:false,answerKey:"",questionType:"radio", options : [{optionText: "0"}], open: true, required:false}
 
            setQuestions([...questions, newQuestion])
       
@@ -126,7 +126,7 @@ function Grade() {
       function addMoreQuestionField(){
           expandCloseAll(); //I AM GOD
     
-          setQuestions(questions=> [...questions, {questionText: "Question", questionType:"radio", options : [{optionText: "Option 1"}], open: true, required:false}]);
+          setQuestions(questions=> [...questions, {questionText: "Tên", questionType:"radio", options : [{optionText: "0"}], open: true, required:false}]);
       }
 
       function addQuestionType(i,type){
@@ -189,22 +189,7 @@ function Grade() {
         return result;
       };
 
-      function showAsQuestion(i){
-        let qs = [...questions];  
-         qs[i].open = false;
-         setQuestions(qs);
-      }
-
-      function addOption(i){
-        var optionsOfQuestion = [...questions];
-        if(optionsOfQuestion[i].options.length < 5){
-          optionsOfQuestion[i].options.push({optionText: "Option " + (optionsOfQuestion[i].options.length + 1)})
-        } else{
-          console.log("Max  5 options ");  
-        }
-        //console.log(optionsOfQuestion);
-        setQuestions(optionsOfQuestion)
-      }
+      
     
       function setOptionAnswer(ans,qno){
         var Questions = [...questions];
@@ -225,13 +210,7 @@ function Grade() {
         setQuestions(Questions)
         console.log(qno+" "+points)
       }
-      function addAnswer(i){
-        var answerOfQuestion = [...questions];
-        
-          answerOfQuestion[i].answer= !answerOfQuestion[i].answer;
-        
-        setQuestions(answerOfQuestion)
-      }
+      
     
       function doneAnswer(i){
         var answerOfQuestion = [...questions];
@@ -251,14 +230,7 @@ function Grade() {
       }
     
 
-      function removeOption(i, j){
-        var optionsOfQuestion = [...questions];
-        if(optionsOfQuestion[i].options.length > 1){
-          optionsOfQuestion[i].options.splice(j, 1);
-          setQuestions(optionsOfQuestion)
-          console.log(i + "__" + j);
-        }   
-      }
+      
     
       function expandCloseAll(){
         let qs = [...questions]; 
@@ -297,24 +269,16 @@ function Grade() {
                 </div>
               {/**/}
                 <Accordion onChange={()=>{handleExpand(i)}} expanded={questions[i].open} 
-                
                     className={questions[i].open ? 'add_border' : ""} >
                   <AccordionSummary            
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                     elevation={1} style={{width:'100%'}}
                   >
-                    { !questions[i].open ? (
-
-                        
+                    { !questions[i].open ? (     
                   <div className="saved_questions">
-                    
-                    
                     <Typography  style={{fontSize:"15px",fontWeight:"400",letterSpacing: '.1px',lineHeight:'24px',paddingBottom:"8px"}} >{i+1}.  {ques.questionText}</Typography>
-    
-                    
                     {ques.options.map((op, j)=>(
-                     
                      <div key={j} >
                        <div style={{display: 'flex',}}>
                         <FormControlLabel style={{marginLeft:"5px",marginBottom:"5px"}} disabled control={<input type={ques.questionType} color="primary" style={{marginRight: '3px', }} required={ques.type}/>} label={
@@ -328,12 +292,7 @@ function Grade() {
                             </Typography>
                           } />
                        </div>
-    
-                     
                      </div>
-
-                         
-
                     ))}  
                   </div>            
                   ): ""}   
@@ -343,81 +302,20 @@ function Grade() {
                          
                         <div >
                             <div className="add_question_top">
-                                <input type="text" className="question" placeholder="Question"    value={ques.questionText} onChange={(e)=>{handleQuestionValue(e.target.value, i)}}></input>
-                                <CropOriginal style={{color:"#5f6368"}} />
-                                
-                                <Select className="select" style={{color:"#5f6368",fontSize:"13px"}} >
-                                    {/* <MenuItem value="radio" className="menuitem" >
-                                     <ShortTextIcon style={{marginRight:"10px"}} /> <span style={{marginBottom:"10px"}}>Short Paragraph</span></MenuItem>
-                                     */}
-                                    <MenuItem id="text" value="Text" onClick= {()=>{addQuestionType(i,"text")}}> <Subject style={{marginRight:"10px"}} />  Paragraph</MenuItem>
-                                    
-                                    {/* <MenuItem id="checkbox"><RadioButtonCheckedIcon checked style={{marginRight:"10px", color:"#70757a"}}/> Multiple Choice</MenuItem> */}
-                                    <MenuItem id="checkbox"  value="Checkbox" onClick= {()=>{addQuestionType(i,"checkbox")}}><CheckBox style={{marginRight:"10px" ,color:"#70757a"}} checked /> Checkboxes</MenuItem>
-                                    <MenuItem id="radio" value="Radio" onClick= {()=>{addQuestionType(i,"radio")}}> <Radio style={{marginRight:"10px",color:"#70757a"}} checked/> Multiple Choice</MenuItem>
-                                    
-
-                                </Select>
-                                    
-                                        
+                                <input type="text" className="question" placeholder="Tên"    value={ques.questionText} onChange={(e)=>{handleQuestionValue(e.target.value, i)}}></input>         
                             </div>
-                    
-                    
-    
-                 
                             {ques.options.map((op, j)=>(
                                 <div className="add_question_body" key={j}>
-                                    {/* <Checkbox  color="primary" inputProps={{ 'aria-label': 'secondary checkbox' }} disabled/> */}
-                                    {
-                                        (ques.questionType!="text") ? 
-                                        <input type={ques.questionType}  style={{marginRight:"10px"}}/> :
-                                        <ShortText style={{marginRight:"10px"}} />
-
-                                    }
                                     <div >
-                                        <input type="text" className="text_input" placeholder="option"  value={ques.options[j].optionText}onChange={(e)=>{handleOptionValue(e.target.value, i, j)}}></input>
+                                        <input type="number" className="diem" placeholder="điểm"  value={ques.options[j].optionText}onChange={(e)=>{handleOptionValue(e.target.value, i, j)}}></input>
                                     </div>
-
-                                    <CropOriginal style={{color:"#5f6368"}}/>
-
-                                    <IconButton aria-label="delete" onClick={()=>{removeOption(i, j)}}>
-                                            <Close />
-                                    </IconButton>
                                 </div>   
                             ))}  
-                        
-                    
-                    
-                                {ques.options.length < 5 ? (
-                                <div className="add_question_body">
-                                <FormControlLabel disabled control={ 
-                                
-                                (ques.questionType!="text") ? 
-                                <input type={ques.questionType}  color="primary" inputProps={{ 'aria-label': 'secondary checkbox' }} style={{marginLeft:"10px",marginRight:"10px"}} disabled/> :
-                                <ShortText style={{marginRight:"10px"}} />
-
-                                } label={
-                                <div>
-                                    <input type="text" className="text_input" style={{fontSize:"13px",width:"60px"}} placeholder="Add other"></input>
-                                    <Button size="small" onClick={()=>{addOption(i)}} style={{textTransform: 'none',color:"#4285f4",fontSize:"13px",fontWeight:"600"}}>Add Option</Button>
-                                </div>
-                                } /> 
-                                </div>
-
-                                ): ""}
                                <div className="add_footer">
-                               <div className="add_question_bottom_left">
-                        
-                               <Button size="small"  onClick={()=>{addAnswer(i)}} style={{textTransform: 'none',color:"#4285f4",fontSize:"13px",fontWeight:"600"}}>       <FcRightUp style={{border:"2px solid #4285f4", padding:"2px",marginRight:"8px"}} /> Answer key</Button>
-                                 
-                              </div>
-
                                 <div className="add_question_bottom">
-                                  
                                     <IconButton aria-label="Copy" onClick={()=>{copyQuestion(i)}}>
                                         <FilterNone/>
                                     </IconButton>
-                                    
                                     <IconButton aria-label="delete" onClick={()=>{deleteQuestion(i)}}>
                                         <BsTrash />
                                     </IconButton>
@@ -430,26 +328,19 @@ function Grade() {
                             </div>
                             
                     </AccordionDetails>):(
-
-<AccordionDetails className="add_question" >
+                      <AccordionDetails className="add_question" >
                          <div className="top_header">
                               Choose Correct Answer
                          </div>
-<div >
-    <div className="add_question_top">
-        <input type="text" className="question " placeholder="Question"    value={ques.questionText} onChange={(e)=>{handleQuestionValue(e.target.value, i)}} disabled/>
-        <input type="number" className="points" min="0" step="1" placeholder="0" onChange={(e)=>{setOptionPoints(e.target.value, i)}} />
-            
-                
-    </div>
+                          <div >
+                              <div className="add_question_top">
+                                  <input type="text" className="question " placeholder="Question"    value={ques.questionText} onChange={(e)=>{handleQuestionValue(e.target.value, i)}} disabled/>
+                                  <input type="number" className="points" min="0" step="1" placeholder="0" onChange={(e)=>{setOptionPoints(e.target.value, i)}} />        
+                              </div>
+                              {ques.options.map((op, j)=>(
+                                  <div className="add_question_body" key={j} style={{marginLeft:"8px",marginBottom:"10px",marginTop:"5px"}}>
 
-
-
-
-    {ques.options.map((op, j)=>(
-        <div className="add_question_body" key={j} style={{marginLeft:"8px",marginBottom:"10px",marginTop:"5px"}}>
-
-            <div key={j}>
+                                      <div key={j}>
                                   <div style={{display: 'flex'}} className="">
                                   <div className="form-check">
                                     <label style={{fontSize:"13px"}} onClick={()=>{setOptionAnswer(ques.options[j].optionText, i)}}>
@@ -472,36 +363,19 @@ function Grade() {
                                   </div>
                                   </div>
                                 </div>
-            
-        </div>   
-    ))}  
-
-
-
-        <div className="add_question_body">
-  
-           
-            <Button size="small"  style={{textTransform: 'none',color:"#4285f4",fontSize:"13px",fontWeight:"600"}}> <BsFileText style={{fontSize:"20px",marginRight:"8px"}}/>Add Answer Feedback</Button>
-        
-        
-        </div>
-
-       
-     
-    
-        <div className="add_question_bottom">
-          
-        <Button variant="outlined" color="primary"  style={{textTransform: 'none',color:"#4285f4",fontSize:"12px",marginTop:"12px",fontWeight:"600"}} onClick={()=>{doneAnswer(i)}}>
-                        Done
-                      </Button>
-        
-      </div>
-    </div>
-    
-</AccordionDetails>
-
-
-                       
+                            </div>   
+                           ))}  
+                            <div className="add_question_body">
+                                <Button size="small"  style={{textTransform: 'none',color:"#4285f4",fontSize:"13px",fontWeight:"600"}}> <BsFileText style={{fontSize:"20px",marginRight:"8px"}}/>Add Answer Feedback</Button>
+                            
+                            </div>
+                          <div className="add_question_bottom">
+                          <Button variant="outlined" color="primary"  style={{textTransform: 'none',color:"#4285f4",fontSize:"12px",marginTop:"12px",fontWeight:"600"}} onClick={()=>{doneAnswer(i)}}>
+                                          Done
+                          </Button>
+                          </div>
+                        </div>
+                        </AccordionDetails>
                     )}
                     {!ques.answer ? (<div className="question_edit">
                                 <AddCircleOutline    onClick={addMoreQuestionField} className="edit"/>
@@ -510,41 +384,24 @@ function Grade() {
                                 <TextFields className="edit"/>
                     </div>): "" }
                     </div>
-                            
                 </Accordion>
-
               </div>
           </div>
-                        </div>
-                      )}
-          </Draggable>
-          
-         )
-        )
-      }
+        </div>
+       )}
+    </Draggable>
+  )
+)
+}
     
     
 
       
     return (
         <div >
-         
-            <div className="question_form">
-     
-
+          <div className="question_form">
             <br></br>
             <div className="section">
-           
-            <div className="question_title_section">
-
-            
-               <div className="question_form_top">
-                   <input type="text" className="question_form_top_name" style={{color:"black"}} placeholder={documentName} value={documentName} onChange={(e)=>{setDocName(e.target.value)}}></input>
-                   <input type="text" className="question_form_top_desc" placeholder="Form Description" placeholder={documentDescription} value={documentDescription} onChange={(e)=>{setDocDesc(e.target.value)}} ></input>
-
-               </div>
-            </div>   
-     
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="droppable">
                         {(provided, snapshot) => (
@@ -559,14 +416,10 @@ function Grade() {
                         )} 
                     </Droppable>
                 </DragDropContext>
-
-                
                 <div className="save_form">
             <Button variant="contained" color="primary"  style={{fontSize:"14px"}}>Save</Button>
-
             </div>
-            </div>
-          
+          </div>
     </div>
 </div>
     )

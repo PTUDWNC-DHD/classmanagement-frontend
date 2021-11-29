@@ -2,7 +2,7 @@ import { Fragment, useState } from 'react'
 import { useLocation } from "react-router-dom";
 import PropTypes from 'prop-types';
 
-import {Drawer,Container,Paper,Grid,CssBaseline, Tab, Tabs, Box, Typography } from '@mui/material'
+import {Container,Paper,Grid,CssBaseline, Tab, Tabs, Box, Typography } from '@mui/material'
 
 import { Header, ClassroomDetail, MemberList, Grade } from "../components/components";
 
@@ -49,8 +49,10 @@ const ClassroomPage = (props) => {
   };
 
   return (
+    
     <Fragment>
       <Header />
+      
       <Box sx={{ width: '100%' }}>
         <Box color="success" sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex' }} container direction="row" justifyContent="center" alignItems="center" spacing={5}>
           <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
@@ -92,31 +94,7 @@ const ClassroomPage = (props) => {
           
         </TabPanel>
         <TabPanel value={value} index={2}>
-        <CssBaseline />
-        <Box
-          component="main"
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === 'light'
-                ? theme.palette.grey[0]
-                : theme.palette.grey[0],
-            flexGrow: 1,
-            height: '100vh',
-            overflow: 'auto',
-          }}
-        >
-          
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                <Grade/>
-                </Paper>
-              </Grid>
-            </Grid>
-            
-          </Container>
-        </Box>
+                <Grade/> 
         </TabPanel>
       </Box>
     </Fragment>

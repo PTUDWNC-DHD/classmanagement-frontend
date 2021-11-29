@@ -96,7 +96,7 @@
   border: 1.5px solid #dadce0;
   padding: 20px;
   border-radius: 10px;
-  width: 10vw;
+  width: 75px;
   height: 15vh;
 }
 .main__announcementsWrapper {
@@ -110,7 +110,7 @@
 }
 .main__ancContent {
   padding: 30px;
-  width: 70vw;
+  width: 58vw;
   color: rgba(0, 0, 0, 0.549);
 }
 

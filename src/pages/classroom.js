@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import {Container,Paper,Grid,CssBaseline, Tab, Tabs, Box, Typography } from '@mui/material'
 
-import { Header, ClassroomDetail, MemberList } from "../components/components";
+import { Header, ClassroomDetail, MemberList, Grade } from "../components/components";
 
 
 function TabPanel(props) {
@@ -20,7 +20,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          {children}
+          <Typography>{children}</Typography>
         </Box>
       )}
     </div>
@@ -49,10 +49,12 @@ const ClassroomPage = (props) => {
   };
 
   return (
+    
     <Fragment>
       <Header />
+      
       <Box sx={{ width: '100%' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex' }} container direction="row" justifyContent="center" alignItems="center" spacing={5}>
+        <Box color="success" sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex' }} container direction="row" justifyContent="center" alignItems="center" spacing={5}>
           <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
             <Tab label="Detail" {...a11yProps(0)} />
             <Tab label="Members" {...a11yProps(1)} />
@@ -64,8 +66,6 @@ const ClassroomPage = (props) => {
         </TabPanel>
         <TabPanel value={value} index={1}> <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        
-        
         <Box
           component="main"
           sx={{
@@ -94,7 +94,7 @@ const ClassroomPage = (props) => {
           
         </TabPanel>
         <TabPanel value={value} index={2}>
-          Grade Page
+                <Grade/> 
         </TabPanel>
       </Box>
     </Fragment>

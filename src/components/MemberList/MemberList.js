@@ -57,9 +57,9 @@ const MemberList = (props) => {
         <Title>Teachers</Title>
         <Table size="small" >
           <TableBody>
-            {!teachers.length && <p>Class has no teacher</p>}
-            {teachers.map((teacher) => (
-              <TableRow key={teacher.userId}>
+            {!teachers.length ? <TableRow><TableCell>Class has no teacher</TableCell></TableRow> :
+            teachers.map((teacher, index) => (
+              <TableRow key={index}>
                 <TableCell><ListItemAvatar><Avatar src={'./avatar.jpg'}></Avatar></ListItemAvatar></TableCell>
                 <TableCell><ListItemText><h4>{teacher.name}</h4></ListItemText></TableCell>
                 
@@ -72,10 +72,9 @@ const MemberList = (props) => {
         <Table size="small">
           
           <TableBody>
-            {!students.length && <p>Class has no student</p>}
-            {
-            students.map((student) => (
-              <TableRow key={student.userId}>
+            {!students.length ? <TableRow><TableCell>Class has no student</TableCell></TableRow> :
+            students.map((student, index) => (
+              <TableRow key={index}>
                 <TableCell><ListItemAvatar><Avatar src={'./avatar.jpg'}></Avatar></ListItemAvatar></TableCell>
                 <TableCell><ListItemText><h4>{student.name}</h4></ListItemText></TableCell>
                 

@@ -2,7 +2,7 @@ import { Fragment, useState } from 'react'
 import { useLocation } from "react-router-dom";
 import PropTypes from 'prop-types';
 
-import {Container,Paper,Grid,CssBaseline, Tab, Tabs, Box, Typography } from '@mui/material'
+import {Container,Paper,Grid,CssBaseline, Tab, Tabs, Box } from '@mui/material'
 
 import { Header, ClassroomDetail, MemberList, Grade } from "../components/components";
 
@@ -95,7 +95,7 @@ const ClassroomPage = (props) => {
         </TabPanel>
 
         <TabPanel value={value} index={2}>
-          <Grade/> 
+          <Grade classroomId={classroomId}/> 
         </TabPanel>
 
       </Box>

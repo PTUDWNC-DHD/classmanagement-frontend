@@ -58,8 +58,7 @@ const ClassroomDetail = (props) => {
   }
 
   useEffect(() => {
-    fetchClassroom(classroom);
-    console.log(currentUser, classroom)
+    fetchClassroom();
   }, [])
   
   if (error) {
@@ -175,18 +174,22 @@ const ClassroomDetail = (props) => {
           <div className="grade_announce">
             <div className="grade__status">
               <p>Grade Structure</p>
-              {/* <p className="main__subText">No Grade Structure</p> */}
-              <List sx="grade__list">
-                {[1, 2, 3].map((value) => (
-                  <ListItem
-                    key={value}
-                    disableGutters
-                    secondaryAction={"percent"}
-                  >
-                    <ListItemText primary={`Line item 123456 ${value}`} />
-                  </ListItem>
-                ))}
-              </List>
+              {
+                classroom.gradeStructure ? 
+                  <p className="main__subText">No Grade Structure</p>
+                :
+                  <List sx="grade__list">
+                    {classroom.gradeStructure.map((grade, index) => (
+                      <ListItem
+                        key={index}
+                        disableGutters
+                        secondaryAction={grade.weight}
+                      >
+                        <ListItemText primary={grade.name} />
+                      </ListItem>
+                    ))}
+                  </List>
+              }
             </div>
           </div>
         </div>

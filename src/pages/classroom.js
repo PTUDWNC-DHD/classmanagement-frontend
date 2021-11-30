@@ -20,7 +20,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          {children}
         </Box>
       )}
     </div>
@@ -61,41 +61,43 @@ const ClassroomPage = (props) => {
             <Tab label="Grade" {...a11yProps(2)} />
           </Tabs>
         </Box>
+
         <TabPanel value={value} index={0}>
           <ClassroomDetail classroomId={classroomId}/>
         </TabPanel>
-        <TabPanel value={value} index={1}> <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
-        <Box
-          component="main"
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === 'light'
-                ? theme.palette.grey[0]
-                : theme.palette.grey[0],
-            flexGrow: 1,
-            height: '100vh',
-            overflow: 'auto',
-          }}
-        >
-          
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                <MemberList classroomId={classroomId}/>
-                </Paper>
-              </Grid>
-            </Grid>
-            
-          </Container>
-        </Box>
-      </Box>
-          
+
+        <TabPanel value={value} index={1}> 
+          <Box sx={{ display: 'flex' }}>
+            <CssBaseline />
+            <Box
+              component="main"
+              sx={{
+                backgroundColor: (theme) =>
+                  theme.palette.mode === 'light'
+                    ? theme.palette.grey[0]
+                    : theme.palette.grey[0],
+                flexGrow: 1,
+                height: '100vh',
+                overflow: 'auto',
+              }}
+            >
+              <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12}>
+                    <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                    <MemberList classroomId={classroomId}/>
+                    </Paper>
+                  </Grid>
+                </Grid>
+              </Container>
+            </Box>
+          </Box>
         </TabPanel>
+
         <TabPanel value={value} index={2}>
-                <Grade/> 
+          <Grade/> 
         </TabPanel>
+
       </Box>
     </Fragment>
     

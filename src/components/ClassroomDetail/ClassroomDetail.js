@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from 'react';
 
 import AuthContext from '../../context/AuthContext'
 
-import { CircularProgress, Avatar, Button, TextField, IconButton } from "@mui/material";
+import { CircularProgress, Avatar, Button, TextField, IconButton, List, ListItem, ListItemText } from "@mui/material";
 
 import { ContentCopy } from '@mui/icons-material'
 
@@ -172,12 +172,23 @@ const ClassroomDetail = (props) => {
             showInvitePopup={showInvitePopup} 
             setShowInvitePopup={setShowInvitePopup}
           />}
-          <div className="main__announce">
-          <div className="main__status">
+          <div className="grade_announce">
+            <div className="grade__status">
               <p>Grade Structure</p>
-              <p className="main__subText">No Grade Structure</p>
+              {/* <p className="main__subText">No Grade Structure</p> */}
+              <List sx="grade__list">
+                {[1, 2, 3].map((value) => (
+                  <ListItem
+                    key={value}
+                    disableGutters
+                    secondaryAction={"percent"}
+                  >
+                    <ListItemText primary={`Line item 123456 ${value}`} />
+                  </ListItem>
+                ))}
+              </List>
             </div>
-            </div>
+          </div>
         </div>
         
       </div>

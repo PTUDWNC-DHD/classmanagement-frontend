@@ -81,11 +81,11 @@ const LoginForm = () => {
         fetchLoginAPI(username, password)
         break;
       case 'google':
-        const saltRounds = 10
-        const hashPassword = bcryptjs.hashSync(process.env.REACT_APP_LOGIN_BY_MAIL_SECRET, saltRounds)
         auth.signInWithPopup(googleProvider)
         .then((res) => {
-          fetchLoginAPI(res.user.email, hashPassword)
+          auth.currentUser.getIdToken().then((token)=>{
+            fetchLoginAPI(res.user.email, token)
+          })
         })
         .catch((error) => {
           console.log('Get account information by firebase error: ', error)

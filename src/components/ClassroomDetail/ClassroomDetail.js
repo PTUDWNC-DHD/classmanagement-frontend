@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from 'react';
 
 import AuthContext from '../../context/AuthContext'
 
-import { CircularProgress, Avatar, Button, TextField, IconButton } from "@mui/material";
+import { CircularProgress, Avatar, Button, TextField, IconButton, List, ListItem, ListItemText } from "@mui/material";
 
 import { ContentCopy } from '@mui/icons-material'
 
@@ -48,6 +48,7 @@ const ClassroomDetail = (props) => {
     })
     .then(res => res.json())
     .then((result) => {
+      console.log(result);
       setClassroom(result)
       setIsLoading(false);
     })
@@ -58,8 +59,7 @@ const ClassroomDetail = (props) => {
   }
 
   useEffect(() => {
-    fetchClassroom(classroom);
-    console.log(currentUser, classroom)
+    fetchClassroom();
   }, [])
   
   if (error) {
@@ -172,12 +172,27 @@ const ClassroomDetail = (props) => {
             showInvitePopup={showInvitePopup} 
             setShowInvitePopup={setShowInvitePopup}
           />}
-          <div className="main__announce">
-          <div className="main__status">
+          <div className="grade_announce">
+            <div className="grade__status">
               <p>Grade Structure</p>
-              <p className="main__subText">No Grade Structure</p>
+              {
+                classroom.gradeStructure.length < 1 ? 
+                  <p className="main__subText">No Grade Structure</p>
+                :
+                  <List>
+                    {classroom.gradeStructure.map((grade, index) => (
+                      <ListItem
+                        key={index}
+                        disableGutters
+                        secondaryAction={grade.weight}
+                      >
+                        <ListItemText primary={grade.name} />
+                      </ListItem>
+                    ))}
+                  </List>
+              }
             </div>
-            </div>
+          </div>
         </div>
         
       </div>

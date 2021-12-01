@@ -143,6 +143,20 @@
   padding-top: 60px;
   padding-bottom: 60px;
 }
+
+.grade_announce {
+  border: 1.5px solid #dadce0;
+  border-radius: 0.5rem;
+  max-width: 260px;
+  margin-top: 1rem;
+}
+.grade__status {
+  margin: 10px 20px;
+}
+.grade__list {
+
+}
+
 @media only screen and (max-width: 842px) {
   .main__status {
     display: none;

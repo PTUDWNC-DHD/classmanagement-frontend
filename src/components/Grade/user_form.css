@@ -220,11 +220,8 @@ background:transparent;
     display:flex;
     flex-direction: column;
     margin-right:12px;
-    margin-top: 10px;
     margin-bottom: 0;
-    padding:1px;
     border-radius:3px;
-    height:180px;
     width:35px;
 }
 
@@ -241,8 +238,41 @@ background:transparent;
     text-transform: capitalize;
     display:flex;
     flex-direction: column;
+    width: 100%;
+}
+.summary_wrapper {
+  
+  width: 100%;
+}
+.summary_edit {
+  background-color:#F4F4F9;
+  display:flex;
+  flex-direction: column;
+  margin-right:12px;
+  margin-top: 10px;
+  margin-bottom: 0;
+  padding:1px;
+  border-radius:3px;
+  height:120px;
+  width:35px;
+}
 
-    
+.nograde_announce{
+  display: flex;
+  justify-content: center;
+  height: 50px;
+}
+.nograde_announce > p {
+  line-height: 50px;
+}
+.grade_label{
+  font-family: Roboto,Arial,sans-serif;
+  font-size: 26px;
+  font-weight: 400;
+  letter-spacing: .2px;
+  color: #202124;
+  width: 100%;
+  text-align: center;
 }
 
 .options{
@@ -255,4 +285,11 @@ background:transparent;
 
 .save_form{
     margin:15px;
+}
+
+.center-parent {
+  display: flex;
+  justify-content: center;
+  padding-top: 60px;
+  padding-bottom: 60px;
 }

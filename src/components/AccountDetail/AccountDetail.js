@@ -27,7 +27,8 @@ const AccountDetail = (props) => {
       },
       body: JSON.stringify({
         name: fullname,
-        email: email
+        email: email,
+        
       })
     })
     .then(res => res.json())
@@ -122,6 +123,42 @@ const AccountDetail = (props) => {
                 required
                 value={email}
                 variant="outlined"
+              />
+            </Grid>
+            <Grid item md={6} xs={12} >
+              <TextField
+                fullWidth
+                label="User name"
+                name="username"
+                onChange={handleChangeEmail}
+                required
+                value={email}
+                variant="outlined"
+                disabled="enable"
+              />
+            </Grid>
+            <Grid item md={6} xs={12} >
+              <TextField
+                fullWidth
+                label="Password"
+                name="password"
+                onChange={handleChangeEmail}
+                required
+                value={email}
+                variant="outlined"
+                disabled="enable"
+              />
+            </Grid>
+            <Grid item md={6} xs={12} >
+              <TextField
+                fullWidth
+                label="MSSV"
+                name="studentID"
+                onChange={handleChangeEmail}
+                required
+                value={email}
+                variant="outlined"
+                disabled="enable"
               />
             </Grid>
           </Grid>

@@ -6,10 +6,14 @@ import AuthContext from '../../context/AuthContext'
 import swal from 'sweetalert';
 const AccountDetail = (props) => {
   const { currentUser } = useContext(AuthContext)
+  console.log('currUser: ', currentUser)
 
   const [username, setUsername] = useState(currentUser.user.username);
   const [fullname, setFullname] = useState(currentUser.user.name);
   const [email, setEmail] = useState(currentUser.user.email);
+  const [studentId, setStudentId] = useState(currentUser.user.studentId);
+  
+
   const [hasChanged, setHasChanged] = useState(false)
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -60,6 +64,15 @@ const AccountDetail = (props) => {
 
   const handleChangeEmail = (e) => {
     setEmail(e.target.value)
+    setHasChanged(true)
+  }
+  const handleChangeUsername = (e) => {
+    setUsername(e.target.value)
+    setHasChanged(true)
+  }
+  
+  const handleChangeStudentId = (e) => {
+    setStudentId(e.target.value)
     setHasChanged(true)
   }
   
@@ -123,7 +136,7 @@ const AccountDetail = (props) => {
                 required
                 value={email}
                 variant="outlined"
-                disabled="enable"
+                disabled
               />
             </Grid>
             <Grid item md={6} xs={12} >
@@ -131,35 +144,24 @@ const AccountDetail = (props) => {
                 fullWidth
                 label="User name"
                 name="username"
-                onChange={handleChangeEmail}
+                onChange={handleChangeUsername}
                 required
-                value={email}
+                value={username}
                 variant="outlined"
-                disabled="enable"
+                disabled
               />
             </Grid>
-            <Grid item md={6} xs={12} >
-              <TextField
-                fullWidth
-                label="Password"
-                name="password"
-                onChange={handleChangeEmail}
-                required
-                value={email}
-                variant="outlined"
-                
-              />
-            </Grid>
+            
             <Grid item md={6} xs={12} >
               <TextField
                 fullWidth
                 label="MSSV"
                 name="studentID"
-                onChange={handleChangeEmail}
+                onChange={handleChangeStudentId}
                 required
-                value={email}
+                value={studentId}
                 variant="outlined"
-                disabled="enable"
+                
               />
             </Grid>
           </Grid>

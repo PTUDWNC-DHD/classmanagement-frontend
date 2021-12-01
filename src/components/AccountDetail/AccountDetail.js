@@ -123,6 +123,7 @@ const AccountDetail = (props) => {
                 required
                 value={email}
                 variant="outlined"
+                disabled="enable"
               />
             </Grid>
             <Grid item md={6} xs={12} >
@@ -146,7 +147,7 @@ const AccountDetail = (props) => {
                 required
                 value={email}
                 variant="outlined"
-                disabled="enable"
+                
               />
             </Grid>
             <Grid item md={6} xs={12} >

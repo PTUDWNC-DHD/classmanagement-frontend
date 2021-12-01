@@ -238,11 +238,10 @@ background:transparent;
     text-transform: capitalize;
     display:flex;
     flex-direction: column;
+    width: 100%;
 }
 .summary_wrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  
   width: 100%;
 }
 .summary_edit {
@@ -266,9 +265,16 @@ background:transparent;
 .nograde_announce > p {
   line-height: 50px;
 }
-.nograde_add {
-  
+.grade_label{
+  font-family: Roboto,Arial,sans-serif;
+  font-size: 26px;
+  font-weight: 400;
+  letter-spacing: .2px;
+  color: #202124;
+  width: 100%;
+  text-align: center;
 }
+
 .options{
   
 }

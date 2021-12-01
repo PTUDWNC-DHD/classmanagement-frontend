@@ -48,6 +48,7 @@ const ClassroomDetail = (props) => {
     })
     .then(res => res.json())
     .then((result) => {
+      console.log(result);
       setClassroom(result)
       setIsLoading(false);
     })
@@ -175,10 +176,10 @@ const ClassroomDetail = (props) => {
             <div className="grade__status">
               <p>Grade Structure</p>
               {
-                classroom.gradeStructure ? 
+                classroom.gradeStructure.length < 1 ? 
                   <p className="main__subText">No Grade Structure</p>
                 :
-                  <List sx="grade__list">
+                  <List>
                     {classroom.gradeStructure.map((grade, index) => (
                       <ListItem
                         key={index}

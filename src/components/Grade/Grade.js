@@ -35,8 +35,7 @@ function Grade(props) {
     })
     .then(res => res.json())
     .then((result) => {
-      
-      setGrades(result.gradeStructure)
+      addIsExpandAndSetGrades(result.gradeStructure)
       setIsLoading(false);
     })
     .catch((error) => {
@@ -47,13 +46,7 @@ function Grade(props) {
 
   const fetchToSaveGrades = () => {
     setIsLoading(true);
-    const data = [];
-    grades.forEach(element => {
-      data.push({
-        name: element.name,
-        weight: parseInt(element.value)
-      })
-    });
+    
     fetch(process.env.REACT_APP_API_URL + '/api/class/' + props.classroomId, { 
       method: 'PATCH',
       headers: {
@@ -61,12 +54,12 @@ function Grade(props) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        gradeStructure: data
+        gradeStructure: grades
       })
     })
     .then(res => res.json())
     .then((result) => {
-      setGrades(result.gradeStructure)
+      addIsExpandAndSetGrades(result.gradeStructure)
       setIsLoading(false);
     })
     .catch((error) => {
@@ -80,16 +73,30 @@ function Grade(props) {
     console.log('class grade detail:', grades)
   }, [])
 
+  function addIsExpandAndSetGrades(gradesArr){
+    const newGrades = [];
+    gradesArr.forEach(grade => {
+      newGrades.push({...grade, isExpanded: false})
+    })
+    setGrades(newGrades)
+  }
+
   function handleSaveGrades(){
-    fetchToSaveGrades();
+    let isEmpty = false;
+    grades.forEach(grade => {
+      if (!grade.name || !grade.weight){
+        isEmpty = true;
+      }
+    })
+    isEmpty ? window.alert("Name or grade must not be empty") : fetchToSaveGrades();
   }
 
   function handleAddGrade(){
     closeAllExpandedGrades();
 
-    setGrades(grades => [...grades, {
+    setGrades([...grades, {
       name: "",
-      value: "",
+      weight: "",
       isExpanded: true, 
     }]);
   }
@@ -106,13 +113,12 @@ function Grade(props) {
   function handleDeleteGrade(index){
     const newGrades = [...grades]; 
     newGrades.splice(index, 1);
-    console.log('new grade: ', newGrades);
     setGrades(newGrades)
   }
   
-  function handleGradeValueChange(index, value){
+  function handleGradeWeightChange(index, value){
     const newGrades = [...grades];
-    newGrades[index].value = value;
+    newGrades[index].weight = value;
     setGrades(newGrades);
   }
 
@@ -150,7 +156,7 @@ function Grade(props) {
     setGrades(newGrades);
   }
 
-  function handleExpand(index){
+  function openExpand(index){
     const newGrades = [...grades];
     for (let j = 0; j < newGrades.length; j++) {
       j === index ? newGrades[j].isExpanded = true : newGrades[j].isExpanded = false;
@@ -163,20 +169,22 @@ function Grade(props) {
       <AccordionSummary            
         aria-controls="panel1a-content"
         id="panel1a-header"
-        elevation={1} style={{width:'100%'}}
+        style={{width:'100%'}}
       >
-        { !grade.isExpanded && (     
-          <div className="summary_wrapper">
+        
+        <div className="summary_wrapper">
+          <div className="grade_label">Grade {index + 1}</div>
+          {!grade.isExpanded && 
             <div className="saved_questions">
-              <Typography  style={{fontSize:"15px",fontWeight:"400",letterSpacing: '.1px',lineHeight:'24px',padding:"0 0 0 8px"}} >
-                {index + 1}. {grade.name ? grade.name : "No name"}
+              <Typography  style={{fontSize:"15px",fontWeight:"400",letterSpacing: '.1px',lineHeight:'24px',padding:"0 0 8px 24px"}} >
+                {grade.name ? grade.name : "No name"}
               </Typography>
               <Typography  style={{fontSize:"15px",fontWeight:"400",letterSpacing: '.1px',lineHeight:'24px',padding:"0 0 8px 24px"}} >
-                {grade.value ? grade.value : "No grade"}
+                {grade.weight ? grade.weight : "No grade"}
               </Typography>
             </div>
-          </div>            
-        )}   
+          }
+        </div> 
       </AccordionSummary>
     )
   }
@@ -199,8 +207,8 @@ function Grade(props) {
                 {/* Drag content */}
                 <Accordion 
                   className={grade.isExpanded ? 'add_border' : ""}
-                  onChange={()=>{handleExpand(i)}} 
-                  expanded={grade.isExpanded} 
+                  onChange={()=>{openExpand(i)}} 
+                  expanded={grade.isExpanded}
                 >
 
                   {gradeSummary(grade, i)}
@@ -212,7 +220,7 @@ function Grade(props) {
                             <input type="text" className="question" placeholder="Tên" value={grade.name} onChange={(e)=>{handleGradeNameChange(i, e.target.value)}}></input>         
                         </div>
                         <div >
-                          <input type="number" className="diem" placeholder="Điểm" value={grade.value} onChange={(e)=>{handleGradeValueChange(i, e.target.value)}}></input>
+                          <input type="number" className="diem" placeholder="Điểm" value={grade.weight} onChange={(e)=>{handleGradeWeightChange(i, e.target.value)}}></input>
                         </div>
                         <div className="add_footer">
                         

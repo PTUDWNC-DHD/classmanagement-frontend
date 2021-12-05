@@ -11,14 +11,14 @@ import classes from './style'
 import "./ClassroomCard/style.css";
 
 const ClassroomList = (props) => {
-  const { currentUser, isLoading, isError, fetchClassrooms } = useContext(AuthContext)
+  const { currentUser, isLoading, errorMessage, fetchClassrooms } = useContext(AuthContext)
 
   useEffect(() => {
     fetchClassrooms();
   }, [])
   
-  if (isError) {
-    return <div>Error: {isError.message}</div>;
+  if (errorMessage) {
+    return <div>Error: {errorMessage}</div>;
   } else if (isLoading) {
     return(
       <div className="center-parent">

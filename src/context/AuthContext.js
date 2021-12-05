@@ -1,43 +1,28 @@
 import { createContext, useState } from "react";
 
+import { fetchAllClassrooms } from "../api/classroom";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+
   const [isRegistered, setIsRegistered] = useState(false);
   const [isJoined, setIsJoined] = useState(false);
   const [isEmailNotRegistered, setIsEmailNotRegistered] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
 
   const [createClassDialog, setCreateClassDialog] = useState(false);
   const [joinClassDialog, setJoinClassDialog] = useState(false);
 
-  const [isError, setIsError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchClassrooms = () => {
-    setIsLoading(true);
-    fetch(process.env.REACT_APP_API_URL + '/api/user/me/classes', { 
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer '+ currentUser.token,
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(res => res.json())
-    .then((result) => {
-      setCurrentUser({...currentUser, classrooms: result})
-      setIsLoading(false);
-    })
-    .catch((error) => {
-      setIsError(error);
-      setIsLoading(false);
-    })
+    const result = fetchAllClassrooms(currentUser.token, setIsLoading, setErrorMessage)
+    setCurrentUser({...currentUser, classrooms: result})
   }
 
   const value = {
-    isLoggedIn, setIsLoggedIn,
     isRegistered, setIsRegistered,
     isJoined, setIsJoined,
     isEmailNotRegistered, setIsEmailNotRegistered,
@@ -45,7 +30,7 @@ export const AuthProvider = ({ children }) => {
     createClassDialog, setCreateClassDialog,
     joinClassDialog, setJoinClassDialog,
     isLoading, setIsLoading,
-    isError, setIsError,
+    errorMessage, setErrorMessage,
     fetchClassrooms
   };
 

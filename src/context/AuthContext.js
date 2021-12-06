@@ -1,6 +1,6 @@
 import { createContext, useState } from "react";
 
-import { fetchAllClassrooms } from "../api/classroom";
+import { getAllClassrooms } from "../api/classroom";
 
 const AuthContext = createContext();
 
@@ -17,9 +17,16 @@ export const AuthProvider = ({ children }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchClassrooms = () => {
-    const result = fetchAllClassrooms(currentUser.token, setIsLoading, setErrorMessage)
-    setCurrentUser({...currentUser, classrooms: result})
+  const fetchClassrooms = async () => {
+    setIsLoading(true);
+    const result = await getAllClassrooms(currentUser.token)
+    if (result.data) {
+      setCurrentUser({...currentUser, classrooms: result.data})
+    }
+    else if (result.error) {
+      setErrorMessage(result.error)
+    }
+    setIsLoading(false);
   }
 
   const value = {

@@ -3,10 +3,14 @@ import { useState, useContext } from 'react';
 import { Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField, Avatar, Typography, CardActions } from '@mui/material';
 
 import AuthContext from '../../context/AuthContext'
-import swal from 'sweetalert';
+import { updateUserAccountInformation } from '../../api/user'
+import * as Notifications from '../../utils/notifications'
+import Swal from 'sweetalert2';
+
+
 const AccountDetail = (props) => {
-  const { currentUser } = useContext(AuthContext)
-  console.log('currUser: ', currentUser)
+  const { currentUser, setCurrentUser } = useContext(AuthContext)
+  //console.log('currUser: ', currentUser)
 
   const [username, setUsername] = useState(currentUser.user.username);
   const [fullname, setFullname] = useState(currentUser.user.name);
@@ -15,46 +19,31 @@ const AccountDetail = (props) => {
   
 
   const [hasChanged, setHasChanged] = useState(false)
-  const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   
   
-  const handleSaveDetail = (e) => {
+  const handleSaveDetail = async (e) => {
     e.preventDefault();
-
     setIsLoading(true);
-    fetch(process.env.REACT_APP_API_URL + '/api/user/me', { 
-      method: 'PATCH',
-      headers: {
-        'Authorization': 'Bearer '+ currentUser.token,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: fullname,
-        email: email,
-        
-      })
-    })
-    .then(res => res.json())
-    .then((result) => {
-      if (result.errors) {
-        console.log(result.errors);
-        setError(result.errors);
-        setIsLoading(false);
-      } else {
-        swal({
-          title: "Good job!",
-          text: "Update information successfully !!!",
-          icon: "success",
-          button: "Close",
-        });
-        setIsLoading(false);
-      }
-    })
-    .catch((error) => {
-      setError(error);
-      setIsLoading(false);
-    })
+    const result = await updateUserAccountInformation(currentUser.token, fullname, email)
+    if (result.data) {
+      setCurrentUser(result.data)
+      Swal.fire({
+        title: "Success",
+        text: Notifications.UPDATE_ACCOUNT_SUCCESSFULLY,
+        icon: "success",
+        button: "Close",
+      });
+    }
+    else if (result.error) {
+      Swal.fire({
+        title: "Error",
+        text: Notifications.UPDATE_ACCOUNT_FAILED,
+        icon: "error",
+        button: "Close",
+      });
+    }
+    setIsLoading(false);
   }
 
   const handleChangeFullname = (e) => {
@@ -136,7 +125,6 @@ const AccountDetail = (props) => {
                 required
                 value={email}
                 variant="outlined"
-                disabled
               />
             </Grid>
             <Grid item md={6} xs={12} >
@@ -161,7 +149,7 @@ const AccountDetail = (props) => {
                 required
                 value={studentId}
                 variant="outlined"
-                
+                disabled
               />
             </Grid>
           </Grid>

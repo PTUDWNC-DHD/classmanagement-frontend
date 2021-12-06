@@ -1,8 +1,8 @@
+import * as Notifications from '../utils/notifications'
 
-//get all classrooms that user joined
-const fetchAllClassrooms = (token, setIsLoading, setError) => {
-  setIsLoading(true);
-  fetch(process.env.REACT_APP_API_URL + '/api/user/me/classes', { 
+// GET all classrooms that user joined
+const getAllClassrooms = (token) => {
+  return fetch(process.env.REACT_APP_API_URL + '/api/user/me/classes', { 
     method: 'GET',
     headers: {
       'Authorization': 'Bearer '+ token,
@@ -10,49 +10,97 @@ const fetchAllClassrooms = (token, setIsLoading, setError) => {
     }
   })
   .then((res)=>{
-    if (res.status === 401) {
-      setError(res.statusText)
-      setIsLoading(false);
-      //console.log('res status text: ', res.statusText)
+    //console.log('res: ', res)
+    if (res.ok) {
+      return res.json().then((result) => {
+        //console.log('result: ', result)
+        if (!result)
+          return { error: Notifications.API_RETURN_NULL_RESULT}
+        else if (result.errors)
+          return { error: result.errors}
+        else
+        return { data: result }
+      })
     } 
     else {
-      res.json()
-      .then((result) => {
-        //console.log('result: ', result)
-        setIsLoading(false);
-        return result
-      })
+      return { error: Notifications.API_FAILED}
     }
   })
   .catch((error) => {
     //console.log('error: ', error)
-    setError(error);
-    setIsLoading(false);
+    return { error: error}
   })
 }
 
-//get detail of a classroom
-const fetchClassroomDetail = (token, classroomId, setIsLoading, setError) => {
-  setIsLoading(true);
-  fetch(process.env.REACT_APP_API_URL + '/api/class/' + classroomId, { 
+// GET detail of a classroom
+const getClassroomDetail = (token, classroomId) => {
+  return fetch(process.env.REACT_APP_API_URL + '/api/class/' + classroomId, { 
     method: 'GET',
     headers: {
       'Authorization': 'Bearer '+ token,
       'Content-Type': 'application/json'
     }
   })
-  .then(res => res.json())
-  .then((result) => {
-    setIsLoading(false);
-    return result
+  .then(res => {
+    //console.log('res: ', res)
+    if (res.ok) {
+      return res.json().then((result) => {
+        //console.log('result: ', result)
+        if (!result)
+          return { error: Notifications.API_RETURN_NULL_RESULT}
+        else if (result.errors)
+          return { error: result.errors}
+        else
+          return { data: result }
+      })
+    } 
+    else {
+      return { error: Notifications.API_FAILED}
+    }
   })
   .catch((error) => {
-    setError(error);
-    setIsLoading(false);
+    //console.log('error: ', error)
+    return { error: error}
+  })
+}
+
+// CREATE new classroom
+const createClassroom = (token, classroom) => {
+  return fetch(process.env.REACT_APP_API_URL+'/api/class', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer '+ token,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: classroom.name,
+    })
+  })
+  .then(res => {
+    //console.log('res: ', res)
+    if (res.ok) {
+      return res.json().then((result) => {
+        //console.log('result: ', result)
+        if (!result)
+          return { error: Notifications.API_RETURN_NULL_RESULT}
+        else if (result.errors)
+          return { error: result.errors}
+        else
+          return { data: result }
+      })
+    } 
+    else {
+      return { error: Notifications.API_FAILED}
+    }
+  })
+  .catch((error) => {
+    //console.log('error: ', error)
+    return { error: error}
   })
 }
 
 export {
-  fetchAllClassrooms,
-  fetchClassroomDetail
+  getAllClassrooms,
+  getClassroomDetail,
+  createClassroom
 }

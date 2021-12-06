@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 
 
 import AuthContext from '../../context/AuthContext'
+import { getClassroomDetail } from '../../api/classroom';
 
 import { CircularProgress, Avatar, Button, TextField, IconButton, List, ListItem, ListItemText } from "@mui/material";
 
@@ -16,13 +17,13 @@ import './style.css'
 const ClassroomDetail = (props) => {
   const { currentUser } = useContext(AuthContext)
 
-  const [error, setError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [classroom, setClassroom] = useState(null);
 
   const [showInput, setShowInput] = useState(false);
   const [inputValue, setInput] = useState("");
-  const [image, setImage] = useState(null);
+  //const [image, setImage] = useState(null);
   const [showInvitePopup, setShowInvitePopup] = useState(false);
 
   const handleUpload = (e) => {}
@@ -37,33 +38,24 @@ const ClassroomDetail = (props) => {
     navigator.clipboard.writeText(process.env.REACT_APP_CLIENT_URL + process.env.REACT_APP_INVITE_LINK + classroom.invite)
   }
 
-  const fetchClassroom = () => {
+  const callFetchClassroomDetail = async () => {
     setIsLoading(true);
-    fetch(process.env.REACT_APP_API_URL + '/api/class/' + props.classroomId, { 
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer '+ currentUser.token,
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(res => res.json())
-    .then((result) => {
-      console.log(result);
-      setClassroom(result)
-      setIsLoading(false);
-    })
-    .catch((error) => {
-      setError(error);
-      setIsLoading(false);
-    })
+    const result = await getClassroomDetail(currentUser.token, props.classroomId)
+    if (result.data) {
+      setClassroom(result.data)
+    }
+    else if (result.error) {
+      setErrorMessage(result.error)
+    }
+    setIsLoading(false);
   }
 
   useEffect(() => {
-    fetchClassroom();
+    callFetchClassroomDetail();
   }, [])
   
-  if (error) {
-    return <div>Error: {error.message}</div>;
+  if (errorMessage) {
+    return <div>Error: {errorMessage}</div>;
   } else if (isLoading) {
     return(
       <div className="center-parent">

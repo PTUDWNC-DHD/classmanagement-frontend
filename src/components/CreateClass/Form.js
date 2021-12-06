@@ -3,6 +3,10 @@ import React, { useState, useContext } from "react";
 import { Button, DialogActions, TextField } from "@mui/material";
 
 import AuthContext from "../../context/AuthContext";
+import { createClassroom } from '../../api/classroom'
+import * as Notifications from '../../utils/notifications'
+
+import Swal from 'sweetalert2';
 
 
 
@@ -10,36 +14,35 @@ const Form = () => {
   const { currentUser, setCreateClassDialog, fetchClassrooms } = useContext(AuthContext);
 
   const [className, setClassName] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
-  const handleCreateClass = (e) => {
+  const handleCreateClass = async (e) => {
     e.preventDefault();
     if (!className){
       window.alert('Please enter class name !!!');
     } else {
-      fetch(process.env.REACT_APP_API_URL+'/api/class', {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer '+ currentUser.token,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          name: className,
-        })
-      })
-      .then((res) => res.json())
-      .then((result) => {
-        if (result.errors) {
-          window.alert(`Create class failed: ${result.errors[0]}`);
-        } else {
-          window.alert('Create class successfully !!!');
-        }
-        setCreateClassDialog(false);
-        fetchClassrooms()
-      })
-      .catch((error) => {
-        console.log('Create class error: ', error)
-        setCreateClassDialog(false);
-      })
+      const newClassroom = {
+        name: className
+      }
+      setIsLoading(true);
+      const result = await createClassroom(currentUser.token, newClassroom)
+      if (result.data) {
+        Swal.fire({
+          title: "Success",
+          text: Notifications.CREATE_CLASS_SUCCESSFULLY,
+          icon: "success",
+          button: "Close",
+        });
+      }
+      else if (result.error) {
+        Swal.fire({
+          title: "Error",
+          text: Notifications.CREATE_CLASS_FAILED,
+          icon: "error",
+          button: "Close",
+        });
+      }
+      setIsLoading(false);
     }
   }
 

@@ -30,6 +30,7 @@ const fetchLogin = (usernameToFetch, passwordToFetch) => {
     }
   })
   .catch((error) => {
+    //console.log('error: ', error)
     return { error: error }
   })
 }

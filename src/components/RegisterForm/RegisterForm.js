@@ -1,11 +1,13 @@
 import React, { useContext, useState } from "react";
 
 import AuthContext from '../../context/AuthContext'
+import { fetchRegister } from '../../api/auth'
+import * as Notifications from '../../utils/notifications'
 
 import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox } from "@mui/material";
 import { Link, Grid, Box, Container, Typography } from "@mui/material";
-
 import { LockOutlined } from '@mui/icons-material'
+import Swal from 'sweetalert2';
 
 
 
@@ -16,42 +18,31 @@ const RegisterForm = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [passwordNoti, setPasswordNoti] = useState('Please enter password again');
+  const [passwordNoti, setPasswordNoti] = useState('Please enter password again !');
   const [isValid, setIsValid] = useState(false);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     //call fetch to get register checking from server
-    fetch(process.env.REACT_APP_API_URL+'/api/user', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        username: username,
-        name: fullname,
-        email: email,
-        password: password
+    const result = await fetchRegister(username, fullname, email, password);
+    if (result.data) {
+      setIsEmailNotRegistered(false)
+      setIsRegistered(true)
+      Swal.fire({
+        title: "Success",
+        text: Notifications.REGISTER_SUCCESSFULLY,
+        icon: "success",
+        button: "Close",
       })
-    })
-    .then((res) => {
-      if (res.status === 401) {
-        window.alert('Register failed !!!');
-      } else {
-        res.json().then((result) => {
-          if (result.username) {
-            setIsEmailNotRegistered(false)
-            setIsRegistered(true)
-            window.alert('Your account was registered successfully !!!')
-          } else {
-            window.alert(`Register failed: ${result.errors[0]}`);
-          }
-        })
-      }
-    })
-    .catch((error) => {
-      console.log('Register failed error: ', error)
-    })
+    }
+    else if (result.error) {
+      Swal.fire({
+        title: "Error",
+        text: result.error,
+        icon: "error",
+        button: "Close",
+      })
+    }
   }
 
   const handleConfirmPassword = (event) => {

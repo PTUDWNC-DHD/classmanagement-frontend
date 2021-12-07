@@ -3,6 +3,10 @@ import React, { useState, useContext } from "react";
 import { Button, DialogActions, TextField } from "@mui/material";
 
 import AuthContext from "../../context/AuthContext";
+import { sendInvitation } from "../../api/invite";
+import * as Notifications from "../../utils/notifications"
+
+import Swal from 'sweetalert2'
 
 
 
@@ -13,33 +17,26 @@ const InviteForm = (props) => {
   const [invitationCode, setInvitationCode] = useState(props.invite)
   const { setShowInvitePopup } = props;
 
-  const handleSendInvitation = (e) => {
+  const handleSendInvitation = async (e) => {
     e.preventDefault();
-
-    fetch(process.env.REACT_APP_API_URL+'/api/invite/invite', {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer '+ currentUser.token,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        to: [emailTo],
-        invitecode: invitationCode
+    const result = await sendInvitation(currentUser.token, [emailTo], invitationCode)
+    if (result.data) {
+      Swal.fire({
+        title: "Success",
+        text: Notifications.SEND_INVITATION_SUCCESSFULLY,
+        icon: "success",
+        button: "Close",
       })
-    })
-    .then((res) => res.json())
-    .then((result) => {
-      if (result.errors) {
-        window.alert(`Send invitation failed: ${result.errors[0]}`);
-      } else {
-        window.alert('Send invitation successfully !!!');
-      }
-      setShowInvitePopup(false)
-    })
-    .catch((error) => {
-      setShowInvitePopup(false)
-      console.log('Send invitation error: ', error)
-    })
+    }
+    else if (result.error) {
+      Swal.fire({
+        title: "Error",
+        text: Notifications.SEND_INVITATION_FAILED,
+        icon: "error",
+        button: "Close",
+      });
+    }
+    setShowInvitePopup(false)
   }
 
   return (

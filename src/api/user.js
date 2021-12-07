@@ -20,7 +20,7 @@ const getUserDetail = (token, userId) => {
         else if (result.errors)
           return { error: result.errors}
         else
-        return { data: result }
+          return { data: result }
       })
     } 
     else {
@@ -56,7 +56,7 @@ const updateUserAccountInformation = (token, fullname, email) => {
         else if (result.errors)
           return { error: result.errors}
         else
-        return { data: result }
+          return { data: result }
       })
     } 
     else {

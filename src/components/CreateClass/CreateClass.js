@@ -31,7 +31,7 @@ const CreateClass = () => {
             </div>
             <DialogContent className="class__content">
               <p className="class__text">
-                <p>If so, your school must sign up for a free</p>
+                If so, your school must sign up for a free
                 <a href="/help" className="class__link">
                   G Suite for Education
                 </a>

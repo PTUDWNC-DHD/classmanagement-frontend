@@ -14,7 +14,6 @@ import { useStyles } from "./style";
 const HeaderBar = ({ children }) => {
   const {
     currentUser,
-    setIsLoggedIn,
     setCurrentUser,
     setCreateClassDialog
     } = useContext(AuthContext);
@@ -37,7 +36,6 @@ const HeaderBar = ({ children }) => {
 
   const handleLogout = () => {
     setCurrentUser(null);
-    setIsLoggedIn(false);
   }
 
   return (

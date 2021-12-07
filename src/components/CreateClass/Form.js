@@ -11,7 +11,7 @@ import Swal from 'sweetalert2';
 
 
 const Form = () => {
-  const { currentUser, setCreateClassDialog, fetchClassrooms } = useContext(AuthContext);
+  const { currentUser, setCurrentUser, setCreateClassDialog } = useContext(AuthContext);
 
   const [className, setClassName] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -27,6 +27,9 @@ const Form = () => {
       setIsLoading(true);
       const result = await createClassroom(currentUser.token, newClassroom)
       if (result.data) {
+        setCurrentUser({...currentUser, 
+          classrooms: [...currentUser.classrooms, result.data]
+        })
         Swal.fire({
           title: "Success",
           text: Notifications.CREATE_CLASS_SUCCESSFULLY,
@@ -42,6 +45,7 @@ const Form = () => {
           button: "Close",
         });
       }
+      setCreateClassDialog(false);
       setIsLoading(false);
     }
   }

@@ -4,7 +4,7 @@ import { Accordion,  AccordionSummary, AccordionDetails, Button, Typography, Cir
 
 import { AddCircleOutline, DragIndicator, FilterNone, Delete } from '@mui/icons-material';
 
-import AuthContext from '../../context/AuthContext'
+import AuthContext from '../../contexts/authContext'
 import { getClassroomDetail, updateGradeStructure } from '../../api/classroom';
 
 //--------------
@@ -26,9 +26,9 @@ function Grade(props) {
   const [grades, setGrades] =useState([]); 
 
 
-  const callFetchClassroomDetail = async () => {
+  const callFetchClassroomDetail = async (token, classroomId) => {
     setIsLoading(true);
-    const result = await getClassroomDetail(currentUser.token, props.classroomId)
+    const result = await getClassroomDetail(token, classroomId)
     if (result.data) {
       addIsExpandAndSetGrades(result.data.gradeStructure)
     }
@@ -38,9 +38,9 @@ function Grade(props) {
     setIsLoading(false);
   }
 
-  const fetchToSaveGrades = async () => {
+  const fetchToSaveGrades = async (token, classroomId, grades) => {
     setIsLoading(true);
-    const result = await updateGradeStructure(currentUser.token, props.classroomId, grades)
+    const result = await updateGradeStructure(token, classroomId, grades)
     if (result.data)
       addIsExpandAndSetGrades(result.gradeStructure)
     else if (result.error)
@@ -49,7 +49,7 @@ function Grade(props) {
   }
 
   useEffect(() => {
-    callFetchClassroomDetail();
+    callFetchClassroomDetail(currentUser.token, props.classroomId);
     //console.log('class grade detail:', grades)
   }, [])
 
@@ -68,7 +68,7 @@ function Grade(props) {
         isEmpty = true;
       }
     })
-    isEmpty ? window.alert("Name or grade must not be empty") : fetchToSaveGrades();
+    isEmpty ? window.alert("Name or grade must not be empty") : fetchToSaveGrades(currentUser.token, props.classroomId, grades);
   }
 
   function handleAddGrade(){

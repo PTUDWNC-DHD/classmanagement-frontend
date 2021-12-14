@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 
-import AuthContext from '../../context/AuthContext'
+import AuthContext from '../../contexts/authContext'
 import { fetchRegister } from '../../api/auth'
 import * as Notifications from '../../utils/notifications'
 

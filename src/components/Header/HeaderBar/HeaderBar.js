@@ -5,18 +5,17 @@ import { AppBar, Avatar, Menu, MenuItem, Toolbar, Typography } from "@mui/materi
 
 import { Add, Logout } from "@mui/icons-material";
 
-import AuthContext from "../../../context/AuthContext";
+import AuthContext from "../../../contexts/authContext";
 
 import { CreateClass } from "../../components";
 
 import { useStyles } from "./style";
 
 const HeaderBar = ({ children }) => {
-  const {
-    currentUser,
-    setCurrentUser,
-    setCreateClassDialog
-    } = useContext(AuthContext);
+  const { currentUser, setCurrentUser } = useContext(AuthContext);
+
+  const [isOpenCreateDialog, setIsOpenCreateDialog] = useState(false);
+  const [isOpenJoinDialog, setIsOpenJoinDialog] = useState(false);
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -26,7 +25,7 @@ const HeaderBar = ({ children }) => {
 
   const handleCreate = () => {
     handleClose();
-    setCreateClassDialog(true);
+    setIsOpenCreateDialog(true);
   };
 
   const handleJoin = () => {
@@ -46,10 +45,10 @@ const HeaderBar = ({ children }) => {
 
             {children}
             <Link to='/'>
-            <img
-              src="https://www.gstatic.com/images/branding/googlelogo/svg/googlelogo_clr_74x24px.svg"
-              alt="Classroom"
-            />
+              <img
+                src="https://www.gstatic.com/images/branding/googlelogo/svg/googlelogo_clr_74x24px.svg"
+                alt="Classroom"
+              />
             </Link>
             <Typography className={classes.title}>
               Classroom
@@ -78,7 +77,7 @@ const HeaderBar = ({ children }) => {
           </div>
         </Toolbar>
       </AppBar>
-      <CreateClass />
+      <CreateClass isOpen={isOpenCreateDialog} setIsOpen={setIsOpenCreateDialog} />
     </div>
   );
 };

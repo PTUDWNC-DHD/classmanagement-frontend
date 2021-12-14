@@ -1,9 +1,11 @@
 import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { Button, TextField, Checkbox, FormControlLabel } from "@mui/material";
 
-import AuthContext from "../../context/AuthContext";
+import AuthContext from "../../contexts/authContext";
 import { joinClassroom } from "../../api/join";
+import { getAllClassrooms } from "../../api/classroom";
 import * as Notifications from "../../utils/notifications"
 
 import Swal from 'sweetalert2'
@@ -11,18 +13,19 @@ import Swal from 'sweetalert2'
 import "./style.css";
 
 const JoinClass = (props) => {
-  const { currentUser, setIsJoined, fetchClassrooms } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate()
 
   const [displayName, setDisplayName] = useState('');
   const [isStudent, setIsStudent] = useState(false);
   const [studentId, setStudentId] = useState('');
+
 
   const handleJoinClass = async (e) => {
     e.preventDefault();
     if (displayName){
       const result = await joinClassroom(currentUser.token, props.joinCode, displayName, studentId, isStudent)
       if (result.data) {
-        fetchClassrooms()
         Swal.fire({
           title: "Success",
           text: Notifications.JOIN_CLASS_SUCCESSFULLY,
@@ -38,7 +41,7 @@ const JoinClass = (props) => {
           button: "Close",
         })
       }
-      setIsJoined(true)
+      navigate('/')
     }
     else{
       Swal.fire({

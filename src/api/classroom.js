@@ -148,7 +148,7 @@ const getAllClassroomMembers = (token, classroomId) => {
     if (res.ok) {
       return res.json().then((result) => {
         //console.log('result: ', result)
-        if (!result || !result.gradeStructure)
+        if (!result)
           return { error: Notifications.API_RETURN_NULL_RESULT}
         else if (result.errors)
           return { error: result.errors}

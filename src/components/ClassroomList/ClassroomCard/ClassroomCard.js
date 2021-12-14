@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 
-import AuthContext from '../../../context/AuthContext'
+import AuthContext from '../../../contexts/authContext'
 import { getUserDetail } from "../../../api/user";
 
 import { CircularProgress,Avatar } from "@mui/material";
@@ -21,7 +21,7 @@ const ClassroomCard = ({ classData }) => {
     setIsLoading(true);
     const result = await getUserDetail(currentUser.token, classroom.ownerId)
     if (result.data) {
-      setClassroom({...classroom, owner: result.name})
+      setClassroom({...classroom, owner: result.data.name})
     }
     else if (result.error) {
       setErrorMessage(result.error)

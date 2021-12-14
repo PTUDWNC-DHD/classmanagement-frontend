@@ -2,7 +2,7 @@ import { useState, useContext } from 'react';
 
 import { Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField, Avatar, Typography, CardActions } from '@mui/material';
 
-import AuthContext from '../../context/AuthContext'
+import AuthContext from '../../contexts/authContext'
 import { updateUserAccountInformation } from '../../api/user'
 import * as Notifications from '../../utils/notifications'
 import Swal from 'sweetalert2';
@@ -27,7 +27,8 @@ const AccountDetail = (props) => {
     setIsLoading(true);
     const result = await updateUserAccountInformation(currentUser.token, fullname, email)
     if (result.data) {
-      setCurrentUser(result.data)
+      //console.log('user: ', result)
+      setCurrentUser({...currentUser, user: {...result.data}})
       Swal.fire({
         title: "Success",
         text: Notifications.UPDATE_ACCOUNT_SUCCESSFULLY,

@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 
 
-import AuthContext from '../../context/AuthContext'
+import AuthContext from '../../contexts/authContext'
 import { getClassroomDetail } from '../../api/classroom';
 
 import { CircularProgress, Avatar, Button, TextField, IconButton, List, ListItem, ListItemText } from "@mui/material";
@@ -56,13 +56,15 @@ const ClassroomDetail = (props) => {
   
   if (errorMessage) {
     return <div>Error: {errorMessage}</div>;
-  } else if (isLoading) {
+  } 
+  else if (isLoading) {
     return(
       <div className="center-parent">
       <CircularProgress  />
       </div>
     );
-  } else {
+  } 
+  else {
     return (
       <div className="main">
         <div className="main__wrapper">

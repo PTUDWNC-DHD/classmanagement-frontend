@@ -1,7 +1,7 @@
 export const API_RETURN_NULL_RESULT = "API return null result !"
 export const API_FAILED = "Fetch API failed !"
 
-export const EMAIL_NOT_REGISTER = "Your email is not registered !"
+export const EMAIL_REGISTERED = "Your email was registered by another account !"
 export const GET_GG_ACCOUNT_FAILED = "Can not get Google account information !"
 export const PLEASE_ENTER_NAME = "Please enter your display name in class !"
 

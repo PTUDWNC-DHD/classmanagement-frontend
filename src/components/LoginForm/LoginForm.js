@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { auth, googleProvider } from "../../lib/firebase";
 
-import AuthContext from '../../context/AuthContext'
+import AuthContext from '../../contexts/authContext'
 import { saveToLocalStorage, loadFromLocalStorage } from '../../utils/localStorage'
 import { fetchLogin } from '../../api/auth'
 import * as Notifications from '../../utils/notifications'
@@ -18,12 +18,12 @@ const LoginForm = () => {
   const [password, setPassword] = useState('');
 
 
-  useEffect(()=>{
-    const savedUser = loadFromLocalStorage('user_infor')
-    if (savedUser) {
-      setCurrentUser(savedUser)
-    }
-  },[])
+  // useEffect(()=>{
+  //   const savedUser = loadFromLocalStorage('user_infor')
+  //   if (savedUser) {
+  //     setCurrentUser(savedUser)
+  //   }
+  // },[])
   //function fetch to get login checking from server
   const callLoginAPI = async (usernameToFetch, passwordToFetch) => {
     const result = await fetchLogin(usernameToFetch, passwordToFetch)
@@ -37,6 +37,7 @@ const LoginForm = () => {
     
     if (result.data){
       setCurrentUser(result.data)
+      console.log('curr: ', result.data)
       //saveToLocalStorage(result, 'user_infor')
     }
     else if (result.error) {
@@ -45,10 +46,6 @@ const LoginForm = () => {
         text: result.error,
         icon: "error",
         button: "Close",
-      }
-      if (result.error === Notifications.EMAIL_NOT_REGISTER) {
-        setIsEmailNotRegistered(true)
-        alert.button = "Register now"
       }
     }
     Swal.fire(alert)

@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 
 import { Button, DialogActions, TextField } from "@mui/material";
 
-import AuthContext from "../../context/AuthContext";
+import AuthContext from "../../contexts/authContext";
 import { sendInvitation } from "../../api/invite";
 import * as Notifications from "../../utils/notifications"
 

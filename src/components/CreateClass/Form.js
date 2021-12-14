@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 
 import { Button, DialogActions, TextField } from "@mui/material";
 
-import AuthContext from "../../context/AuthContext";
+import AuthContext from "../../contexts/authContext";
 import { createClassroom } from '../../api/classroom'
 import * as Notifications from '../../utils/notifications'
 
@@ -10,8 +10,8 @@ import Swal from 'sweetalert2';
 
 
 
-const Form = () => {
-  const { currentUser, setCurrentUser, setCreateClassDialog } = useContext(AuthContext);
+const Form = ({ setIsOpen}) => {
+  const { currentUser, setCurrentUser } = useContext(AuthContext);
 
   const [className, setClassName] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -45,7 +45,7 @@ const Form = () => {
           button: "Close",
         });
       }
-      setCreateClassDialog(false);
+      setIsOpen(false);
       setIsLoading(false);
     }
   }

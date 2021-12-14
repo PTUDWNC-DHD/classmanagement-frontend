@@ -2,28 +2,26 @@ import React, { useState, useContext } from "react";
 
 import { Button, Checkbox, Dialog, DialogActions, DialogContent } from "@mui/material";
 
-import AuthContext from '../../context/AuthContext'
-
 import Form from "./Form";
 
 import "./style.css";
 
 
-const CreateClass = () => {
-  const { createClassDialog, setCreateClassDialog } = useContext(AuthContext);
+const CreateClass = (props) => {
+  const { isOpen, setIsOpen } ={...props}
   const [check, setChecked] = useState(false);
   const [showForm, setShowForm] = useState(false);
   return (
     <div>
       <Dialog
-        onClose={() => setCreateClassDialog(false)}
+        onClose={() => setIsOpen(false)}
         aria-labelledby="customized-dialog-title"
-        open={createClassDialog}
+        open={isOpen}
         maxWidth={showForm ? "lg" : "xs"}
         className="form__dialog"
       >
         {showForm ? (
-          <Form />
+          <Form setIsOpen={setIsOpen} />
         ) : (
           <>
             <div className="class__title">
@@ -59,7 +57,7 @@ const CreateClass = () => {
               </div>
             </DialogContent>
             <DialogActions>
-              <Button autoFocus onClick={() => setCreateClassDialog(false)}>
+              <Button autoFocus onClick={() => setIsOpen(false)}>
                 Close
               </Button>
 

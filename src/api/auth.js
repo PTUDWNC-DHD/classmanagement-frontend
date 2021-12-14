@@ -24,8 +24,6 @@ const fetchLogin = (usernameToFetch, passwordToFetch) => {
         else
           return { data: result }
       })
-    else if (usernameToFetch.indexOf('@') > 0)
-      return { error: Notifications.EMAIL_NOT_REGISTER }
     else
       return { error: Notifications.LOGIN_FAILED }
   })

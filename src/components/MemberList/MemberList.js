@@ -2,7 +2,7 @@ import { Fragment, useEffect, useContext, useState } from 'react';
 
 import { CircularProgress, Avatar, ListItemAvatar, ListItemText, Table, TableBody, TableCell, TableRow } from "@mui/material";
 
-import AuthContext from '../../context/AuthContext'
+import AuthContext from '../../contexts/authContext'
 import { getAllClassroomMembers } from '../../api/classroom';
 
 import Title from './Title';
@@ -17,9 +17,9 @@ const MemberList = (props) => {
   const [students, setStudents] = useState([]);
   const [teachers, setTeachers] = useState([]);
 
-  const callFetchAllClassroomMembers = async () => {
+  const callFetchAllClassroomMembers = async (token, classroomId) => {
     setIsLoading(true);
-    const result = await getAllClassroomMembers(currentUser.token, props.classroomId);
+    const result = await getAllClassroomMembers(token, classroomId);
     if (result.data) {
       setStudents(result.data.students)
       setTeachers(result.data.teachers)
@@ -31,18 +31,20 @@ const MemberList = (props) => {
   }
 
   useEffect(() => {
-    callFetchAllClassroomMembers()
+    callFetchAllClassroomMembers(currentUser.token, props.classroomId)
   }, [])
 
   if (errorMessage) {
     return <div>Error: {errorMessage}</div>;
-  } else if (isLoading) {
+  } 
+  else if (isLoading) {
     return(
       <div className="center-parent">
-      <CircularProgress  />
+        <CircularProgress  />
       </div>
-    );
-  } else {
+    )
+  } 
+  else {
     return (
       <Fragment>
         <Title>Teachers</Title>

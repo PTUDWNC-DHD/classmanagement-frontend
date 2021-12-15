@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import {Container, Paper, Grid, Tab, Box } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 
-import { Header, ClassroomDetail, MemberList, Grade } from "../components/components";
+import { Header, ClassroomDetail, MemberList, Grade, GradeTable} from "../components/components";
 
 
 
@@ -29,6 +29,7 @@ const ClassroomPage = (props) => {
               <Tab label="Detail" value="1" />
               <Tab label="Members" value="2" />
               <Tab label="Grade Structure" value="3" />
+              <Tab label="Grade" value="4" />
             </TabList>
           </Box>
 
@@ -65,6 +66,9 @@ const ClassroomPage = (props) => {
 
           <TabPanel value="3">
             <Grade classroomId={classroomId}/> 
+          </TabPanel>
+          <TabPanel value="4">
+            <GradeTable /> 
           </TabPanel>
         </TabContext>
       </Box>

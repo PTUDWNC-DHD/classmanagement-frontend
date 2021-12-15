@@ -1,13 +1,13 @@
 import { Fragment, useState } from "react";
 
-import { SwipeableDrawer, List, Divider, ListSubheader, ListItemButton, ListItemIcon, ListItemText, IconButton} from "@mui/material";
+import { Switch, SwipeableDrawer, List, Divider, ListSubheader, ListItemButton, ListItemIcon, ListItemText, IconButton} from "@mui/material";
 
 import { Menu, HomeRounded, CalendarTodayRounded, ArchiveRounded, Settings } from "@mui/icons-material";
 
 import { HeaderBar } from "../components";
 
 
-const Header = () => {
+export default function Header({check,change}) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDrawer = (value) => {
@@ -77,6 +77,12 @@ const Header = () => {
               <Settings />
             </ListItemIcon>
             <ListItemText primary="Settings" />
+            <Switch 
+            defaulftChecked
+            inputProps={{'aria-label':'checkbox with default color'}}
+            onChange={change}
+            checked={check}
+             />
           </ListItemButton>
         </List>
       </SwipeableDrawer>
@@ -84,4 +90,3 @@ const Header = () => {
   );
 }
 
-export default Header

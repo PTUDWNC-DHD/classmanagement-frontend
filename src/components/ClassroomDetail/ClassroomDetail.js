@@ -111,63 +111,14 @@ const ClassroomDetail = (props) => {
               <p className="main__subText">No work due</p>
             </div>
             
-            <div className="main__announcements">
-              <div className="main__announcementsWrapper">
-                <div className="main__ancContent">
-                  {showInput ? (
-                    <div className="main__form">
-                      <TextField
-                        id="filled-multiline-flexible"
-                        multiline
-                        label="Announce Something to class"
-                        variant="filled"
-                        value={inputValue}
-                        onChange={(e) => setInput(e.target.value)}
-                      />
-                      <div className="main__buttons">
-                        <input
-                          onChange={handleChange}
-                          variant="outlined"
-                          color="primary"
-                          type="file"
-                        />
-
-                        <div>
-                          <Button onClick={() => setShowInput(false)}>
-                            Cancel
-                          </Button>
-
-                          <Button
-                            onClick={handleUpload}
-                            color="primary"
-                            variant="contained"
-                          >
-                            Post
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div
-                      className="main__wrapper100"
-                      onClick={() => setShowInput(true)}
-                    >
-                      <Avatar />
-                      <div>Announce Something to class</div>
-                    </div>
-                  )}
-                </div>
-              </div>
             </div>
-            
-          </div>
           {showInvitePopup && <InvitePopup 
             invite={classroom.invite} 
             showInvitePopup={showInvitePopup} 
             setShowInvitePopup={setShowInvitePopup}
           />}
-          <div className="grade_announce">
-            <div className="grade__status">
+          <div className="main__announce">
+            <div className="main__status">
               <p>Grade Structure</p>
               {
                 classroom.gradeStructure.length < 1 ? 
@@ -175,7 +126,8 @@ const ClassroomDetail = (props) => {
                 :
                   <List>
                     {classroom.gradeStructure.map((grade, index) => (
-                      <ListItem
+                      <ListItem 
+                        style={{width:"150px"}}
                         key={index}
                         disableGutters
                         secondaryAction={grade.weight}

@@ -85,6 +85,7 @@
   overflow: hidden;
   margin: -2.4rem;
   margin-left: 1rem;
+  
   /* margin-top: 1.5rem; */
 }
 .main__subText {
@@ -96,8 +97,9 @@
   border: 1.5px solid #dadce0;
   padding: 20px;
   border-radius: 10px;
-  width: 75px;
+  width: 150px;
   height: 15vh;
+  
 }
 .main__announcementsWrapper {
   box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.302),
@@ -152,6 +154,8 @@
 }
 .grade__status {
   margin: 10px 20px;
+  width: 260px;
+  height: 15vh;
 }
 .grade__list {
 

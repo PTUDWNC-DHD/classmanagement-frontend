@@ -42,7 +42,7 @@ function Grade(props) {
     setIsLoading(true);
     const result = await updateGradeStructure(token, classroomId, grades)
     if (result.data)
-      addIsExpandAndSetGrades(result.gradeStructure)
+      addIsExpandAndSetGrades(result.data.gradeStructure)
     else if (result.error)
       setErrorMessage(result.error)
     setIsLoading(false);
@@ -182,7 +182,7 @@ function Grade(props) {
               <div style={{marginBottom: "0px"}}>
                 {/* DragIndicator */}
                 <div style={{width:'100%', marginBottom: '0px' }}>
-                  <DragIndicator style={{transform: "rotate(-90deg)", color:'#DAE0E2',position:"relative",left:"300px"}} fontSize="small"/>
+                  <DragIndicator style={{transform: "rotate(-90deg)", color:'#DAE0E2',position:"relative",left:"50%"}} fontSize="small"/>
                 </div>
                 {/* Drag content */}
                 <Accordion 

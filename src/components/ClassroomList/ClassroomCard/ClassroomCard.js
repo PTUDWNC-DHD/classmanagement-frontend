@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 
 import AuthContext from '../../../contexts/authContext'
-import { getUserDetail } from "../../../api/user";
+import { getUserDetail } from "../../../services/userService";
 
 import { CircularProgress,Avatar } from "@mui/material";
 import { FolderOpen, PermContactCalendar } from "@mui/icons-material";

@@ -5,7 +5,7 @@ import { Accordion,  AccordionSummary, AccordionDetails, Button, Typography, Cir
 import { AddCircleOutline, DragIndicator, FilterNone, Delete } from '@mui/icons-material';
 
 import AuthContext from '../../contexts/authContext'
-import { getClassroomDetail, updateGradeStructure } from '../../api/classroom';
+import { getClassroomDetail, updateGradeStructure } from '../../services/classroomService';
 
 //--------------
 

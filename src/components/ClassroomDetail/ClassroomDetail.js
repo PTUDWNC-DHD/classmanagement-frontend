@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 
 
 import AuthContext from '../../contexts/authContext'
-import { getClassroomDetail } from '../../api/classroom';
+import { getClassroomDetail } from '../../services/classroomService';
 
 import { CircularProgress, Avatar, Button, TextField, IconButton, List, ListItem, ListItemText } from "@mui/material";
 

@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 
 import AuthContext from '../../contexts/authContext'
-import { fetchRegister } from '../../api/auth'
+import { fetchRegister } from '../../services/authService'
 import * as Notifications from '../../utils/notifications'
 
 import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox } from "@mui/material";

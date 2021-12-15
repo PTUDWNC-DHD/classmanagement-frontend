@@ -2,9 +2,10 @@ import React, { useContext, useState, useEffect } from "react";
 import { auth, googleProvider } from "../../lib/firebase";
 
 import AuthContext from '../../contexts/authContext'
-import { saveToLocalStorage, loadFromLocalStorage } from '../../utils/localStorage'
-import { fetchLogin } from '../../api/auth'
+import { saveToLocalStorage } from '../../utils/localStorage'
+import { fetchLogin } from '../../services/authService'
 import * as Notifications from '../../utils/notifications'
+import * as Constant from '../../utils/constant'
 
 import { Image, Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox } from "@mui/material";
 import { Paper, Link, Grid, Box, Container, Typography } from "@mui/material";
@@ -13,17 +14,11 @@ import Swal from 'sweetalert2';
 
 
 const LoginForm = () => {
-  const { setCurrentUser, setIsEmailNotRegistered} = useContext(AuthContext)
+  const { setCurrentUser } = useContext(AuthContext)
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
 
-  // useEffect(()=>{
-  //   const savedUser = loadFromLocalStorage('user_infor')
-  //   if (savedUser) {
-  //     setCurrentUser(savedUser)
-  //   }
-  // },[])
   //function fetch to get login checking from server
   const callLoginAPI = async (usernameToFetch, passwordToFetch) => {
     const result = await fetchLogin(usernameToFetch, passwordToFetch)
@@ -37,8 +32,8 @@ const LoginForm = () => {
     
     if (result.data){
       setCurrentUser(result.data)
-      console.log('curr: ', result.data)
-      //saveToLocalStorage(result, 'user_infor')
+      //console.log('curr: ', result.data)
+      saveToLocalStorage(result.data, Constant.LOCAL_STORAGE_USER)
     }
     else if (result.error) {
       alert = {

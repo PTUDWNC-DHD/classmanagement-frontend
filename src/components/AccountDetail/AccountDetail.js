@@ -3,7 +3,7 @@ import { useState, useContext } from 'react';
 import { Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField, Avatar, Typography, CardActions } from '@mui/material';
 
 import AuthContext from '../../contexts/authContext'
-import { updateUserAccountInformation } from '../../api/user'
+import { updateUserAccountInformation } from '../../services/userService'
 import * as Notifications from '../../utils/notifications'
 import Swal from 'sweetalert2';
 

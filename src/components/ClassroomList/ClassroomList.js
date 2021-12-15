@@ -2,7 +2,7 @@ import { useEffect, useContext, useState } from 'react';
 import { CircularProgress, Container, Grid } from '@mui/material'
 
 import AuthContext from '../../contexts/authContext'
-import { getAllClassrooms } from '../../api/classroom';
+import { getAllClassrooms } from '../../services/classroomService';
 
 import { ClassroomCard } from '../components'
 

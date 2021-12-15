@@ -7,12 +7,12 @@ const loadFromLocalStorage = (strName) => {
   return res;
 }
 
-const removeInLocalStorage = (strName) => {
+const removeFromLocalStorage = (strName) => {
   localStorage.removeItem(strName);
 }
 
 export {
   saveToLocalStorage,
   loadFromLocalStorage,
-  removeInLocalStorage
+  removeFromLocalStorage
 }

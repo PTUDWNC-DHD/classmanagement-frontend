@@ -52,11 +52,11 @@ const AppRouter = ()=>{
           </AuthRequired>
         }/>
 
-        {/* <Route path="*" element={
+        <Route path="*" element={
           <AuthRequired>
             <HomePage />
           </AuthRequired>}
-        /> */}
+        />
       </Routes>
     </BrowserRouter>
   )

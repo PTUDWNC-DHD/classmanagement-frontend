@@ -1,9 +1,11 @@
 import { createContext, useState } from "react";
+import { loadFromLocalStorage } from "../utils/localStorage";
+import * as Constant from '../utils/constant'
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(() => loadFromLocalStorage(Constant.LOCAL_STORAGE_USER))
 
   const [isRegistered, setIsRegistered] = useState(false);
   const [isJoined, setIsJoined] = useState(false);

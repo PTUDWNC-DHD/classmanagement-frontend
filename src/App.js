@@ -2,7 +2,7 @@ import { AuthProvider } from "./contexts/authContext";
 import AppRouter from './routes'
 
 
-function App() {
+const App = () => {
   return (
     <AuthProvider>
       <AppRouter />

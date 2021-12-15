@@ -3,7 +3,7 @@ import { Fragment, useEffect, useContext, useState } from 'react';
 import { CircularProgress, Avatar, ListItemAvatar, ListItemText, Table, TableBody, TableCell, TableRow } from "@mui/material";
 
 import AuthContext from '../../contexts/authContext'
-import { getAllClassroomMembers } from '../../api/classroom';
+import { getAllClassroomMembers } from '../../services/classroomService';
 
 import Title from './Title';
 

@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { Button, TextField, Checkbox, FormControlLabel } from "@mui/material";
 
 import AuthContext from "../../contexts/authContext";
-import { joinClassroom } from "../../api/join";
-import { getAllClassrooms } from "../../api/classroom";
+import { joinClassroom } from "../../services/joinService";
+import { getAllClassrooms } from "../../services/classroomService";
 import * as Notifications from "../../utils/notifications"
 
 import Swal from 'sweetalert2'

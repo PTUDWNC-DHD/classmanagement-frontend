@@ -3,7 +3,7 @@ import React, { useState, useContext } from "react";
 import { Button, DialogActions, TextField } from "@mui/material";
 
 import AuthContext from "../../contexts/authContext";
-import { sendInvitation } from "../../api/invite";
+import { sendInvitation } from "../../services/inviteService";
 import * as Notifications from "../../utils/notifications"
 
 import Swal from 'sweetalert2'

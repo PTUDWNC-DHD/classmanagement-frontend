@@ -2,12 +2,12 @@ import { useContext, useState } from "react";
 import { Link } from "react-router-dom"
 
 import { AppBar, Avatar, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
-
 import { Add, Logout } from "@mui/icons-material";
 
 import AuthContext from "../../../contexts/authContext";
-
 import { CreateClass } from "../../components";
+import { removeFromLocalStorage } from "../../../utils/localStorage";
+import * as Constant from '../../../utils/constant'
 
 import { useStyles } from "./style";
 
@@ -30,11 +30,12 @@ const HeaderBar = ({ children }) => {
 
   const handleJoin = () => {
     handleClose();
-    //setJoinClassDialog(true);
+    //setIsOpenJoinDialog(true);
   };
 
   const handleLogout = () => {
-    setCurrentUser(null);
+    setCurrentUser(null)
+    removeFromLocalStorage(Constant.LOCAL_STORAGE_USER)
   }
 
   return (

@@ -3,7 +3,7 @@ import React, { useState, useContext } from "react";
 import { Button, DialogActions, TextField } from "@mui/material";
 
 import AuthContext from "../../contexts/authContext";
-import { createClassroom } from '../../api/classroom'
+import { createClassroom } from '../../services/classroomService'
 import * as Notifications from '../../utils/notifications'
 
 import Swal from 'sweetalert2';

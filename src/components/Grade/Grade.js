@@ -4,7 +4,8 @@ import { Accordion,  AccordionSummary, AccordionDetails, Button, Typography, Cir
 
 import { AddCircleOutline, DragIndicator, FilterNone, Delete } from '@mui/icons-material';
 
-import AuthContext from '../../context/AuthContext'
+import AuthContext from '../../contexts/authContext'
+import { getClassroomDetail, updateGradeStructure } from '../../services/classroomService';
 
 //--------------
 
@@ -19,58 +20,37 @@ import "./user_form.css"
 function Grade(props) {
   const { currentUser } = useContext(AuthContext)
 
-  const [error, setError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const [grades, setGrades] =useState([]); 
 
-  const fetchToGetGrades = () => {
+
+  const callFetchClassroomDetail = async (token, classroomId) => {
     setIsLoading(true);
-    fetch(process.env.REACT_APP_API_URL + '/api/class/' + props.classroomId, { 
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer '+ currentUser.token,
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(res => res.json())
-    .then((result) => {
-      addIsExpandAndSetGrades(result.gradeStructure)
-      setIsLoading(false);
-    })
-    .catch((error) => {
-      setError(error);
-      setIsLoading(false);
-    })
+    const result = await getClassroomDetail(token, classroomId)
+    if (result.data) {
+      addIsExpandAndSetGrades(result.data.gradeStructure)
+    }
+    else if (result.error) {
+      setErrorMessage(result.error)
+    }
+    setIsLoading(false);
   }
 
-  const fetchToSaveGrades = () => {
+  const fetchToSaveGrades = async (token, classroomId, grades) => {
     setIsLoading(true);
-    
-    fetch(process.env.REACT_APP_API_URL + '/api/class/' + props.classroomId, { 
-      method: 'PATCH',
-      headers: {
-        'Authorization': 'Bearer '+ currentUser.token,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        gradeStructure: grades
-      })
-    })
-    .then(res => res.json())
-    .then((result) => {
+    const result = await updateGradeStructure(token, classroomId, grades)
+    if (result.data)
       addIsExpandAndSetGrades(result.gradeStructure)
-      setIsLoading(false);
-    })
-    .catch((error) => {
-      setError(error);
-      setIsLoading(false);
-    })
+    else if (result.error)
+      setErrorMessage(result.error)
+    setIsLoading(false);
   }
 
   useEffect(() => {
-    fetchToGetGrades();
-    console.log('class grade detail:', grades)
+    callFetchClassroomDetail(currentUser.token, props.classroomId);
+    //console.log('class grade detail:', grades)
   }, [])
 
   function addIsExpandAndSetGrades(gradesArr){
@@ -88,7 +68,7 @@ function Grade(props) {
         isEmpty = true;
       }
     })
-    isEmpty ? window.alert("Name or grade must not be empty") : fetchToSaveGrades();
+    isEmpty ? window.alert("Name or grade must not be empty") : fetchToSaveGrades(currentUser.token, props.classroomId, grades);
   }
 
   function handleAddGrade(){
@@ -249,8 +229,8 @@ function Grade(props) {
     )))
   }
   
-  if (error) {
-    return <div>Error: {error.message}</div>;
+  if (errorMessage) {
+    return <div>Error: errorMessage</div>;
   } else if (isLoading) {
     return(
       <div className="center-parent">

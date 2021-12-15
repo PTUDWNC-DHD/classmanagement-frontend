@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 
+import AuthContext from '../../../contexts/authContext'
+import { getUserDetail } from "../../../services/userService";
+
 import { CircularProgress,Avatar } from "@mui/material";
-
 import { FolderOpen, PermContactCalendar } from "@mui/icons-material";
-
-import AuthContext from '../../../context/AuthContext'
 
 import "./style.css";
 
@@ -13,46 +13,37 @@ import "./style.css";
 const ClassroomCard = ({ classData }) => {
   const { currentUser } = useContext(AuthContext)
 
-  const [error, setError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [classroom, setClassroom] = useState(classData);
 
-  const fetchClassrooms = () => {
+  const callFetchOwnerData = async () => {
     setIsLoading(true);
-    fetch(process.env.REACT_APP_API_URL + '/api/user/' + classroom.ownerId, { 
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer '+ currentUser.token,
-        'Content-Type': 'application/json'
-      }
-    })
-    .then((res) => res.json())
-    .then((result) => {
-        setClassroom({...classroom, 
-          owner: result.name
-        })
-        setIsLoading(false);
-      },
-      (error) => {
-        setError(error);
-        setIsLoading(false);
-      }
-    )
+    const result = await getUserDetail(currentUser.token, classroom.ownerId)
+    if (result.data) {
+      setClassroom({...classroom, owner: result.data.name})
+    }
+    else if (result.error) {
+      setErrorMessage(result.error)
+    }
+    setIsLoading(false);
   }
 
   useEffect(() => {
-    fetchClassrooms();
+    callFetchOwnerData();
   }, [])
   
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  } else if (isLoading) {
+  if (errorMessage) {
+    return <div>Error: {errorMessage}</div>;
+  } 
+  else if (isLoading) {
     return(
       <div className="center-parent">
       <CircularProgress  />
       </div>
     );
-  } else {
+  } 
+  else {
     return (
       <li className="joined__list">
         <div className="joined__wrapper">

@@ -2,7 +2,8 @@ import { Fragment, useEffect, useContext, useState } from 'react';
 
 import { CircularProgress, Avatar, ListItemAvatar, ListItemText, Table, TableBody, TableCell, TableRow } from "@mui/material";
 
-import AuthContext from '../../context/AuthContext'
+import AuthContext from '../../contexts/authContext'
+import { getAllClassroomMembers } from '../../services/classroomService';
 
 import Title from './Title';
 
@@ -11,47 +12,39 @@ import Title from './Title';
 const MemberList = (props) => {
   const { currentUser } = useContext(AuthContext)
   
-  const [error, setError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [students, setStudents] = useState([]);
   const [teachers, setTeachers] = useState([]);
 
-  useEffect(() => {
+  const callFetchAllClassroomMembers = async (token, classroomId) => {
     setIsLoading(true);
-    fetch(process.env.REACT_APP_API_URL + '/api/class/' + props.classroomId + '/users', { 
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer '+ currentUser.token,
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(res => res.json())
-    .then((result) => {
-      if (result.errors) {
-        console.log(result.errors);
-        setError(result.errors);
-        setIsLoading(false);
-      } else {
-        setStudents(result.students)
-        setTeachers(result.teachers)
-        setIsLoading(false);
-      }
-    })
-    .catch((error) => {
-      setError(error);
-      setIsLoading(false);
-    })
+    const result = await getAllClassroomMembers(token, classroomId);
+    if (result.data) {
+      setStudents(result.data.students)
+      setTeachers(result.data.teachers)
+    }
+    else if (result.error) {
+      setErrorMessage(result.error)
+    }
+    setIsLoading(false);
+  }
+
+  useEffect(() => {
+    callFetchAllClassroomMembers(currentUser.token, props.classroomId)
   }, [])
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  } else if (isLoading) {
+  if (errorMessage) {
+    return <div>Error: {errorMessage}</div>;
+  } 
+  else if (isLoading) {
     return(
       <div className="center-parent">
-      <CircularProgress  />
+        <CircularProgress  />
       </div>
-    );
-  } else {
+    )
+  } 
+  else {
     return (
       <Fragment>
         <Title>Teachers</Title>

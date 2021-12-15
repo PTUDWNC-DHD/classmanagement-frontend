@@ -1,51 +1,55 @@
 import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { Button, TextField, Checkbox, FormControlLabel } from "@mui/material";
 
-import AuthContext from "../../context/AuthContext";
+import AuthContext from "../../contexts/authContext";
+import { joinClassroom } from "../../services/joinService";
+import { getAllClassrooms } from "../../services/classroomService";
+import * as Notifications from "../../utils/notifications"
+
+import Swal from 'sweetalert2'
 
 import "./style.css";
 
 const JoinClass = (props) => {
-  const { currentUser, setIsJoined, fetchClassrooms } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate()
 
   const [displayName, setDisplayName] = useState('');
   const [isStudent, setIsStudent] = useState(false);
   const [studentId, setStudentId] = useState('');
 
-  const handleJoinClass = (e) => {
+
+  const handleJoinClass = async (e) => {
     e.preventDefault();
     if (displayName){
-      fetch(process.env.REACT_APP_API_URL+'/api/join/' + props.joinCode, {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer '+ currentUser.token,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          name: displayName,
-          code: studentId,
-          isStudent: isStudent
+      const result = await joinClassroom(currentUser.token, props.joinCode, displayName, studentId, isStudent)
+      if (result.data) {
+        Swal.fire({
+          title: "Success",
+          text: Notifications.JOIN_CLASS_SUCCESSFULLY,
+          icon: "success",
+          button: "Close",
         })
-      })
-      .then((res) => res.json())
-      .then((result) => {
-        if (result.errors) {
-          window.alert(`Join class failed: ${result.errors[0]}`);
-        } else {
-          window.alert('Join class successfully !!!');
-        }
-        setIsJoined(true);
-        fetchClassrooms()
-      })
-      .catch((error) => {
-        console.log('Join class error: ', error)
-        window.alert(`Join class error: ${error}`);
-        setIsJoined(true);
-      })
+      }
+      else if (result.error) {
+        Swal.fire({
+          title: "Error",
+          text: Notifications.JOIN_CLASS_FAILED,
+          icon: "error",
+          button: "Close",
+        })
+      }
+      navigate('/')
     }
     else{
-      window.alert('Please enter your display name in class !!!');
+      Swal.fire({
+        title: "Error",
+        text: Notifications.PLEASE_ENTER_NAME,
+        icon: "Error",
+        button: "Close",
+      })
     }
   }
 

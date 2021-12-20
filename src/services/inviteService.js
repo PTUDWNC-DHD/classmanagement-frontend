@@ -1,7 +1,7 @@
 import * as Notifications from '../utils/notifications'
 
 // SEND invitation
-const sendInvitation = (token, emails, invitationCode) => {
+const sendInvitation = (token, emails, classroomId, isPublic, isStudent) => {
   return fetch(process.env.REACT_APP_API_URL+'/api/invite/invite', {
     method: 'POST',
     headers: {
@@ -10,7 +10,9 @@ const sendInvitation = (token, emails, invitationCode) => {
     },
     body: JSON.stringify({
       to: emails,
-      invitecode: invitationCode
+      classId: classroomId,
+      isPublic: isPublic,
+      isStudent: isStudent
     })
   })
   .then(res => {

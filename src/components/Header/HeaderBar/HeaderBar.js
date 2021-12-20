@@ -46,69 +46,70 @@ const HeaderBar = ({ children }) => {
 
 
 
-  
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar className="appar" color="common" position="static">
+      <AppBar className="appbar" color="common" position="static">
         <Toolbar className="toolBar" >
-            {children}
-            <Link to='/'>
-              <img
-                src="https://www.gstatic.com/images/branding/googlelogo/svg/googlelogo_clr_74x24px.svg"
-                alt="Classroom"
-                className="img"
-              />
-            </Link>
+          {children}
+          <Link to='/'>
+            <img
+              src="https://www.gstatic.com/images/branding/googlelogo/svg/googlelogo_clr_74x24px.svg"
+              alt="Classroom"
+              className="img"
+            />
+          </Link>
           <Typography className="title" variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Classroom
+            Classroom
           </Typography>
-          <IconButton>
-            <Add className="icon" size="large" onClick={handleClick} />
-            </IconButton>
-            <Menu 
-              size="large"
-              keepMounted 
-              id="simple-menu" 
-              anchorEl={anchorEl} 
-              open={Boolean(anchorEl)} 
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleJoin}>Join Class</MenuItem>
-              <MenuItem onClick={handleCreate}>Create Class</MenuItem>
-            </Menu>
-            <IconButton
-              size="large"
-              aria-label="show 17 new notifications"
-              color="inherit"
-            >
+          <IconButton onClick={handleClick}>
+            <Add className="icon" size="large" />
+          </IconButton>
+          <Menu 
+            size="large"
+            keepMounted 
+            id="simple-menu" 
+            anchorEl={anchorEl} 
+            open={Boolean(anchorEl)} 
+            onClose={handleClose}
+          >
+            <MenuItem onClick={handleJoin}>Join Class</MenuItem>
+            <MenuItem onClick={handleCreate}>Create Class</MenuItem>
+          </Menu>
+          <IconButton
+            size="large"
+            aria-label="show 17 new notifications"
+            color="inherit"
+            onClick={handleClickNoti}
+          >
             <Badge badgeContent={17} color="error">
-            <Notifications className="icon" size="large" onClick={handleClickNoti} />
+              <Notifications className="icon" size="large" />
             </Badge>
-            </IconButton>
-            <Menu 
-              size="large"
-              keepMounted 
-              id="simple-menu" 
-              notifi={notifi} 
-              open={Boolean(notifi)} 
-              onClose={handleCloseNoti}
-            >
-              <MenuItem >17 new notifications</MenuItem>
-              
-            </Menu>
+          </IconButton>
+          <Menu 
+            size="large"
+            keepMounted 
+            id="simple-menu" 
+            notifi={notifi} 
+            open={Boolean(notifi)} 
+            onClose={handleCloseNoti}
+          >
+            <MenuItem >17 new notifications</MenuItem>
             
-            <IconButton>
-              <Link to='/account' className="link">
-                <Avatar className="icon" className="link">
-                  {currentUser.user.name.charAt(0)}
-                </Avatar>
-              </Link>
-              </IconButton>
-            <Logout className="icon" onClick={handleLogout} />
+          </Menu>
+            
+          <IconButton>
+            <Link to='/account' className="link">
+              <Avatar className="icon" >
+                {currentUser.user.name.charAt(0)}
+              </Avatar>
+            </Link>
+            </IconButton>
+          <Logout className="icon" onClick={handleLogout} />
             
         </Toolbar>
       </AppBar>
+      <CreateClass isOpen={isOpenCreateDialog} setIsOpen={setIsOpenCreateDialog} />
     </Box>
   );
 };

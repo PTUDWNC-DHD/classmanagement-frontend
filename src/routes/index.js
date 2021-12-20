@@ -28,7 +28,7 @@ const AppRouter = ()=>{
           </NonAuthRequired>
         }/>
 
-        <Route path={process.env.REACT_APP_INVITE_LINK + ':id'} element={
+        <Route path={process.env.REACT_APP_INVITE_LINK + ':id/:type'} element={
           <AuthRequired>
             <JoinPage />
           </AuthRequired>

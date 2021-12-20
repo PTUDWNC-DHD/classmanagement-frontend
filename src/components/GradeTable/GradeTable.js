@@ -1,152 +1,147 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useRef, useEffect, useContext } from 'react';
+import { CSVLink } from "react-csv";
 
-import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import {
-  GridColumnMenu,
-  GridColumnMenuContainer,
-  GridFilterMenuItem,
-  SortGridMenuItems,
-  useGridApiRef,
-  DataGrid,
-  GridToolbarContainer,
-  GridToolbarExport,
-  gridClasses,
-} from '@mui/x-data-grid';
+import { Box, Button } from '@mui/material';
+import { FileDownload, FileUpload } from '@mui/icons-material';
+import {  DataGrid } from '@mui/x-data-grid';
 
-function CustomToolbar() {
-  return (
-    <GridToolbarContainer className={gridClasses.toolbarContainer}>
-      <GridToolbarExport csvOptions={{ fields: ['name','mssv'] }} />
-    </GridToolbarContainer>
-  );
-}
+import { CustomToolbar, CustomColumnMenuComponent } from './TableCustomComponent';
+import { getAllStudentGrades } from '../../services/classroomService';
+import AuthContext from '../../contexts/authContext';
 
-const StyledGridColumnMenuContainer = styled(GridColumnMenuContainer)(
-  ({ theme, ownerState }) => ({
-    background: theme.palette[ownerState.color].main,
-    color: theme.palette[ownerState.color].contrastText,
-  }),
-);
+import * as csvTemplate from '../../utils/csvTemplate'
 
-const StyledGridColumnMenu = styled(GridColumnMenu)(({ theme, ownerState }) => ({
-  background: theme.palette[ownerState.color].main,
-  color: theme.palette[ownerState.color].contrastText,
-}));
 
-function CustomColumnMenuComponent(props) {
-  const { hideMenu, currentColumn, color, ...other } = props;
 
-  if (currentColumn.field === 'grade'||'grade1'||'grade2'||'grade3'||'grade4') {
-    return (
-      <StyledGridColumnMenuContainer
-        hideMenu={hideMenu}
-        currentColumn={currentColumn}
-        ownerState={{ color }}
-        {...other}
-      >
-        <SortGridMenuItems onClick={hideMenu} column={currentColumn} />
-        <GridFilterMenuItem onClick={hideMenu} column={currentColumn} />
-        <Checkbox />
-      </StyledGridColumnMenuContainer>
-    );
-  }
+const GradeTable = ({ classroom }) => {
+  const { currentUser } = useContext(AuthContext)
+  //state for data
+  const [headers, setHeaders] = useState(['StudentID', 'Name']);
+  const [fields, setFields] = useState(['studentId', 'name']);
+  const [grades, setGrades] = useState(null);
+  const [columns, setColumns] = useState([]);
+  const [rows, setRows] = useState([]);
+
+  // state for display
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [color, setColor] = useState('success');
+
   
+  const fetchToGetGrades = async (token, classroomId) => {
+    setIsLoading(true);
+    const result = await getAllStudentGrades(token, classroomId)    
+    if (result.data)
+      setGrades(result.data)
+    else if (result.error)
+      setErrorMessage(result.error)
+    setIsLoading(false);
+  }
+
+  // do once after render
+  useEffect(()=>{
+    // get data of headers and fields from grade structure
+    const gradeName = [];
+    const gradeField = [];
+    classroom.gradeStructure.forEach((grade, index)=>{
+      gradeName.push(grade.name)
+      gradeField.push(grade._id)
+    })
+    setHeaders([...headers, ...gradeName])
+    setFields([...fields, ...gradeField])
+
+    // get grades of all students in class
+    fetchToGetGrades(currentUser.token, classroom._id)
+  },[])
+
+  // map header names and fields to columns
+  useEffect(()=>{
+    const columnsData = [];
+    for (let index = 0; index < headers.length; index++) {
+      columnsData.push({ 
+        field: fields[index],
+        headerName: headers[index],
+        width: 180,
+        type: fields[index].indexOf('grade') > -1 ? 'number' : '',
+        editable: true
+      })
+    }
+    setColumns(columnsData)
+  },[headers, fields])
+
+  // map grade of students to rows
+  useEffect(()=>{
+    if (grades) {
+      const gradeStructure = grades.gradeStructure;
+      const allGrades = grades.grades;
+      const allStudentIds = grades.studentIds;
+      const rowsData = []
+      console.log('grades: ', grades)
+  
+      for (let [id, grades] of Object.entries(allGrades)) {
+        let row = { 
+          id: id,
+          studentId: id,
+          name: 'N/A',
+          ...grades
+        }
+        rowsData.push(row)
+      }
+      setRows(rowsData)
+    }
+  },[grades])
+
+  
+
+  const studentListDownloadRef = useRef(null);
+
+  const handleDownloadStudentList = () => {
+    studentListDownloadRef.current.link.click();
+  }
+  const handleDownloadStudentGrades = () => {
+    
+  }
+  const handleUploadStudentList = () => {
+    
+  }
+  const handleUploadStudentGrades = () => {
+    
+  }
+
+  
+
   return (
-    <StyledGridColumnMenu
-      hideMenu={hideMenu}
-      currentColumn={currentColumn}
-      ownerState={{ color }}
-      {...other}
-    />
-  );
-}
+    <div style={{ width: '100%' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          {/* download button */}
+          <Button variant="outlined" endIcon={<FileDownload />} onClick={handleDownloadStudentList}>
+            Student List
+          </Button>
+          <CSVLink
+            headers={csvTemplate.STUDENT_LIST_CSV_TEMPLATE.headers}
+            filename="StudentListTemplate.csv"
+            data={csvTemplate.STUDENT_LIST_CSV_TEMPLATE.data}
+            ref={studentListDownloadRef}
+          />
 
-CustomColumnMenuComponent.propTypes = {
-  color: PropTypes.string.isRequired,
-  currentColumn: PropTypes.object.isRequired,
-  hideMenu: PropTypes.func.isRequired,
-};
-
-export { CustomColumnMenuComponent };
-
-export default function CustomColumnMenu() {
-  const [color, setColor] = React.useState('success');
-  const apiRef = useGridApiRef();
-
-  return (
-    <div
-      style={{
-        width: '100%',
-      }}
-    >
-      
+          <Button variant="outlined" endIcon={<FileDownload />} onClick={handleDownloadStudentGrades}>
+            Student Grade
+          </Button>
+        </Box>
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <Button variant="contained" startIcon={<FileUpload />} onClick={handleUploadStudentList}>
+            Student List
+          </Button>
+          <Button variant="contained" startIcon={<FileUpload />} onClick={handleUploadStudentGrades}>
+            Student Grade
+          </Button>
+        </Box>
+      </Box>
       <div style={{ height: 2500, width: '100%', marginTop: 16 }}>
         <DataGrid
-          apiRef={apiRef}
-          columns = {[
-            { field: 'name', headerName: 'Name', width: 180, editable: true },
-            { field: 'mssv', headerName: 'MSSV', editable: true },
-            { field: 'grade', headerName: 'Grade', type: 'number', editable: true },
-            { field: 'grade1', headerName: 'Grade1', type: 'number', editable: true },
-            { field: 'grade2', headerName: 'Grade2', type: 'number', editable: true },
-            { field: 'grade3', headerName: 'Grade3', type: 'number', editable: true },
-            { field: 'grade4', headerName: 'Grade4', type: 'number', editable: true },
-          ]}
-          rows={[
-            {
-              id: 1,
-              name: "Hieu",
-              mssv: "18120179",
-              grade: 10,
-              grade1: 5,
-              grade2: 8,
-              grade3: 9,
-              grade4: 7,
-            },
-            {
-              id: 2,
-              name: "Duc",
-              mssv:"18120164",
-              grade: 9,
-              grade1: 8,
-              grade2: 7,
-              grade3: 9,
-              grade4: 10,
-            },
-            {
-              id: 3,
-              name: "Danh",
-              mssv:"18120161",
-              grade: 6,
-              grade1: 10,
-              grade2: 8,
-              grade3: 9,
-              grade4: 9,
-            },
-            {
-              id: 4,
-              name: "Dung",
-              
-              grade: 8,
-              grade1: 9,
-              grade2: 8,
-              grade3: 9,
-              grade4: 9,
-            },
-            {
-              id: 5,
-              name: "Bao",
-              grade: 8,
-              grade1: 8,
-              grade2: 8,
-              grade3: 6,
-              grade4: 7,
-            },
-          ]}
-          
+          columns = {columns}
+          rows={rows}
           components={{
             ColumnMenu: CustomColumnMenuComponent,
             Toolbar: CustomToolbar,
@@ -160,3 +155,4 @@ export default function CustomColumnMenu() {
   );
 }
 
+export default GradeTable;

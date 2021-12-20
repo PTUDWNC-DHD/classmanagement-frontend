@@ -17,41 +17,24 @@ import "./user_form.css"
 
 
 
-function Grade(props) {
+function GradeStructure({classroom}) {
   const { currentUser } = useContext(AuthContext)
 
   const [errorMessage, setErrorMessage] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [grades, setGrades] =useState([]); 
+  const [grades, setGrades] =useState(classroom?.gradeStructure);
 
-
-  const callFetchClassroomDetail = async (token, classroomId) => {
-    setIsLoading(true);
-    const result = await getClassroomDetail(token, classroomId)
-    if (result.data) {
-      addIsExpandAndSetGrades(result.data.gradeStructure)
-    }
-    else if (result.error) {
-      setErrorMessage(result.error)
-    }
-    setIsLoading(false);
-  }
 
   const fetchToSaveGrades = async (token, classroomId, grades) => {
     setIsLoading(true);
     const result = await updateGradeStructure(token, classroomId, grades)
     if (result.data)
-      addIsExpandAndSetGrades(result.data.gradeStructure)
+      addIsExpandAndSetGrades(result.data)
     else if (result.error)
       setErrorMessage(result.error)
     setIsLoading(false);
   }
-
-  useEffect(() => {
-    callFetchClassroomDetail(currentUser.token, props.classroomId);
-    //console.log('class grade detail:', grades)
-  }, [])
 
   function addIsExpandAndSetGrades(gradesArr){
     const newGrades = [];
@@ -68,7 +51,7 @@ function Grade(props) {
         isEmpty = true;
       }
     })
-    isEmpty ? window.alert("Name or grade must not be empty") : fetchToSaveGrades(currentUser.token, props.classroomId, grades);
+    isEmpty ? window.alert("Name or grade must not be empty") : fetchToSaveGrades(currentUser.token, classroom._id, grades);
   }
 
   function handleAddGrade(){
@@ -282,4 +265,4 @@ function Grade(props) {
 }
 
 
-export default Grade;
+export default GradeStructure;

@@ -1,24 +1,20 @@
 import * as Notifications from '../utils/notifications'
 
 // JOIN classroom
-const joinClassroom = (token, joinCode, name, studentId, isStudent) => {
-  return fetch(process.env.REACT_APP_API_URL+'/api/join/' + joinCode, {
+const joinClassroom = (token, joinCode, type) => {
+  console.log('token, joincode, type: ', token, joinCode, type)
+  return fetch(`${process.env.REACT_APP_API_URL}/api/join/${joinCode}/${type}`, {
     method: 'POST',
     headers: {
       'Authorization': 'Bearer '+ token,
       'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      name: name,
-      code: studentId,
-      isStudent: isStudent
-    })
+    }
   })
   .then(res => {
-    //console.log('res: ', res)
+    console.log('res: ', res)
     if (res.ok) {
       return res.json().then((result) => {
-        //console.log('result: ', result)
+        console.log('result: ', result)
         if (!result)
           return { error: Notifications.API_RETURN_NULL_RESULT}
         else if (result.errors)

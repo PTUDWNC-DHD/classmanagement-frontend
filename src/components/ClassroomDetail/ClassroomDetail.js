@@ -4,7 +4,7 @@ import { useState, useEffect, useContext } from 'react';
 import AuthContext from '../../contexts/authContext'
 import { getClassroomDetail } from '../../services/classroomService';
 
-import { CircularProgress, Avatar, Button, TextField, IconButton, List, ListItem, ListItemText } from "@mui/material";
+import { CircularProgress, Button, IconButton, List, ListItem, ListItemText } from "@mui/material";
 
 import { ContentCopy } from '@mui/icons-material'
 
@@ -14,12 +14,8 @@ import './style.css'
 
 
 
-const ClassroomDetail = (props) => {
+const ClassroomDetail = ({classroom, isLoading, errorMessage}) => {
   const { currentUser } = useContext(AuthContext)
-
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [classroom, setClassroom] = useState(null);
 
   const [showInput, setShowInput] = useState(false);
   const [inputValue, setInput] = useState("");
@@ -35,24 +31,8 @@ const ClassroomDetail = (props) => {
   }
 
   const handleCopyInviteCode = (e) => {
-    navigator.clipboard.writeText(process.env.REACT_APP_CLIENT_URL + process.env.REACT_APP_INVITE_LINK + classroom.invite)
+    navigator.clipboard.writeText(process.env.REACT_APP_CLIENT_URL + process.env.REACT_APP_INVITE_LINK + classroom.invite + '/public')
   }
-
-  const callFetchClassroomDetail = async () => {
-    setIsLoading(true);
-    const result = await getClassroomDetail(currentUser.token, props.classroomId)
-    if (result.data) {
-      setClassroom(result.data)
-    }
-    else if (result.error) {
-      setErrorMessage(result.error)
-    }
-    setIsLoading(false);
-  }
-
-  useEffect(() => {
-    callFetchClassroomDetail();
-  }, [])
   
   if (errorMessage) {
     return <div>Error: {errorMessage}</div>;
@@ -114,6 +94,7 @@ const ClassroomDetail = (props) => {
             </div>
           {showInvitePopup && <InvitePopup 
             invite={classroom.invite} 
+            classroomId={classroom.id}
             showInvitePopup={showInvitePopup} 
             setShowInvitePopup={setShowInvitePopup}
           />}

@@ -34,7 +34,7 @@ const getUserDetail = (token, userId) => {
 }
 
 //PATCH to update user account information
-const updateUserAccountInformation = (token, fullname, email) => {
+const updateUserAccountInformation = (token, fullname, email, studentId) => {
   return fetch(process.env.REACT_APP_API_URL + '/api/user/me', { 
     method: 'PATCH',
     headers: {
@@ -44,6 +44,7 @@ const updateUserAccountInformation = (token, fullname, email) => {
     body: JSON.stringify({
       name: fullname,
       email: email,
+      studentId: studentId
     })
   })
   .then(res => {

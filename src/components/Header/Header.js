@@ -78,11 +78,10 @@ export default function Header({check,change}) {
             </ListItemIcon>
             <ListItemText primary="Settings" />
             <Switch 
-            defaulftChecked
             inputProps={{'aria-label':'checkbox with default color'}}
             onChange={change}
             checked={check}
-             />
+            />
           </ListItemButton>
         </List>
       </SwipeableDrawer>

@@ -21,6 +21,7 @@ const MemberList = (props) => {
     setIsLoading(true);
     const result = await getAllClassroomMembers(token, classroomId);
     if (result.data) {
+      //console.log('result: ', result)
       setStudents(result.data.students)
       setTeachers(result.data.teachers)
     }

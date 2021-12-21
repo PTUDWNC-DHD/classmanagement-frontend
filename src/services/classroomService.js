@@ -271,11 +271,15 @@ const uploadStudentList = (token, classroomId, file) => {
 
 // UPLOAD student grade file
 const uploadStudentGrade = (token, classroomId, gradeId, file) => {
-  return fetch(`${process.env.REACT_APP_API_URL}/api/class/${classroomId}/addstudents`, { 
+  const form = new FormData();
+  form.append('filecsv', file);
+
+  return fetch(`${process.env.REACT_APP_API_URL}/api/class/${classroomId}/${gradeId}/addgrades`, { 
     method: 'POST',
     headers: {
       'Authorization': 'Bearer '+ token,
-    }
+    },
+    body: form
   })
   .then(res => {
     //console.log('res: ', res)
@@ -309,5 +313,6 @@ export {
   updateGradeStructure,
   saveStudentGrade,
   uploadStudentList,
+  uploadStudentGrade,
 
 }

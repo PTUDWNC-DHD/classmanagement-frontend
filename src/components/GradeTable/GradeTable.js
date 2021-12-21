@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 
-import { Box, Button } from '@mui/material';
-import {  FileUpload } from '@mui/icons-material';
+import { Box } from '@mui/material';
+
 import {  DataGrid } from '@mui/x-data-grid';
 
 import { DownloadButton, UploadButton } from '../components';
-import { CustomToolbar, CustomColumnMenuComponent } from './TableCustomComponent';
+import { CustomColumnMenu } from './CustomColumnMenu';
 import { getAllStudentGrades, saveStudentGrade, uploadStudentList } from '../../services/classroomService';
 import AuthContext from '../../contexts/authContext';
 
@@ -105,7 +105,7 @@ const GradeTable = ({ classroom }) => {
   const callFetchToUploadStudentList = async (token, classroomId, file) => {
     setIsLoading(true);
     const result = await uploadStudentList(token, classroomId, file);
-    //console.log('result file: ', result)
+    console.log('result student list upload: ', result)
     if (result.data)
       callFetchToGetGrades(token, classroomId)
     else if (result.error)
@@ -176,11 +176,16 @@ const GradeTable = ({ classroom }) => {
           rows={rows}
           onCellEditCommit={handleCellEditCommit}
           components={{
-            ColumnMenu: CustomColumnMenuComponent,
-            Toolbar: CustomToolbar,
+            ColumnMenu: CustomColumnMenu
           }}
           componentsProps={{
-            columnMenu: { color },
+            columnMenu: { 
+              color,
+              callFetchToGetGrades: callFetchToGetGrades,
+              currentUser: currentUser,
+              classroomId: classroom._id
+            },
+            
           }}
         />
       </div>

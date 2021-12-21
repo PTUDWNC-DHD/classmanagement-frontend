@@ -198,6 +198,108 @@ const getAllStudentGrades = (token, classroomId) => {
   })
 }
 
+// SAVE grade of 1 student in classroom
+const saveStudentGrade = (token, classroomId, studentId, gradeId, score) => {
+  return fetch(`${process.env.REACT_APP_API_URL}/api/class/${classroomId}/${gradeId}/addgrade`, { 
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer '+ token,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      studentId: studentId,
+      score: score
+    })
+  })
+  .then(res => {
+    //console.log('res: ', res)
+    if (res.ok) {
+      return res.json().then((result) => {
+        //console.log('result: ', result)
+        if (!result)
+          return { error: Notifications.API_RETURN_NULL_RESULT}
+        else if (result.errors)
+          return { error: result.errors}
+        else
+          return { data: result }
+      })
+    } 
+    else {
+      return { error: Notifications.API_FAILED}
+    }
+  })
+  .catch((error) => {
+    //console.log('error: ', error)
+    return { error: error}
+  })
+}
+
+// UPLOAD student list file
+const uploadStudentList = (token, classroomId, file) => {
+  const form = new FormData();
+  form.append('filecsv', file);
+
+  return fetch(`${process.env.REACT_APP_API_URL}/api/class/${classroomId}/addstudents`, { 
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer '+ token,
+    },
+    body: form
+  })
+  .then(res => {
+    //console.log('res: ', res)
+    if (res.ok) {
+      return res.json().then((result) => {
+        //console.log('result: ', result)
+        if (!result)
+          return { error: Notifications.API_RETURN_NULL_RESULT}
+        else if (result.errors)
+          return { error: result.errors}
+        else
+          return { data: result }
+      })
+    } 
+    else {
+      return { error: Notifications.API_FAILED}
+    }
+  })
+  .catch((error) => {
+    //console.log('error: ', error)
+    return { error: error}
+  })
+}
+
+// UPLOAD student grade file
+const uploadStudentGrade = (token, classroomId, gradeId, file) => {
+  return fetch(`${process.env.REACT_APP_API_URL}/api/class/${classroomId}/addstudents`, { 
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer '+ token,
+    }
+  })
+  .then(res => {
+    //console.log('res: ', res)
+    if (res.ok) {
+      return res.json().then((result) => {
+        //console.log('result: ', result)
+        if (!result)
+          return { error: Notifications.API_RETURN_NULL_RESULT}
+        else if (result.errors)
+          return { error: result.errors}
+        else
+          return { data: result }
+      })
+    } 
+    else {
+      return { error: Notifications.API_FAILED}
+    }
+  })
+  .catch((error) => {
+    //console.log('error: ', error)
+    return { error: error}
+  })
+}
+
 export {
   getAllClassrooms,
   getClassroomDetail,
@@ -205,5 +307,7 @@ export {
   getAllStudentGrades,
   createClassroom,
   updateGradeStructure,
-  
+  saveStudentGrade,
+  uploadStudentList,
+
 }

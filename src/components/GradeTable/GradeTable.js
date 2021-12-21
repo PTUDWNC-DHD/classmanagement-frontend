@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
-import { CSVLink } from "react-csv";
 
 import { Box, Button } from '@mui/material';
-import { FileDownload, FileUpload } from '@mui/icons-material';
+import {  FileUpload } from '@mui/icons-material';
 import {  DataGrid } from '@mui/x-data-grid';
 
+import { DownloadButton, UploadButton } from '../components';
 import { CustomToolbar, CustomColumnMenuComponent } from './TableCustomComponent';
-import { getAllStudentGrades } from '../../services/classroomService';
+import { getAllStudentGrades, saveStudentGrade, uploadStudentList } from '../../services/classroomService';
 import AuthContext from '../../contexts/authContext';
 
 import * as csvTemplate from '../../utils/csvTemplate'
@@ -27,16 +27,6 @@ const GradeTable = ({ classroom }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [color, setColor] = useState('success');
 
-  
-  const fetchToGetGrades = async (token, classroomId) => {
-    setIsLoading(true);
-    const result = await getAllStudentGrades(token, classroomId)    
-    if (result.data)
-      setGrades(result.data)
-    else if (result.error)
-      setErrorMessage(result.error)
-    setIsLoading(false);
-  }
 
   // do once after render
   useEffect(()=>{
@@ -47,11 +37,12 @@ const GradeTable = ({ classroom }) => {
       gradeName.push(grade.name)
       gradeField.push(grade._id)
     })
+    gradeName.push('Total Grade')
+    gradeField.push('total')
     setHeaders([...headers, ...gradeName])
     setFields([...fields, ...gradeField])
-
     // get grades of all students in class
-    fetchToGetGrades(currentUser.token, classroom._id)
+    callFetchToGetGrades(currentUser.token, classroom._id)
   },[])
 
   // map header names and fields to columns
@@ -72,18 +63,20 @@ const GradeTable = ({ classroom }) => {
   // map grade of students to rows
   useEffect(()=>{
     if (grades) {
-      const gradeStructure = grades.gradeStructure;
-      const allGrades = grades.grades;
-      const allStudentIds = grades.studentIds;
-      const rowsData = []
       console.log('grades: ', grades)
-  
-      for (let [id, grades] of Object.entries(allGrades)) {
+      const rowsData = [];
+      for (let [id, values] of Object.entries(grades)) {
+        // calculate sum of each student grade
+        const sum = Object.values(values).reduce((total, element) => {
+          const elementNumber = parseFloat(element) || 0;
+          return total + elementNumber
+        }, 0)
+
         let row = { 
           id: id,
           studentId: id,
-          name: 'N/A',
-          ...grades
+          ...values,
+          total: sum
         }
         rowsData.push(row)
       }
@@ -91,57 +84,97 @@ const GradeTable = ({ classroom }) => {
     }
   },[grades])
 
-  
+  const callFetchToGetGrades = async (token, classroomId) => {
+    setIsLoading(true);
+    const result = await getAllStudentGrades(token, classroomId)    
+    if (result.data)
+      setGrades(result.data)
+    else if (result.error)
+      setErrorMessage(result.error)
+    setIsLoading(false);
+  }
 
-  const studentListDownloadRef = useRef(null);
+  const callFetchToSaveGrade = async (token, classroomId, studentId, gradeId, score) => {
+    setIsLoading(true);
+    const result = await saveStudentGrade(token, classroomId, studentId, gradeId, score)    
+    if (result.error)
+      setErrorMessage(result.error)
+    setIsLoading(false);
+  }
 
-  const handleDownloadStudentList = () => {
-    studentListDownloadRef.current.link.click();
+  const callFetchToUploadStudentList = async (token, classroomId, file) => {
+    setIsLoading(true);
+    const result = await uploadStudentList(token, classroomId, file);
+    //console.log('result file: ', result)
+    if (result.data)
+      callFetchToGetGrades(token, classroomId)
+    else if (result.error)
+      setErrorMessage(result.error)
+    setIsLoading(false);
   }
-  const handleDownloadStudentGrades = () => {
+
+  const handleUploadStudentList = (file) => {
+    callFetchToUploadStudentList(currentUser.token, classroom._id, file)
+  }
+  const handleUploadStudentGrades = (file) => {
     
   }
-  const handleUploadStudentList = () => {
-    
+
+  const handleCellEditCommit = (params) => {
+    callFetchToSaveGrade(currentUser.token, classroom._id, params.id, params.field, params.value)
+    //update new grades
+    const newGrades = {...grades}
+    newGrades[params.id][params.field] = parseFloat(params.value)
+    setGrades(newGrades)
   }
-  const handleUploadStudentGrades = () => {
-    
-  }
+
+
 
   
 
   return (
     <div style={{ width: '100%' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        {/* Download button */}
         <Box sx={{ display: 'flex', gap: 1 }}>
           {/* download button */}
-          <Button variant="outlined" endIcon={<FileDownload />} onClick={handleDownloadStudentList}>
-            Student List
-          </Button>
-          <CSVLink
-            headers={csvTemplate.STUDENT_LIST_CSV_TEMPLATE.headers}
+          <DownloadButton 
+            variant='outlined' 
+            content='Student List'
             filename="StudentListTemplate.csv"
+            headers={csvTemplate.STUDENT_LIST_CSV_TEMPLATE.headers}
             data={csvTemplate.STUDENT_LIST_CSV_TEMPLATE.data}
-            ref={studentListDownloadRef}
           />
 
-          <Button variant="outlined" endIcon={<FileDownload />} onClick={handleDownloadStudentGrades}>
-            Student Grade
-          </Button>
+          <DownloadButton 
+            variant='outlined' 
+            content='Student Grade'
+            filename="StudentGradesTemplate.csv"
+            headers={csvTemplate.STUDENT_GRADES_CSV_TEMPLATE.headers}
+            data={csvTemplate.STUDENT_GRADES_CSV_TEMPLATE.data}
+          />
+
         </Box>
+        {/* Upload button */}
         <Box sx={{ display: 'flex', gap: 1 }}>
-          <Button variant="contained" startIcon={<FileUpload />} onClick={handleUploadStudentList}>
-            Student List
-          </Button>
-          <Button variant="contained" startIcon={<FileUpload />} onClick={handleUploadStudentGrades}>
-            Student Grade
-          </Button>
+          <UploadButton 
+            variant='contained' 
+            content='Student List'
+            handleFile={handleUploadStudentList}
+          />
+
+          <UploadButton 
+            variant='contained' 
+            content='Student Grade'
+            handleFile={handleUploadStudentGrades}
+          />
         </Box>
       </Box>
       <div style={{ height: 2500, width: '100%', marginTop: 16 }}>
         <DataGrid
           columns = {columns}
           rows={rows}
+          onCellEditCommit={handleCellEditCommit}
           components={{
             ColumnMenu: CustomColumnMenuComponent,
             Toolbar: CustomToolbar,

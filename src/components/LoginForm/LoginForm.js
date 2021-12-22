@@ -24,7 +24,7 @@ const LoginForm = () => {
     const result = await fetchLogin(usernameToFetch, passwordToFetch)
     //console.log('result after fetch: ', result)
     let alert = {
-      title: "Good job !",
+      title: "Success",
       text:  Notifications.LOGIN_SUCCESSFULLY,
       icon: "success",
       button: "Next",

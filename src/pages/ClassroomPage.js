@@ -15,7 +15,7 @@ const ClassroomPage = () => {
   const location = useLocation();
   // get classroomId from path
   const path = location.pathname.split('/')
-    const classroomId = path.at(-1);
+  const classroomId = path.at(-1);
 
   const { currentUser } = useContext(AuthContext)
 
@@ -147,7 +147,12 @@ const ClassroomPage = () => {
           </TabPanel>
 
           <TabPanel value="3">
-            <GradeStructure classroomId={classroomId} gradeStructure={gradeStructure} setGradeStructure={setGradeStructure}/> 
+            <GradeStructure 
+              classroomId={classroomId} 
+              gradeStructure={gradeStructure} 
+              setGradeStructure={setGradeStructure}
+              isTeacher={isTeacher}
+            /> 
           </TabPanel>
           <TabPanel value="4">
             <GradeTable 
@@ -156,6 +161,7 @@ const ClassroomPage = () => {
               isTeacher={isTeacher} 
               classroomId={classroomId}
               gradeStructure={gradeStructure}
+              studentList={students}
             /> 
           </TabPanel>
         </TabContext>

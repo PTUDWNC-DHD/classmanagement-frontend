@@ -4,7 +4,7 @@ import { Button } from '@mui/material'
 import { FileUpload } from '@mui/icons-material';
 
 
-const UploadButton = ({ content,  variant='contained', handleFile}) => {
+const UploadButton = ({ content,  variant='contained', handleFile, sx}) => {
   const uploadRef = useRef(null);
   const handleUploadClick = () => {
     uploadRef.current.click();
@@ -17,7 +17,7 @@ const UploadButton = ({ content,  variant='contained', handleFile}) => {
   };
   return (
     <Fragment>
-      <Button variant={variant}  startIcon={<FileUpload />} onClick={handleUploadClick}>
+      <Button variant={variant} sx={sx} startIcon={<FileUpload />} onClick={handleUploadClick}>
         {content}
       </Button>
       <input

@@ -1,19 +1,24 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from "react-router-dom";
 
 import { Box } from '@mui/material';
 
 import {  DataGrid } from '@mui/x-data-grid';
 
 import { DownloadButton, UploadButton } from '../components';
-import { CustomColumnMenu } from './CustomColumnMenu';
+import CustomColumnMenu from './CustomColumnMenu';
+import CustomLoadingOverlay from './CustomLoadingOverlay';
+import CustomNoRowsOverlay from './CustomNoRowsOverLay';
 import { getAllStudentGrades, saveStudentGrade, uploadStudentList } from '../../services/classroomService';
+
+import Swal from 'sweetalert2'
 
 
 import * as Constant from '../../utils/constant'
 
 
 
-const GradeTable = ({ currentUser, isOwner, isTeacher, classroomId, gradeStructure }) => {
+const GradeTable = ({ currentUser, isOwner, isTeacher, classroomId, gradeStructure, studentList }) => {
   //state for data
   const [grades, setGrades] = useState(null);
   const [totalWeight, setTotalWeight] = useState(0);
@@ -63,23 +68,32 @@ const GradeTable = ({ currentUser, isOwner, isTeacher, classroomId, gradeStructu
   useEffect(()=>{
     console.log('column effect')
     const columnsData = [];
-      const csvGradeBoardHeader = [];
-      for (let index = 0; index < headers.length; index++) {
-        columnsData.push({ 
-          field: fields[index],
-          headerName: headers[index],
-          width: 180,
-          type: fields[index].indexOf('grade') > -1 ? 'number' : '',
-          editable: (fields[index] === 'studentId' || fields[index] === 'name' || fields[index] === 'total') ? false : isTeacher
-        })
-        csvGradeBoardHeader.push({
-          label: headers[index],
-          key: fields[index]
-        })
+    const csvGradeBoardHeader = [];
+    for (let index = 0; index < headers.length; index++) {
+      const column = { 
+        field: fields[index],
+        headerName: headers[index],
+        width: 180,
+        type: fields[index].indexOf('grade') > -1 ? 'number' : '',
+        editable: (fields[index] === 'studentId' || fields[index] === 'name' || fields[index] === 'total') ? false : isTeacher
       }
-      //console.log('columns data: ', columnsData)
-      setColumns(columnsData)
-      setGradeBoardHeader(csvGradeBoardHeader)
+      if (fields[index] === 'name') {
+        column.renderCell = (params) => {
+          if (params.row.userId)
+            return <Link to={`/users/${params.row.userId}`}>{params.value}</Link>
+          else 
+            return params.value
+        }
+      }
+      columnsData.push(column)
+      csvGradeBoardHeader.push({
+        label: headers[index],
+        key: fields[index]
+      })
+    }
+    //console.log('columns data: ', columnsData)
+    setColumns(columnsData)
+    setGradeBoardHeader(csvGradeBoardHeader)
   },[headers, fields, isTeacher])
 
   // run when columns has been updated
@@ -93,6 +107,13 @@ const GradeTable = ({ currentUser, isOwner, isTeacher, classroomId, gradeStructu
     console.log('grades effect')
     
     if (grades) {
+      const getUserIdAccount = (studentId) => {
+        for (let student of studentList) {
+          if (student.studentId === studentId)
+            return student._id
+        }
+        return null;
+      }
       
       const rowsData = [];
       const newStudentIdList = [];
@@ -118,14 +139,29 @@ const GradeTable = ({ currentUser, isOwner, isTeacher, classroomId, gradeStructu
           ...studentValues,
           total: totalGrade.toFixed(4)
         }
+        const userId = getUserIdAccount(studentId)
+        if (userId){
+          row.userId = userId;
+        }
         rowsData.push(row)
         newStudentIdList.push({studentId: studentId})
       }
       setRows(rowsData)
       setStudentIdList(newStudentIdList)
     }
-  },[grades, fields, gradesWeight, totalWeight])
+  },[grades, fields, gradesWeight, totalWeight, studentList])
 
+  // run when error happen 
+  useEffect(()=>{
+    if (errorMessage){
+      Swal.fire({
+        title: "Error happen",
+        text: errorMessage,
+        icon: "error",
+        button: "Close",
+      })
+    }
+  },[errorMessage])
 
   // call fetch
   const callFetchToGetGrades = async (token, classroomId) => {
@@ -166,11 +202,23 @@ const GradeTable = ({ currentUser, isOwner, isTeacher, classroomId, gradeStructu
   }
 
   const handleCellEditCommit = (params) => {
+    
+    console.log('debug: ', rows)
     callFetchToSaveGrade(currentUser.token, classroomId, params.id, params.field, params.value)
     //update new grades
     const newGrades = {...grades}
-    newGrades[params.id][params.field] = parseFloat(params.value)
+    const studentIdToUpdate = getStudentId(params.id)
+    if (studentIdToUpdate)
+      newGrades[studentIdToUpdate][params.field] = parseFloat(params.value)
     setGrades(newGrades)
+  }
+
+  const getStudentId = (rowId) => {
+    for (let row of rows) {
+      if (row.id === rowId)
+        return row.studentId;
+    }
+    return null;
   }
 
   return (
@@ -182,7 +230,7 @@ const GradeTable = ({ currentUser, isOwner, isTeacher, classroomId, gradeStructu
             {/* download button */}
             <DownloadButton 
               variant='outlined' 
-              content='Student List'
+              content='Student List Template'
               filename="StudentListTemplate.csv"
               headers={Constant.STUDENT_LIST_CSV_TEMPLATE.headers}
               data={Constant.STUDENT_LIST_CSV_TEMPLATE.data}
@@ -190,7 +238,7 @@ const GradeTable = ({ currentUser, isOwner, isTeacher, classroomId, gradeStructu
 
             <DownloadButton 
               variant='outlined' 
-              content='Student Grade'
+              content='Student Grade Template'
               filename="StudentGradesTemplate.csv"
               headers={Constant.STUDENT_GRADES_CSV_TEMPLATE.headers}
               data={studentIdList}
@@ -209,7 +257,7 @@ const GradeTable = ({ currentUser, isOwner, isTeacher, classroomId, gradeStructu
           <Box sx={{ display: 'flex', gap: 1 }}>
             <UploadButton 
               variant='contained' 
-              content='Student List'
+              content='Upload Student List'
               handleFile={handleUploadStudentList}
             />
           </Box>
@@ -222,8 +270,11 @@ const GradeTable = ({ currentUser, isOwner, isTeacher, classroomId, gradeStructu
           rows={rows}
           onCellEditCommit={handleCellEditCommit}
           components={{
-            ColumnMenu: CustomColumnMenu
+            ColumnMenu: CustomColumnMenu,
+            LoadingOverlay: CustomLoadingOverlay,
+            NoRowsOverlay: CustomNoRowsOverlay
           }}
+          loading={isLoading}
           componentsProps={{
             columnMenu: { 
               color,

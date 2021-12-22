@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Button, TextField, Checkbox, FormControlLabel } from "@mui/material";
+import { Button, Box, Checkbox, FormControlLabel, CardHeader, Card, CardContent, Grid, Divider, TextField } from "@mui/material";
 
 import AuthContext from "../../contexts/authContext";
 import { joinClassroom } from "../../services/joinService";
@@ -16,14 +16,17 @@ const JoinClass = (props) => {
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate()
 
-  const [displayName, setDisplayName] = useState('');
-  const [isStudent, setIsStudent] = useState(false);
-  const [studentId, setStudentId] = useState('');
+  const [studentId, setStudentId] = useState(currentUser.user.studentId);
+  const [isAccepted, setIsAccepted] = useState(false);
+  
 
+  const handleChangeStudentId = (e) => {
+    setStudentId(e.target.value)
+  }
 
   const handleJoinClass = async (e) => {
     e.preventDefault();
-    if (displayName){
+    if (studentId){
       const result = await joinClassroom(currentUser.token, props.joinCode, props.type)
       if (result.data) {
         Swal.fire({
@@ -34,58 +37,77 @@ const JoinClass = (props) => {
         })
       }
       else if (result.error) {
+        let text = Notifications.JOIN_CLASS_FAILED
+        if (result.error[0].indexOf('already been in class'))
+          text = Notifications.ALREADY_BEEN_IN_CLASS
         Swal.fire({
           title: "Error",
-          text: Notifications.JOIN_CLASS_FAILED,
+          text: text,
           icon: "error",
           button: "Close",
         })
       }
       navigate('/')
     }
-    else{
+    else {
       Swal.fire({
-        title: "Error",
-        text: Notifications.PLEASE_ENTER_NAME,
-        icon: "Error",
+        title: "Warning",
+        text: Notifications.PLEASE_ENTER_STUDENT_ID,
+        icon: "warning",
         button: "Close",
       })
     }
   }
 
-  return (
-    <div className="form">
-      <p className="class__title">Join Class Diaglog</p>
+  const handleCancel = (e) => {
+    navigate('/')
+  }
 
-      <div className="form__inputs">
-        <TextField
-          id="displayname"
-          label="Display Name (required)"
-          className="form__input"
-          variant="filled"
-          value={displayName}
-          onChange={(e) => setDisplayName(e.target.value)}
-          required
+  return (
+    <Card>
+        <CardHeader
+          subheader="You are invited to join a classroom"
+          title="Join class Dialog"
         />
-        <FormControlLabel
-            control={<Checkbox color="primary" onChange={() => setIsStudent(!isStudent)} />}
-            label="I am student"
-        />
-        <TextField
-          id="studentid"
-          label="Student ID (if you are student)"
-          className="form__input"
-          variant="filled"
-          value={studentId}
-          onChange={(e) => setStudentId(e.target.value)}
-          disabled={!isStudent}
-        />
-        <Button onClick={handleJoinClass} color="primary">
-          Join class
-        </Button>
-      </div>
-      
-    </div>
+        <Divider />
+        <CardContent>
+          <Grid item md={6} xs={12} >
+            <TextField
+              fullWidth
+              label="Your student ID"
+              name="studentId"
+              onChange={handleChangeStudentId}
+              required
+              value={studentId}
+              variant="outlined"
+              disabled={studentId ? true : false}
+              helperText="Your student ID can not be changed after updated !!!"
+            />
+          </Grid>
+        </CardContent>
+        <Divider />
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: "space-between",
+            p: 2
+          }}
+        >
+          <FormControlLabel
+            control={<Checkbox color="primary" onChange={() => setIsAccepted(!isAccepted)} />}
+            label="I accept to join"
+          />
+          <div>
+            <Button sx={{marginRight: 2}} color="primary" variant="contained" onClick={handleCancel}>
+              Cancel
+            </Button>
+            <Button onClick={handleJoinClass} color="primary" variant="contained" disabled={!isAccepted}>
+              Join class
+            </Button>  
+          </div>
+          
+        </Box>
+      </Card>
   );
 };
 

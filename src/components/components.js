@@ -14,3 +14,4 @@ export { default as GradeStructure } from './GradeStructure/GradeStructure';
 export { default as GradeTable } from './GradeTable/GradeTable';
 export { default as DownloadButton } from './DownloadButton/DownloadButton';
 export { default as UploadButton } from './UploadButton/UploadButton';
+export { default as UserDetail } from './UserDetail/UserDetail';

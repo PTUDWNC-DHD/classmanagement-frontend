@@ -156,6 +156,7 @@ const AccountDetail = (props) => {
                 onChange={handleChangeStudentId}
                 required
                 value={studentId}
+                disabled={studentId ? true : false}
               />
             </Grid>
           </Grid>

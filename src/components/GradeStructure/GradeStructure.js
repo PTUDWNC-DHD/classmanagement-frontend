@@ -17,13 +17,12 @@ import "./user_form.css"
 
 
 
-function GradeStructure({classroom}) {
+function GradeStructure({classroomId, gradeStructure, setGradeStructure}) {
   const { currentUser } = useContext(AuthContext)
 
   const [errorMessage, setErrorMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [grades, setGrades] =useState(classroom?.gradeStructure);
 
 
   const fetchToSaveGrades = async (token, classroomId, grades) => {
@@ -41,23 +40,23 @@ function GradeStructure({classroom}) {
     gradesArr.forEach(grade => {
       newGrades.push({...grade, isExpanded: false})
     })
-    setGrades(newGrades)
+    setGradeStructure(newGrades)
   }
 
   function handleSaveGrades(){
     let isEmpty = false;
-    grades.forEach(grade => {
+    gradeStructure.forEach(grade => {
       if (!grade.name || !grade.weight){
         isEmpty = true;
       }
     })
-    isEmpty ? window.alert("Name or grade must not be empty") : fetchToSaveGrades(currentUser.token, classroom._id, grades);
+    isEmpty ? window.alert("Name or grade must not be empty") : fetchToSaveGrades(currentUser.token, classroomId, gradeStructure);
   }
 
   function handleAddGrade(){
     closeAllExpandedGrades();
 
-    setGrades([...grades, {
+    setGradeStructure([...gradeStructure, {
       name: "",
       weight: "",
       isExpanded: true, 
@@ -67,41 +66,41 @@ function GradeStructure({classroom}) {
   function handleCopyGrade(index){
     closeAllExpandedGrades()
     
-    const newGrades = [...grades];
-    const copyGrade = {...grades[index]}
+    const newGrades = [...gradeStructure];
+    const copyGrade = {...gradeStructure[index]}
     newGrades.splice(index, 0, copyGrade);
-    setGrades(newGrades)
+    setGradeStructure(newGrades)
   }
     
   function handleDeleteGrade(index){
-    const newGrades = [...grades]; 
+    const newGrades = [...gradeStructure]; 
     newGrades.splice(index, 1);
-    setGrades(newGrades)
+    setGradeStructure(newGrades)
   }
   
   function handleGradeWeightChange(index, value){
-    const newGrades = [...grades];
+    const newGrades = [...gradeStructure];
     newGrades[index].weight = value;
-    setGrades(newGrades);
+    setGradeStructure(newGrades);
   }
 
   function handleGradeNameChange(index, value){
-    const newGrades = [...grades];
+    const newGrades = [...gradeStructure];
     newGrades[index].name = value;
-    setGrades(newGrades);
+    setGradeStructure(newGrades);
   }
     
   function onDragEnd(result) {
       if (!result.destination) {
         return;
       }
-      var oldGrades = [...grades];
+      var oldGrades = [...gradeStructure];
       const newGrades = reorder(
         oldGrades,
         result.source.index,
         result.destination.index
       );
-      setGrades(newGrades);
+      setGradeStructure(newGrades);
   }
     
   function reorder(list, startIndex, endIndex){
@@ -112,19 +111,19 @@ function GradeStructure({classroom}) {
   }
   
   function closeAllExpandedGrades(){
-    let newGrades = [...grades]; 
+    let newGrades = [...gradeStructure]; 
     for (let i = 0; i < newGrades.length; i++) {  
       newGrades[i].isExpanded = false;
     }
-    setGrades(newGrades);
+    setGradeStructure(newGrades);
   }
 
   function openExpand(index){
-    const newGrades = [...grades];
+    const newGrades = [...gradeStructure];
     for (let j = 0; j < newGrades.length; j++) {
       j === index ? newGrades[j].isExpanded = true : newGrades[j].isExpanded = false;
     }
-    setGrades(newGrades);
+    setGradeStructure(newGrades);
   }
 
   const gradeSummary = (grade, index) => {
@@ -153,7 +152,7 @@ function GradeStructure({classroom}) {
   }
     
   function gradesUI(){
-    return (grades.map((grade, i)=> (
+    return (gradeStructure.map((grade, i)=> (
       <Draggable key={i} draggableId={i + 'id'} index={i}>
         {(provided, snapshot) => (
           <div
@@ -220,7 +219,7 @@ function GradeStructure({classroom}) {
         <CircularProgress  />
       </div>
     );
-  } else if (grades.length < 1) {
+  } else if (gradeStructure.length < 1) {
     return (
       <div className="nograde_announce">
         <p>No grade structure</p>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { Button } from '@mui/material';
 import { UploadButton } from '../components'
-import { uploadStudentGrade } from '../../services/classroomService';
+import { uploadStudentGrade, updateGradeStructure } from '../../services/classroomService';
 import { GridColumnMenu, GridColumnMenuContainer } from '@mui/x-data-grid';
 
 
@@ -22,7 +22,18 @@ const StyledGridColumnMenu = styled(GridColumnMenu)(
 
 
 
-const CustomColumnMenu = ({ hideMenu, currentColumn, color, callFetchToGetGrades, currentUser, classroomId, ...other }) => {
+const CustomColumnMenu = (
+  { hideMenu, 
+    currentColumn, 
+    color, 
+    callFetchToGetGrades, 
+    currentUser, 
+    classroomId,
+    gradeStructure,
+    isOwner, 
+    isTeacher,
+    ...other }
+  ) => {
   const currentGradeId = currentColumn.field;
   // state for display
   const [errorMessage, setErrorMessage] = useState(null);
@@ -39,8 +50,31 @@ const CustomColumnMenu = ({ hideMenu, currentColumn, color, callFetchToGetGrades
     setIsLoading(false);
   }
 
+  const callFetchToFinalizeGrade = async (token, classroomId, gradeId, isFinalized) => {
+    const newGradeStructure = [...gradeStructure];
+    for (const grade of newGradeStructure) {
+      if (grade._id === gradeId) {
+        grade.isFinalized = isFinalized
+        break;
+      }
+    }
+    setIsLoading(true);
+    const result = await updateGradeStructure(token, classroomId, newGradeStructure)
+    console.log('result finalized: ', result)
+    if (result.data)
+      console.log('finalized successfully !')
+    else if (result.error)
+      setErrorMessage(result.error)
+    setIsLoading(false);
+  }
+  
+
   const handleUploadGrade = (file) => {
     callFetchToUploadStudentGrade(currentUser.token, classroomId, currentGradeId, file)
+  }
+
+  const handleFinalize = () => {
+    callFetchToFinalizeGrade(currentUser.token, classroomId, currentGradeId, true)
   }
 
 
@@ -53,7 +87,14 @@ const CustomColumnMenu = ({ hideMenu, currentColumn, color, callFetchToGetGrades
         ownerState={{ color }}
         {...other}
       >
-        <UploadButton content="Upload grade" handleFile={handleUploadGrade} />
+        {isOwner && <Button onClick={handleFinalize}>Finalize</Button>}
+        {isTeacher && <UploadButton content="Upload grade" handleFile={handleUploadGrade} />}
+        <StyledGridColumnMenu
+          hideMenu={hideMenu}
+          currentColumn={currentColumn}
+          ownerState={{ color }}
+          {...other}
+        />
       </StyledGridColumnMenuContainer>
     );
   }

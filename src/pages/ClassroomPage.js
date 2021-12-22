@@ -5,7 +5,7 @@ import {Container, Paper, Grid, Tab, Box } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 
 import AuthContext from '../contexts/authContext';
-import { getClassroomDetail } from '../services/classroomService';
+import { getClassroomDetail, getAllClassroomMembers } from '../services/classroomService';
 
 import { Header, ClassroomDetail, MemberList, GradeStructure, GradeTable} from "../components/components";
 
@@ -15,20 +15,60 @@ const ClassroomPage = () => {
   const location = useLocation();
   // get classroomId from path
   const path = location.pathname.split('/')
-  const classroomId = path.at(-1);
+    const classroomId = path.at(-1);
 
   const { currentUser } = useContext(AuthContext)
 
+  const [isOwner, setIsOwner] = useState(false);
+  const [isTeacher, setIsTeacher] = useState(false);
+  const [classroom, setClassroom] = useState(null);
+  const [gradeStructure, setGradeStructure] = useState([]);
+  const [teachers, setTeachers] = useState([]);
+  const [students, setStudents] = useState([]);
+  
+
+  //state for display
   const [tab, setTab] = useState('1');
   const [errorMessage, setErrorMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [classroom, setClassroom] = useState(null);
+
+
+  // do once after render
+  useEffect(() => {
+    callFetchClassroomDetail();
+    callFetchAllClassroomMembers(currentUser.token, classroomId)
+  }, [])
+
+
+  // check if current user is owner
+  useEffect(()=>{
+    if (classroom) {
+      console.log('classroom detail: ', classroom)
+      setGradeStructure(classroom.gradeStructure)
+      if (classroom.ownerId === currentUser.user._id)
+        setIsOwner(true);
+    }
+  },[classroom, currentUser])
+
+
+  // check if current user is teacher
+  useEffect(()=>{
+    for (const teacher of teachers){
+      if (teacher._id === currentUser.user._id){
+        setIsTeacher(true);
+        break;
+      }
+    }
+  },[teachers, currentUser])
+
+  
 
 
   const handleChangeTab = (event, newValue) => {
     setTab(newValue);
   };
 
+  // call fetch func
   const callFetchClassroomDetail = async () => {
     setIsLoading(true);
     const result = await getClassroomDetail(currentUser.token, classroomId)
@@ -40,10 +80,19 @@ const ClassroomPage = () => {
     }
     setIsLoading(false);
   }
-
-  useEffect(() => {
-    callFetchClassroomDetail();
-  }, [])
+  const callFetchAllClassroomMembers = async (token, classroomId) => {
+    setIsLoading(true);
+    const result = await getAllClassroomMembers(token, classroomId);
+    if (result.data) {
+      //console.log('result: ', result)
+      setStudents(result.data.students)
+      setTeachers(result.data.teachers)
+    }
+    else if (result.error) {
+      setErrorMessage(result.error)
+    }
+    setIsLoading(false);
+  }
 
   return (
     <Fragment>
@@ -60,7 +109,14 @@ const ClassroomPage = () => {
           </Box>
 
           <TabPanel value="1">
-            <ClassroomDetail classroom={classroom} isLoading={isLoading} errorMessage={errorMessage}/>
+            <ClassroomDetail 
+              classroomId={classroomId}
+              classroom={classroom} 
+              gradeStructure={gradeStructure}
+              isTeacher={isTeacher}
+              isLoading={isLoading} 
+              errorMessage={errorMessage}
+            />
           </TabPanel>
 
           <TabPanel value="2">
@@ -81,7 +137,7 @@ const ClassroomPage = () => {
                   <Grid container spacing={3}>
                     <Grid item xs={12}>
                       <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                      <MemberList classroomId={classroomId}/>
+                      <MemberList teachers={teachers} students={students} />
                       </Paper>
                     </Grid>
                   </Grid>
@@ -91,10 +147,16 @@ const ClassroomPage = () => {
           </TabPanel>
 
           <TabPanel value="3">
-            <GradeStructure classroom={classroom}/> 
+            <GradeStructure classroomId={classroomId} gradeStructure={gradeStructure} setGradeStructure={setGradeStructure}/> 
           </TabPanel>
           <TabPanel value="4">
-            <GradeTable classroom={classroom} /> 
+            <GradeTable 
+              currentUser={currentUser} 
+              isOwner={isOwner}
+              isTeacher={isTeacher} 
+              classroomId={classroomId}
+              gradeStructure={gradeStructure}
+            /> 
           </TabPanel>
         </TabContext>
       </Box>

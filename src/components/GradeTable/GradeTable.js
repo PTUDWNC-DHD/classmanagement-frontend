@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import { Box } from '@mui/material';
 
@@ -7,18 +7,25 @@ import {  DataGrid } from '@mui/x-data-grid';
 import { DownloadButton, UploadButton } from '../components';
 import { CustomColumnMenu } from './CustomColumnMenu';
 import { getAllStudentGrades, saveStudentGrade, uploadStudentList } from '../../services/classroomService';
-import AuthContext from '../../contexts/authContext';
-
-import * as csvTemplate from '../../utils/csvTemplate'
 
 
+import * as Constant from '../../utils/constant'
 
-const GradeTable = ({ classroom }) => {
-  const { currentUser } = useContext(AuthContext)
+
+
+const GradeTable = ({ currentUser, isOwner, isTeacher, classroomId, gradeStructure }) => {
   //state for data
-  const [headers, setHeaders] = useState(['StudentID', 'Name']);
-  const [fields, setFields] = useState(['studentId', 'name']);
   const [grades, setGrades] = useState(null);
+  const [totalWeight, setTotalWeight] = useState(0);
+  const [gradesWeight, setGradesWeight] = useState({});
+  
+  //state for export csv file
+  const [studentIdList, setStudentIdList] = useState([]);
+  const [gradeBoardHeader , setGradeBoardHeader] = useState([]);
+
+  //state for table
+  const [headers, setHeaders] = useState(['ID', 'StudentID', 'Name']);
+  const [fields, setFields] = useState(['id', 'studentId', 'name']);
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
 
@@ -30,61 +37,99 @@ const GradeTable = ({ classroom }) => {
 
   // do once after render
   useEffect(()=>{
-    // get data of headers and fields from grade structure
-    const gradeName = [];
-    const gradeField = [];
-    classroom.gradeStructure.forEach((grade, index)=>{
-      gradeName.push(grade.name)
-      gradeField.push(grade._id)
+    console.log('start effect')
+    const gradeNames = [];
+    const gradeFields = [];
+    const newGradesWeight = {};
+    let sum = 0;
+    gradeStructure.forEach((grade)=>{
+      if (isTeacher || grade.isFinalized){
+        gradeNames.push(grade.name)
+        gradeFields.push(grade._id)
+        sum += grade.weight
+        newGradesWeight[grade._id] = grade.weight
+      }
     })
-    gradeName.push('Total Grade')
-    gradeField.push('total')
-    setHeaders([...headers, ...gradeName])
-    setFields([...fields, ...gradeField])
-    // get grades of all students in class
-    callFetchToGetGrades(currentUser.token, classroom._id)
+    //add total grade column header
+    gradeNames.push('Total Grade')
+    gradeFields.push('total')
+    setHeaders([...headers, ...gradeNames])
+    setFields([...fields, ...gradeFields])
+    setTotalWeight(sum)
+    setGradesWeight(newGradesWeight)
   },[])
 
   // map header names and fields to columns
   useEffect(()=>{
+    console.log('column effect')
     const columnsData = [];
-    for (let index = 0; index < headers.length; index++) {
-      columnsData.push({ 
-        field: fields[index],
-        headerName: headers[index],
-        width: 180,
-        type: fields[index].indexOf('grade') > -1 ? 'number' : '',
-        editable: true
-      })
-    }
-    setColumns(columnsData)
-  },[headers, fields])
+      const csvGradeBoardHeader = [];
+      for (let index = 0; index < headers.length; index++) {
+        columnsData.push({ 
+          field: fields[index],
+          headerName: headers[index],
+          width: 180,
+          type: fields[index].indexOf('grade') > -1 ? 'number' : '',
+          editable: (fields[index] === 'studentId' || fields[index] === 'name' || fields[index] === 'total') ? false : isTeacher
+        })
+        csvGradeBoardHeader.push({
+          label: headers[index],
+          key: fields[index]
+        })
+      }
+      //console.log('columns data: ', columnsData)
+      setColumns(columnsData)
+      setGradeBoardHeader(csvGradeBoardHeader)
+  },[headers, fields, isTeacher])
 
-  // map grade of students to rows
+  // run when columns has been updated
   useEffect(()=>{
-    if (grades) {
-      console.log('grades: ', grades)
-      const rowsData = [];
-      for (let [id, values] of Object.entries(grades)) {
-        // calculate sum of each student grade
-        const sum = Object.values(values).reduce((total, element) => {
-          const elementNumber = parseFloat(element) || 0;
-          return total + elementNumber
-        }, 0)
+    // get grades of all students in class
+    callFetchToGetGrades(currentUser.token, classroomId)
+  },[columns, currentUser, classroomId])
 
-        let row = { 
-          id: id,
-          studentId: id,
-          ...values,
-          total: sum
+  // run when grades has been fetch and all data is ready to calculate
+  useEffect(()=>{
+    console.log('grades effect')
+    
+    if (grades) {
+      
+      const rowsData = [];
+      const newStudentIdList = [];
+      for (let [studentId, studentValues] of Object.entries(grades)) {
+        let totalGrade = 0;
+        // calculate sum of each student grade
+        for (let [gradeId, gradeValue] of Object.entries(studentValues)) {
+          let weight = 1;
+          if (gradeId !== 'name') {
+            let grade = 0;
+            // check if the grade is finalized
+            if (fields.find(field => field === gradeId)) {
+              grade = parseFloat(gradeValue) || 0;
+              weight = gradesWeight[gradeId] / totalWeight;
+            }
+            totalGrade += grade * weight;
+          }
+        }
+        // init row of table
+        const row = { 
+          id: rowsData.length + 1,
+          studentId: studentId,
+          ...studentValues,
+          total: totalGrade.toFixed(4)
         }
         rowsData.push(row)
+        newStudentIdList.push({studentId: studentId})
       }
       setRows(rowsData)
+      setStudentIdList(newStudentIdList)
     }
-  },[grades])
+  },[grades, fields, gradesWeight, totalWeight])
 
+
+  // call fetch
   const callFetchToGetGrades = async (token, classroomId) => {
+    //console.log('call get grade')
     setIsLoading(true);
     const result = await getAllStudentGrades(token, classroomId)    
     if (result.data)
@@ -105,71 +150,72 @@ const GradeTable = ({ classroom }) => {
   const callFetchToUploadStudentList = async (token, classroomId, file) => {
     setIsLoading(true);
     const result = await uploadStudentList(token, classroomId, file);
-    console.log('result student list upload: ', result)
+    //console.log('result student list upload: ', result)
     if (result.data)
       callFetchToGetGrades(token, classroomId)
     else if (result.error)
       setErrorMessage(result.error)
     setIsLoading(false);
   }
+  
 
+
+  // handle upload
   const handleUploadStudentList = (file) => {
-    callFetchToUploadStudentList(currentUser.token, classroom._id, file)
-  }
-  const handleUploadStudentGrades = (file) => {
-    
+    callFetchToUploadStudentList(currentUser.token, classroomId, file)
   }
 
   const handleCellEditCommit = (params) => {
-    callFetchToSaveGrade(currentUser.token, classroom._id, params.id, params.field, params.value)
+    callFetchToSaveGrade(currentUser.token, classroomId, params.id, params.field, params.value)
     //update new grades
     const newGrades = {...grades}
     newGrades[params.id][params.field] = parseFloat(params.value)
     setGrades(newGrades)
   }
 
-
-
-  
-
   return (
     <div style={{ width: '100%' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        {/* Download button */}
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          {/* download button */}
-          <DownloadButton 
-            variant='outlined' 
-            content='Student List'
-            filename="StudentListTemplate.csv"
-            headers={csvTemplate.STUDENT_LIST_CSV_TEMPLATE.headers}
-            data={csvTemplate.STUDENT_LIST_CSV_TEMPLATE.data}
-          />
+      {isTeacher && (
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          {/* Download button */}
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            {/* download button */}
+            <DownloadButton 
+              variant='outlined' 
+              content='Student List'
+              filename="StudentListTemplate.csv"
+              headers={Constant.STUDENT_LIST_CSV_TEMPLATE.headers}
+              data={Constant.STUDENT_LIST_CSV_TEMPLATE.data}
+            />
 
-          <DownloadButton 
-            variant='outlined' 
-            content='Student Grade'
-            filename="StudentGradesTemplate.csv"
-            headers={csvTemplate.STUDENT_GRADES_CSV_TEMPLATE.headers}
-            data={csvTemplate.STUDENT_GRADES_CSV_TEMPLATE.data}
-          />
+            <DownloadButton 
+              variant='outlined' 
+              content='Student Grade'
+              filename="StudentGradesTemplate.csv"
+              headers={Constant.STUDENT_GRADES_CSV_TEMPLATE.headers}
+              data={studentIdList}
+            />
 
+            <DownloadButton 
+              variant='outlined' 
+              content='Export Grade Board'
+              filename="StudentGradeBoard.csv"
+              headers={gradeBoardHeader}
+              data={rows}
+            />
+
+          </Box>
+          {/* Upload button */}
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <UploadButton 
+              variant='contained' 
+              content='Student List'
+              handleFile={handleUploadStudentList}
+            />
+          </Box>
         </Box>
-        {/* Upload button */}
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <UploadButton 
-            variant='contained' 
-            content='Student List'
-            handleFile={handleUploadStudentList}
-          />
-
-          <UploadButton 
-            variant='contained' 
-            content='Student Grade'
-            handleFile={handleUploadStudentGrades}
-          />
-        </Box>
-      </Box>
+      )}
+      
       <div style={{ height: 2500, width: '100%', marginTop: 16 }}>
         <DataGrid
           columns = {columns}
@@ -183,7 +229,10 @@ const GradeTable = ({ classroom }) => {
               color,
               callFetchToGetGrades: callFetchToGetGrades,
               currentUser: currentUser,
-              classroomId: classroom._id
+              classroomId: classroomId,
+              gradeStructure: gradeStructure,
+              isOwner: isOwner,
+              isTeacher: isTeacher
             },
             
           }}

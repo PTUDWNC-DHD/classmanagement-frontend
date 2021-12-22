@@ -14,7 +14,7 @@ import './style.css'
 
 
 
-const ClassroomDetail = ({classroom, isLoading, errorMessage}) => {
+const ClassroomDetail = ({classroomId, classroom, gradeStructure, isTeacher, isLoading, errorMessage}) => {
   const { currentUser } = useContext(AuthContext)
 
   const [showInput, setShowInput] = useState(false);
@@ -60,7 +60,7 @@ const ClassroomDetail = ({classroom, isLoading, errorMessage}) => {
                 <div className="main__section main__overflow">
                   {classroom.subject}
                 </div>
-                { currentUser.user._id === classroom.ownerId && (
+                { isTeacher && (
                   <div className="main__wrapper2">
                     <em className="main__code">Class Invite Code:</em>
                     <div className="main__id">
@@ -94,7 +94,7 @@ const ClassroomDetail = ({classroom, isLoading, errorMessage}) => {
             </div>
           {showInvitePopup && <InvitePopup 
             invite={classroom.invite} 
-            classroomId={classroom.id}
+            classroomId={classroomId}
             showInvitePopup={showInvitePopup} 
             setShowInvitePopup={setShowInvitePopup}
           />}
@@ -102,11 +102,11 @@ const ClassroomDetail = ({classroom, isLoading, errorMessage}) => {
             <div className="main__status">
               <p>Grade Structure</p>
               {
-                classroom.gradeStructure.length < 1 ? 
+                gradeStructure.length < 1 ? 
                   <p className="main__subText">No Grade Structure</p>
                 :
                   <List>
-                    {classroom.gradeStructure.map((grade, index) => (
+                    {gradeStructure.map((grade, index) => (
                       <ListItem 
                         style={{width:"150px"}}
                         key={index}

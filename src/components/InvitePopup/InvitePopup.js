@@ -23,6 +23,7 @@ const InvitePopup = (props) => {
         {showInviteForm ? (
           <InviteForm 
             invite={props.invite} 
+            classroomId={props.classroomId}
             setShowInvitePopup={setShowInvitePopup}
           />
         ) : (

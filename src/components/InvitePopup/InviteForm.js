@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 
-import { Button, DialogActions, TextField } from "@mui/material";
+import { Button, DialogActions, TextField, FormControlLabel, Checkbox } from "@mui/material";
 
 import AuthContext from "../../contexts/authContext";
 import { sendInvitation } from "../../services/inviteService";
@@ -13,13 +13,14 @@ import Swal from 'sweetalert2'
 const InviteForm = (props) => {
   const { currentUser } = useContext(AuthContext);
 
-  const [emailTo, setEmailTo] = useState('');
-  const [invitationCode, setInvitationCode] = useState(props.invite)
+  const [emails, setEmails] = useState('');
+  const [isStudent, setIsStudent] = useState(false);
+
   const { setShowInvitePopup } = props;
 
   const handleSendInvitation = async (e) => {
     e.preventDefault();
-    const result = await sendInvitation(currentUser.token, [emailTo], invitationCode)
+    const result = await sendInvitation(currentUser.token, [emails], props.classroomId, true, isStudent)
     if (result.data) {
       Swal.fire({
         title: "Success",
@@ -49,8 +50,8 @@ const InviteForm = (props) => {
           label="Email to (required)"
           className="form__input"
           variant="filled"
-          value={emailTo}
-          onChange={(e) => setEmailTo(e.target.value)}
+          value={emails}
+          onChange={(e) => setEmails(e.target.value)}
           required
         />
         <TextField
@@ -58,11 +59,13 @@ const InviteForm = (props) => {
           label="Email to (required)"
           className="form__input"
           variant="filled"
-          type="email"
-          value={invitationCode}
-          onChange={(e) => setInvitationCode(e.target.value)}
-          required
+          type="text"
+          value={props.invite}
           disabled
+        />
+        <FormControlLabel
+          control={<Checkbox color="primary" onChange={() => setIsStudent(!isStudent)} />}
+          label="Is student"
         />
       </div>
       <DialogActions>

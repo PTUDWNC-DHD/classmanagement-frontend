@@ -1,22 +1,28 @@
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom"
 
-import { AppBar, Avatar, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
-import { Add, Logout } from "@mui/icons-material";
+import { Box, IconButton, Badge, AppBar, Avatar, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
+import { Add, Logout, Notifications } from "@mui/icons-material";
+import { grey } from '@mui/material/colors';
 
 import AuthContext from "../../../contexts/authContext";
 import { CreateClass } from "../../components";
 import { removeFromLocalStorage } from "../../../utils/localStorage";
 import * as Constant from '../../../utils/constant'
 
-import { useStyles } from "./style";
+import "./style.css";
+
 
 const HeaderBar = ({ children }) => {
   const { currentUser, setCurrentUser } = useContext(AuthContext);
 
   const [isOpenCreateDialog, setIsOpenCreateDialog] = useState(false);
   const [isOpenJoinDialog, setIsOpenJoinDialog] = useState(false);
-  const classes = useStyles();
+
+  const [notifi, setNotifi] = useState(null);
+
+  const handleClickNoti = (event) => setNotifi(event.currentTarget);
+  const handleCloseNoti = () => setNotifi(null);
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -38,48 +44,73 @@ const HeaderBar = ({ children }) => {
     removeFromLocalStorage(Constant.LOCAL_STORAGE_USER)
   }
 
-  return (
-    <div className={classes.root}>
-      <AppBar className={classes.appBar} position="static">
-        <Toolbar className={classes.toolbar}>
-          <div className={classes.headerWrapper}>
 
-            {children}
-            <Link to='/'>
-              <img
-                src="https://www.gstatic.com/images/branding/googlelogo/svg/googlelogo_clr_74x24px.svg"
-                alt="Classroom"
-              />
+
+
+  return (
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar className="appbar" color="common" position="static">
+        <Toolbar className="toolBar" >
+          {children}
+          <Link to='/'>
+            <img
+              src="https://www.gstatic.com/images/branding/googlelogo/svg/googlelogo_clr_74x24px.svg"
+              alt="Classroom"
+              className="img"
+            />
+          </Link>
+          <Typography className="title" variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Classroom
+          </Typography>
+          <IconButton onClick={handleClick}>
+            <Add className="icon" size="large" />
+          </IconButton>
+          <Menu 
+            size="large"
+            keepMounted 
+            id="simple-menu" 
+            anchorEl={anchorEl} 
+            open={Boolean(anchorEl)} 
+            onClose={handleClose}
+          >
+            <MenuItem onClick={handleJoin}>Join Class</MenuItem>
+            <MenuItem onClick={handleCreate}>Create Class</MenuItem>
+          </Menu>
+          <IconButton
+            size="large"
+            aria-label="show 17 new notifications"
+            color="inherit"
+            onClick={handleClickNoti}
+          >
+            <Badge badgeContent={17} color="error">
+              <Notifications className="icon" size="large" />
+            </Badge>
+          </IconButton>
+          <Menu 
+            size="large"
+            keepMounted 
+            id="simple-menu" 
+            notifi={notifi} 
+            open={Boolean(notifi)} 
+            onClose={handleCloseNoti}
+          >
+            <MenuItem >17 new notifications</MenuItem>
+            
+          </Menu>
+            
+          <IconButton>
+            <Link to='/account' className="link">
+              <Avatar className="icon" >
+                {currentUser.user.name.charAt(0)}
+              </Avatar>
             </Link>
-            <Typography className={classes.title}>
-              Classroom
-            </Typography>
-          </div>
-          <div className={classes.header__wrapper__right}>
-            <Add className={classes.icon} onClick={handleClick} />
-            <Menu 
-              keepMounted 
-              id="simple-menu" 
-              anchorEl={anchorEl} 
-              open={Boolean(anchorEl)} 
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleJoin}>Join Class</MenuItem>
-              <MenuItem onClick={handleCreate}>Create Class</MenuItem>
-            </Menu>
-            <div>
-              <Link to='/account'>
-                <Avatar className={classes.icon}>
-                  {currentUser.user.name.charAt(0)}
-                </Avatar>
-              </Link>
-            </div>
-            <Logout className={classes.icon} onClick={handleLogout} />
-          </div>
+            </IconButton>
+          <Logout className="icon" onClick={handleLogout} />
+            
         </Toolbar>
       </AppBar>
       <CreateClass isOpen={isOpenCreateDialog} setIsOpen={setIsOpenCreateDialog} />
-    </div>
+    </Box>
   );
 };
 

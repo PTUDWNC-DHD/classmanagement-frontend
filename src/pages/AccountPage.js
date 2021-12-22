@@ -1,13 +1,25 @@
 import { Fragment } from 'react'
+import { useState } from "react";
 
 import {Container, Paper, Grid, Box} from '@mui/material'
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
 
 import { Header, AccountDetail } from "../components/components";
 
 const AccountPage = (props) => {
+  const [darkMode,setDarkMode] = useState(false);
+
+  const theme = createTheme({
+        palette: {
+         mode:darkMode?"dark":"light"
+        }
+      })
   return (
+    <ThemeProvider theme={theme}>
+    <Paper style={{height:"250vh"}}>
     <Fragment>
-      <Header />
+      <Header check={darkMode} change={()=>setDarkMode(!darkMode)}/>
       <Box
           component="main"
           sx={{
@@ -35,6 +47,8 @@ const AccountPage = (props) => {
       
       
     </Fragment>
+    </Paper>
+  </ThemeProvider>
   )
 }
 

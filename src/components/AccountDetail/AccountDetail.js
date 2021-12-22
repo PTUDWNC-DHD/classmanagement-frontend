@@ -25,7 +25,7 @@ const AccountDetail = (props) => {
   const handleSaveDetail = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    const result = await updateUserAccountInformation(currentUser.token, fullname, email)
+    const result = await updateUserAccountInformation(currentUser.token, fullname, email, studentId)
     if (result.data) {
       //console.log('user: ', result)
       setCurrentUser({...currentUser, user: {...result.data}})
@@ -149,8 +149,6 @@ const AccountDetail = (props) => {
                 onChange={handleChangeStudentId}
                 required
                 value={studentId}
-                variant="outlined"
-                disabled
               />
             </Grid>
           </Grid>

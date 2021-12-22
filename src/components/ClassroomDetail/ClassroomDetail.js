@@ -4,7 +4,7 @@ import { useState, useEffect, useContext } from 'react';
 import AuthContext from '../../contexts/authContext'
 import { getClassroomDetail } from '../../services/classroomService';
 
-import { CircularProgress, Avatar, Button, TextField, IconButton, List, ListItem, ListItemText } from "@mui/material";
+import { CircularProgress, Button, IconButton, List, ListItem, ListItemText } from "@mui/material";
 
 import { ContentCopy } from '@mui/icons-material'
 
@@ -14,12 +14,8 @@ import './style.css'
 
 
 
-const ClassroomDetail = (props) => {
+const ClassroomDetail = ({classroomId, classroom, gradeStructure, isTeacher, isLoading, errorMessage}) => {
   const { currentUser } = useContext(AuthContext)
-
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [classroom, setClassroom] = useState(null);
 
   const [showInput, setShowInput] = useState(false);
   const [inputValue, setInput] = useState("");
@@ -35,24 +31,8 @@ const ClassroomDetail = (props) => {
   }
 
   const handleCopyInviteCode = (e) => {
-    navigator.clipboard.writeText(process.env.REACT_APP_CLIENT_URL + process.env.REACT_APP_INVITE_LINK + classroom.invite)
+    navigator.clipboard.writeText(process.env.REACT_APP_CLIENT_URL + process.env.REACT_APP_INVITE_LINK + classroom.invite + '/public')
   }
-
-  const callFetchClassroomDetail = async () => {
-    setIsLoading(true);
-    const result = await getClassroomDetail(currentUser.token, props.classroomId)
-    if (result.data) {
-      setClassroom(result.data)
-    }
-    else if (result.error) {
-      setErrorMessage(result.error)
-    }
-    setIsLoading(false);
-  }
-
-  useEffect(() => {
-    callFetchClassroomDetail();
-  }, [])
   
   if (errorMessage) {
     return <div>Error: {errorMessage}</div>;
@@ -80,7 +60,7 @@ const ClassroomDetail = (props) => {
                 <div className="main__section main__overflow">
                   {classroom.subject}
                 </div>
-                { currentUser.user._id === classroom.ownerId && (
+                { isTeacher && (
                   <div className="main__wrapper2">
                     <em className="main__code">Class Invite Code:</em>
                     <div className="main__id">
@@ -111,71 +91,24 @@ const ClassroomDetail = (props) => {
               <p className="main__subText">No work due</p>
             </div>
             
-            <div className="main__announcements">
-              <div className="main__announcementsWrapper">
-                <div className="main__ancContent">
-                  {showInput ? (
-                    <div className="main__form">
-                      <TextField
-                        id="filled-multiline-flexible"
-                        multiline
-                        label="Announce Something to class"
-                        variant="filled"
-                        value={inputValue}
-                        onChange={(e) => setInput(e.target.value)}
-                      />
-                      <div className="main__buttons">
-                        <input
-                          onChange={handleChange}
-                          variant="outlined"
-                          color="primary"
-                          type="file"
-                        />
-
-                        <div>
-                          <Button onClick={() => setShowInput(false)}>
-                            Cancel
-                          </Button>
-
-                          <Button
-                            onClick={handleUpload}
-                            color="primary"
-                            variant="contained"
-                          >
-                            Post
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div
-                      className="main__wrapper100"
-                      onClick={() => setShowInput(true)}
-                    >
-                      <Avatar />
-                      <div>Announce Something to class</div>
-                    </div>
-                  )}
-                </div>
-              </div>
             </div>
-            
-          </div>
           {showInvitePopup && <InvitePopup 
             invite={classroom.invite} 
+            classroomId={classroomId}
             showInvitePopup={showInvitePopup} 
             setShowInvitePopup={setShowInvitePopup}
           />}
-          <div className="grade_announce">
-            <div className="grade__status">
+          <div className="main__announce">
+            <div className="main__status">
               <p>Grade Structure</p>
               {
-                classroom.gradeStructure.length < 1 ? 
+                gradeStructure.length < 1 ? 
                   <p className="main__subText">No Grade Structure</p>
                 :
                   <List>
-                    {classroom.gradeStructure.map((grade, index) => (
-                      <ListItem
+                    {gradeStructure.map((grade, index) => (
+                      <ListItem 
+                        style={{width:"150px"}}
                         key={index}
                         disableGutters
                         secondaryAction={grade.weight}

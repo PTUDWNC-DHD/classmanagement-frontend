@@ -7,8 +7,9 @@ const JoinPage = (props) => {
   const location = useLocation();
   
   const path = location.pathname.split('/')
-  const joinCode = path.at(-1);
-
+  const type = path.at(-1)
+  const joinCode = path.at(-2)
+  
   return (
     <Fragment>
       <Box
@@ -27,7 +28,7 @@ const JoinPage = (props) => {
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-              <JoinClass joinCode={joinCode} />
+              <JoinClass joinCode={joinCode} type ={type}/>
               </Paper>
             </Grid>
           </Grid>

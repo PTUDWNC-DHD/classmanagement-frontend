@@ -5,7 +5,7 @@ import { Button, TextField, Checkbox, FormControlLabel } from "@mui/material";
 
 import AuthContext from "../../contexts/authContext";
 import { joinClassroom } from "../../services/joinService";
-import { getAllClassrooms } from "../../services/classroomService";
+
 import * as Notifications from "../../utils/notifications"
 
 import Swal from 'sweetalert2'
@@ -24,7 +24,7 @@ const JoinClass = (props) => {
   const handleJoinClass = async (e) => {
     e.preventDefault();
     if (displayName){
-      const result = await joinClassroom(currentUser.token, props.joinCode, displayName, studentId, isStudent)
+      const result = await joinClassroom(currentUser.token, props.joinCode, props.type)
       if (result.data) {
         Swal.fire({
           title: "Success",

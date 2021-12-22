@@ -17,64 +17,46 @@ import "./user_form.css"
 
 
 
-function Grade(props) {
+function GradeStructure({classroomId, gradeStructure, setGradeStructure}) {
   const { currentUser } = useContext(AuthContext)
 
   const [errorMessage, setErrorMessage] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const [grades, setGrades] =useState([]); 
+  const [isLoading, setIsLoading] = useState(false);
 
 
-  const callFetchClassroomDetail = async (token, classroomId) => {
-    setIsLoading(true);
-    const result = await getClassroomDetail(token, classroomId)
-    if (result.data) {
-      addIsExpandAndSetGrades(result.data.gradeStructure)
-    }
-    else if (result.error) {
-      setErrorMessage(result.error)
-    }
-    setIsLoading(false);
-  }
 
   const fetchToSaveGrades = async (token, classroomId, grades) => {
     setIsLoading(true);
     const result = await updateGradeStructure(token, classroomId, grades)
     if (result.data)
-      addIsExpandAndSetGrades(result.gradeStructure)
+      addIsExpandAndSetGrades(result.data)
     else if (result.error)
       setErrorMessage(result.error)
     setIsLoading(false);
   }
-
-  useEffect(() => {
-    callFetchClassroomDetail(currentUser.token, props.classroomId);
-    //console.log('class grade detail:', grades)
-  }, [])
 
   function addIsExpandAndSetGrades(gradesArr){
     const newGrades = [];
     gradesArr.forEach(grade => {
       newGrades.push({...grade, isExpanded: false})
     })
-    setGrades(newGrades)
+    setGradeStructure(newGrades)
   }
 
   function handleSaveGrades(){
     let isEmpty = false;
-    grades.forEach(grade => {
+    gradeStructure.forEach(grade => {
       if (!grade.name || !grade.weight){
         isEmpty = true;
       }
     })
-    isEmpty ? window.alert("Name or grade must not be empty") : fetchToSaveGrades(currentUser.token, props.classroomId, grades);
+    isEmpty ? window.alert("Name or grade must not be empty") : fetchToSaveGrades(currentUser.token, classroomId, gradeStructure);
   }
 
   function handleAddGrade(){
     closeAllExpandedGrades();
 
-    setGrades([...grades, {
+    setGradeStructure([...gradeStructure, {
       name: "",
       weight: "",
       isExpanded: true, 
@@ -84,41 +66,41 @@ function Grade(props) {
   function handleCopyGrade(index){
     closeAllExpandedGrades()
     
-    const newGrades = [...grades];
-    const copyGrade = {...grades[index]}
+    const newGrades = [...gradeStructure];
+    const copyGrade = {...gradeStructure[index]}
     newGrades.splice(index, 0, copyGrade);
-    setGrades(newGrades)
+    setGradeStructure(newGrades)
   }
     
   function handleDeleteGrade(index){
-    const newGrades = [...grades]; 
+    const newGrades = [...gradeStructure]; 
     newGrades.splice(index, 1);
-    setGrades(newGrades)
+    setGradeStructure(newGrades)
   }
   
   function handleGradeWeightChange(index, value){
-    const newGrades = [...grades];
+    const newGrades = [...gradeStructure];
     newGrades[index].weight = value;
-    setGrades(newGrades);
+    setGradeStructure(newGrades);
   }
 
   function handleGradeNameChange(index, value){
-    const newGrades = [...grades];
+    const newGrades = [...gradeStructure];
     newGrades[index].name = value;
-    setGrades(newGrades);
+    setGradeStructure(newGrades);
   }
     
   function onDragEnd(result) {
       if (!result.destination) {
         return;
       }
-      var oldGrades = [...grades];
+      var oldGrades = [...gradeStructure];
       const newGrades = reorder(
         oldGrades,
         result.source.index,
         result.destination.index
       );
-      setGrades(newGrades);
+      setGradeStructure(newGrades);
   }
     
   function reorder(list, startIndex, endIndex){
@@ -129,19 +111,19 @@ function Grade(props) {
   }
   
   function closeAllExpandedGrades(){
-    let newGrades = [...grades]; 
+    let newGrades = [...gradeStructure]; 
     for (let i = 0; i < newGrades.length; i++) {  
       newGrades[i].isExpanded = false;
     }
-    setGrades(newGrades);
+    setGradeStructure(newGrades);
   }
 
   function openExpand(index){
-    const newGrades = [...grades];
+    const newGrades = [...gradeStructure];
     for (let j = 0; j < newGrades.length; j++) {
       j === index ? newGrades[j].isExpanded = true : newGrades[j].isExpanded = false;
     }
-    setGrades(newGrades);
+    setGradeStructure(newGrades);
   }
 
   const gradeSummary = (grade, index) => {
@@ -170,7 +152,7 @@ function Grade(props) {
   }
     
   function gradesUI(){
-    return (grades.map((grade, i)=> (
+    return (gradeStructure.map((grade, i)=> (
       <Draggable key={i} draggableId={i + 'id'} index={i}>
         {(provided, snapshot) => (
           <div
@@ -182,7 +164,7 @@ function Grade(props) {
               <div style={{marginBottom: "0px"}}>
                 {/* DragIndicator */}
                 <div style={{width:'100%', marginBottom: '0px' }}>
-                  <DragIndicator style={{transform: "rotate(-90deg)", color:'#DAE0E2',position:"relative",left:"300px"}} fontSize="small"/>
+                  <DragIndicator style={{transform: "rotate(-90deg)", color:'#DAE0E2',position:"relative",left:"50%"}} fontSize="small"/>
                 </div>
                 {/* Drag content */}
                 <Accordion 
@@ -237,7 +219,7 @@ function Grade(props) {
         <CircularProgress  />
       </div>
     );
-  } else if (grades.length < 1) {
+  } else if (gradeStructure.length < 1) {
     return (
       <div className="nograde_announce">
         <p>No grade structure</p>
@@ -282,4 +264,4 @@ function Grade(props) {
 }
 
 
-export default Grade;
+export default GradeStructure;

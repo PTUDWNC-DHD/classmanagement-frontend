@@ -6,6 +6,7 @@ import HomePage from '../pages/HomePage'
 import ClassroomPage from '../pages/ClassroomPage'
 import JoinPage from '../pages/JoinPage'
 import AccountPage from '../pages/AccountPage'
+import UserPage from "../pages/UserPage"
 import LoginPage from '../pages/LoginPage'
 import RegisterPage from '../pages/RegisterPage'
 
@@ -49,6 +50,12 @@ const AppRouter = ()=>{
         <Route path='/account' element={
           <AuthRequired>
             <AccountPage />
+          </AuthRequired>
+        }/>
+
+        <Route path='/users/:id' element={
+          <AuthRequired>
+            <UserPage />
           </AuthRequired>
         }/>
 

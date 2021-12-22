@@ -5,19 +5,19 @@ import { Accordion,  AccordionSummary, AccordionDetails, Button, Typography, Cir
 import { AddCircleOutline, DragIndicator, FilterNone, Delete } from '@mui/icons-material';
 
 import AuthContext from '../../contexts/authContext'
-import { getClassroomDetail, updateGradeStructure } from '../../services/classroomService';
+import { updateGradeStructure } from '../../services/classroomService';
 
 //--------------
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-
+import Swal from 'sweetalert2'
 
 
 import "./user_form.css"
 
 
 
-function GradeStructure({classroomId, gradeStructure, setGradeStructure}) {
+function GradeStructure({classroomId, gradeStructure, setGradeStructure, isTeacher}) {
   const { currentUser } = useContext(AuthContext)
 
   const [errorMessage, setErrorMessage] = useState(null);
@@ -50,7 +50,12 @@ function GradeStructure({classroomId, gradeStructure, setGradeStructure}) {
         isEmpty = true;
       }
     })
-    isEmpty ? window.alert("Name or grade must not be empty") : fetchToSaveGrades(currentUser.token, classroomId, gradeStructure);
+    isEmpty ? Swal.fire({
+      title: "Warning",
+      text: "Name or grade must not be empty",
+      icon: "warning",
+      button: "Close",
+    }) : fetchToSaveGrades(currentUser.token, classroomId, gradeStructure);
   }
 
   function handleAddGrade(){
@@ -248,14 +253,16 @@ function GradeStructure({classroomId, gradeStructure, setGradeStructure}) {
                 )} 
               </Droppable>
             </DragDropContext>
-            <div className="save_form">
-              <Button 
-                variant="contained" 
-                color="primary"  
-                style={{fontSize:"14px"}}
-                onClick={(e)=>handleSaveGrades()}
-              >Save</Button>
-            </div>
+            {isTeacher &&
+              <div className="save_form">
+                <Button 
+                  variant="contained" 
+                  color="primary"  
+                  style={{fontSize:"14px"}}
+                  onClick={(e)=>handleSaveGrades()}
+                >Save</Button>
+              </div>
+            }
           </div>
         </div>
       </div>

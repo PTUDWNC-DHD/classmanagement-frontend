@@ -12,7 +12,7 @@ const AccountPage = (props) => {
 
   const theme = createTheme({
         palette: {
-         mode:darkMode?"dark":"light"
+          mode:darkMode?"dark":"light"
         }
       })
   return (

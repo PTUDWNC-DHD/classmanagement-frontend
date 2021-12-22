@@ -87,8 +87,8 @@ const CustomColumnMenu = (
         ownerState={{ color }}
         {...other}
       >
-        {isOwner && <Button onClick={handleFinalize}>Finalize</Button>}
-        {isTeacher && <UploadButton content="Upload grade" handleFile={handleUploadGrade} />}
+        {isOwner && <Button variant="contained" sx={{backgroundColor: 'transparent', display: 'block'}} onClick={handleFinalize}>Finalize</Button>}
+        {isTeacher && <UploadButton content="Upload grade" sx={{backgroundColor: 'transparent' }} handleFile={handleUploadGrade} />}
         <StyledGridColumnMenu
           hideMenu={hideMenu}
           currentColumn={currentColumn}
@@ -111,6 +111,4 @@ const CustomColumnMenu = (
 }
 
 
-export {
-  CustomColumnMenu
-}
+export default CustomColumnMenu

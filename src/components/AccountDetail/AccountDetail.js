@@ -47,6 +47,13 @@ const AccountDetail = (props) => {
     setIsLoading(false);
   }
 
+  const handleCancel = (e) => {
+    setFullname(currentUser.user.name)
+    setEmail(currentUser.user.email)
+    setStudentId(currentUser.user.studentId)
+    setHasChanged(false)
+  }
+
   const handleChangeFullname = (e) => {
     setFullname(e.target.value)
     setHasChanged(true)
@@ -161,6 +168,9 @@ const AccountDetail = (props) => {
             p: 2
           }}
         >
+          <Button sx={{marginRight: 2}} color="primary" variant="contained" onClick={handleCancel} disabled={!hasChanged}>
+            Cancel
+          </Button>
           <Button color="primary" variant="contained" onClick={handleSaveDetail} disabled={!hasChanged}>
             Save details
           </Button>

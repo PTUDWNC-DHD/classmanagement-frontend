@@ -4,6 +4,8 @@ export const API_FAILED = "Fetch API failed !"
 export const EMAIL_REGISTERED = "Your email was registered by another account !"
 export const GET_GG_ACCOUNT_FAILED = "Can not get Google account information !"
 export const PLEASE_ENTER_NAME = "Please enter your display name in class !"
+export const PLEASE_ENTER_STUDENT_ID = "Please enter your student id !"
+export const ALREADY_BEEN_IN_CLASS = "You are already been in class !"
 
 export const REGISTER_SUCCESSFULLY = "Your account was registered successfully !"
 export const REGISTER_FAILED = "Register failed !"

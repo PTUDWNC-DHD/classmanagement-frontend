@@ -1,76 +1,144 @@
-import React, { useContext, useState } from "react";
-
-import AuthContext from '../../contexts/authContext'
-import { fetchRegister } from '../../services/authService'
-import * as Notifications from '../../utils/notifications'
-
-import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox } from "@mui/material";
-import { Link, Grid, Box, Container, Typography } from "@mui/material";
+import { useState, useEffect } from "react";
+import { 
+  Avatar, 
+  Button, 
+  TextField, 
+  Link, 
+  Grid, 
+  Box, 
+  Container, 
+  Typography } from "@mui/material";
 import { LockOutlined } from '@mui/icons-material'
-import Swal from 'sweetalert2';
 
+import { Copyright } from "../components"
 
+import { validateEmail } from "../../utils/validateUtil";
 
-const RegisterForm = () => {
-  const { setIsRegistered, setIsEmailNotRegistered } = useContext(AuthContext)
+const RegisterForm = ({
+  setFullname,
+  setUsername,
+  setEmail,
+  password, setPassword,
+  handleSubmit,
 
-  const [fullname, setFullname] = useState('');
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordNoti, setPasswordNoti] = useState('Please enter password again !');
-  const [isValid, setIsValid] = useState(false);
+}) => {
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isAllInputValid, setIsAllInputValid] = useState(false);
+  //
+  const defaultChecker = { error: false, hasChanged: false, text: '' };
+  // checker
+  const [fullnameChecker, setFullnameChecker] = useState(defaultChecker);
+  const [usernameChecker, setUsernameChecker] = useState(defaultChecker);
+  const [emailChecker, setEmailChecker] = useState(defaultChecker);
+  const [passwordChecker, setPasswordChecker] = useState(defaultChecker);
+  const [confirmPasswordChecker, setConfirmPasswordChecker] = useState(defaultChecker);
+  
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    //call fetch to get register checking from server
-    const result = await fetchRegister(username, fullname, email, password);
-    if (result.data) {
-      setIsEmailNotRegistered(false)
-      setIsRegistered(true)
-      Swal.fire({
-        title: "Success",
-        text: Notifications.REGISTER_SUCCESSFULLY,
-        icon: "success",
-        button: "Close",
+  useEffect(()=>{
+    if (
+      !fullnameChecker.hasChanged ||
+      !usernameChecker.hasChanged ||
+      !emailChecker.hasChanged ||
+      !passwordChecker.hasChanged ||
+      !confirmPasswordChecker.hasChanged 
+    )
+      setIsAllInputValid(false)
+    else if (
+      (!fullnameChecker.error && fullnameChecker.hasChanged) &&
+      (!usernameChecker.error && usernameChecker.hasChanged) &&
+      (!emailChecker.error && emailChecker.hasChanged) &&
+      (!passwordChecker.error && passwordChecker.hasChanged) &&
+      (!confirmPasswordChecker.error && confirmPasswordChecker.hasChanged) 
+    )
+      setIsAllInputValid(true)
+    else
+      setIsAllInputValid(false)
+  },[fullnameChecker, usernameChecker, passwordChecker, confirmPasswordChecker, emailChecker])
+
+  const handleFullnameChange = (event) => {
+    const value = event.target.value;
+    setFullname(value);
+    if (value)
+      setFullnameChecker(defaultChecker)
+    else
+      setFullnameChecker({
+        error: true,
+        hasChanged: true,
+        text: 'Fullname must not be null !'
       })
-    }
-    else if (result.error) {
-      Swal.fire({
-        title: "Error",
-        text: result.error,
-        icon: "error",
-        button: "Close",
+  }
+
+  const handleUsernameChange = (event) => {
+    const value = event.target.value;
+    setUsername(value);
+    if (value)
+      setUsernameChecker({defaultChecker})
+    else
+      setUsernameChecker({
+        error: true,
+        hasChanged: true,
+        text: 'Username must not be null !'
       })
+  }
+
+  const handleEmailChange = (event) => {
+    const value = event.target.value;
+    setEmail(value);
+    if (validateEmail(value))
+      setEmailChecker(defaultChecker)
+    else
+      setEmailChecker({
+        error: true,
+        hasChanged: true,
+        text: 'Email is invalid !'
+      })
+  }
+
+  const handlePasswordChange = (event) => {
+    const value = event.target.value;
+    setPassword(value);
+    if (!value) {
+      setPasswordChecker({
+        error: true,
+        hasChanged: true,
+        text: 'Password must not be null !'
+      })
+    } else {
+      setPasswordChecker(defaultChecker)
+      if (value !== confirmPassword) 
+        setConfirmPasswordChecker({
+          error: true,
+          hasChanged: true,
+          text: 'Password is not matched !'
+        })
+      else 
+        setConfirmPasswordChecker({
+          error: false,
+          hasChanged: true,
+          text: 'Password is matched !'
+        })
     }
   }
 
-  const handleConfirmPassword = (event) => {
-    const confirmPassword = event.target.value;
-    if (password !== confirmPassword) {
-      setPasswordNoti('Password not match !')
-      setIsValid(false);
-    }else{
-      setPasswordNoti('Password is valid !')
-      setIsValid(true);
-    }
-  }
-  function Copyright(props) {
-    return (
-      <Typography variant="body2" color="text.secondary" align="center" {...props}>
-        {'Copyright © '}
-        <Link color="inherit" href="https://mui.com/">
-          Your Website
-        </Link>{' '}
-        {new Date().getFullYear()}
-        {'.'}
-      </Typography>
-    );
+  const handleConfirmPasswordChange = (event) => {
+    const value = event.target.value;
+    setConfirmPassword(value);
+    if (password === value)
+      setConfirmPasswordChecker({
+        error: false,
+        hasChanged: true,
+        text: 'Password is matched !'
+      })
+    else
+      setConfirmPasswordChecker({
+        error: true,
+        hasChanged: true,
+        text: 'Password is not matched !'
+      })
   }
 
   return (
     <Container component="main" maxWidth="xs">
-      <CssBaseline />
       <Box
         sx={{
           marginTop: 8,
@@ -82,75 +150,73 @@ const RegisterForm = () => {
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
           <LockOutlined />
         </Avatar>
-        <Typography component="h1" variant="h5">
+        <Typography variant="h5">
           Sign up
         </Typography>
-        <Box component="form" noValidate onSubmit={(e)=>handleSubmit(e)} sx={{ mt: 3 }}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                autoComplete="full-name"
-                name="fullname"
                 required
                 fullWidth
-                id="fullname"
                 label="Full Name"
-                onChange={(e)=>{setFullname(e.target.value)}}
+                name="fullname"
+                onChange={handleFullnameChange}
+                autoComplete="full-name"
                 autoFocus
+                helperText={fullnameChecker.text}
+                error={fullnameChecker.error}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
-                autoComplete="username"
-                name="username"
                 required
                 fullWidth
-                id="username"
                 label="Username"
-                onChange={(e)=>{setUsername(e.target.value)}}
-                autoFocus
+                name="username"
+                onChange={handleUsernameChange}
+                autoComplete="username"
+                helperText={usernameChecker.text}
+                error={usernameChecker.error}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
-                id="email"
                 label="Email Address"
                 name="email"
-                onChange={(e)=>{setEmail(e.target.value)}}
+                type="email"
+                onChange={handleEmailChange}
                 autoComplete="email"
+                helperText={emailChecker.text}
+                error={emailChecker.error}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
-                name="password"
                 label="Password"
+                name="password"
                 type="password"
-                id="password"
-                onChange={(e)=>{setPassword(e.target.value)}}
+                onChange={handlePasswordChange}
                 autoComplete="new-password"
+                helperText={passwordChecker.text}
+                error={passwordChecker.error}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
-                name="confirm-password"
                 label="Confirm Password"
+                name="confirm-password"
                 type="password"
-                id="confirm-password"
-                onChange={(e)=>{handleConfirmPassword(e)}}
+                onChange={handleConfirmPasswordChange}
                 autoComplete="new-password"
-                helperText={passwordNoti}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
+                helperText={confirmPasswordChecker.text}
+                error={confirmPasswordChecker.error}
               />
             </Grid>
           </Grid>
@@ -159,7 +225,7 @@ const RegisterForm = () => {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
-            disabled={!isValid}
+            disabled={!isAllInputValid}
           >
             Sign Up
           </Button>

@@ -1,20 +1,13 @@
 import { Avatar, Button, IconButton, TextField, FormControlLabel, Checkbox } from "@mui/material";
 import { Link, Grid, Box, Container, Typography } from "@mui/material";
 
+import { Copyright } from '../components'
+
 
 const LoginForm = ({ handleLogin, setUsername, setPassword}) => {
   const mainLogoSrc = '/images/logo512.png';
   const googleLogoSrc = './images/googleLogo.png';
 
-  const Copyright = (props) => {
-    return (
-      <Typography variant="body2" color="text.primary" align="center" {...props}>
-        {'Copyright © DHD TEAM '}
-        {new Date().getFullYear()}
-        {'.'}
-      </Typography>
-    );
-  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -76,7 +69,7 @@ const LoginForm = ({ handleLogin, setUsername, setPassword}) => {
             </Grid>
             <Grid item>
               <Link href="/register" variant="body2" >
-                {"Don't have an account? Sign Up"}
+                Don't have an account? Sign Up
               </Link>
             </Grid>
           </Grid>

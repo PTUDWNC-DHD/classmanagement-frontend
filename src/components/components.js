@@ -1,5 +1,7 @@
 export { default as Header } from "./Header/Header";
 export { default as HeaderBar } from "./Header/HeaderBar/HeaderBar";
+export { default as Copyright } from './Copyright/Copyright';
+export { default as VerifyAccountForm } from './VerifyAccountForm/VerifyAccountForm'
 export { default as CreateClass } from "./CreateClass/CreateClass";
 export { default as JoinClass } from "./JoinClass/JoinClass";
 export { default as LoginForm } from "./LoginForm/LoginForm";

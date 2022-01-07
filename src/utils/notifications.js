@@ -24,3 +24,8 @@ export const SEND_INVITATION_FAILED = "Send invitation failed !"
 
 export const JOIN_CLASS_SUCCESSFULLY = "Join classroom successfully !"
 export const JOIN_CLASS_FAILED = "Join classroom failed !"
+
+export const ACTIVE_FAILED = "Active account failed !"
+export const REQUEST_ACTIVE_FAILED = "Request to active account failed !"
+export const REQUEST_RESET_PASSWORD_FAILED = "Request to reset password failed !"
+export const RESET_PASSWORD_FAILED = "Reset password failed !"

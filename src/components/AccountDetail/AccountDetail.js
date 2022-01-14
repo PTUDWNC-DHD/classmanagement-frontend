@@ -1,11 +1,14 @@
 import { useState, useContext } from 'react';
+import Swal from 'sweetalert2';
 
 import { Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField, Avatar, Typography, CardActions } from '@mui/material';
 
-import AuthContext from '../../contexts/authContext'
 import { updateUserAccountInformation } from '../../services/userService'
+
+import AuthContext from '../../contexts/authContext'
+
 import * as Notifications from '../../utils/notifications'
-import Swal from 'sweetalert2';
+
 
 
 const AccountDetail = (props) => {
@@ -31,7 +34,7 @@ const AccountDetail = (props) => {
       setCurrentUser({...currentUser, user: {...result.data}})
       Swal.fire({
         title: "Success",
-        text: Notifications.UPDATE_ACCOUNT_SUCCESSFULLY,
+        text: Notifications.UPDATE_ACCOUNT_SUCCESS,
         icon: "success",
         button: "Close",
       });

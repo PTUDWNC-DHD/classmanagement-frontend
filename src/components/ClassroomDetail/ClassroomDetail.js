@@ -1,14 +1,13 @@
 import { useState, useEffect, useContext } from 'react';
 
-
-import AuthContext from '../../contexts/authContext'
-import { getClassroomDetail } from '../../services/classroomService';
-
 import { CircularProgress, Button, IconButton, List, ListItem, ListItemText } from "@mui/material";
-
 import { ContentCopy } from '@mui/icons-material'
 
-import { InvitePopup } from "../components";
+import { InvitePopup } from '../components'
+
+import { getClassroomDetail } from '../../services/classroomService';
+
+import AuthContext from '../../contexts/authContext'
 
 import './style.css'
 

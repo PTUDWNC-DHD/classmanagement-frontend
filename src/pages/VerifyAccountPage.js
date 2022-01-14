@@ -1,10 +1,9 @@
 import React, { useContext, useState } from "react";
+import { useParams } from "react-router-dom";
 
-import { VerifyAccountForm } from "../components/components";
+import VerifyAccountForm from '../components/VerifyAccountForm/VerifyAccountForm'
 
-import { fetchActiveAccount, fetchRequestActiveAccount } from '../services/authService'
-
-import AuthContext from '../contexts/authContext'
+import { fetchActivateAccount, fetchRequestActivateAccount } from '../services/authService'
 
 import * as Notifications from '../utils/notifications'
 
@@ -12,18 +11,21 @@ import * as Notifications from '../utils/notifications'
 import Swal from 'sweetalert2';
 
 
-const VerifyAccountPage = ({email}) => {
-  const { setCurrentUser } = useContext(AuthContext)
+const VerifyAccountPage = () => {
+  const params = useParams();
+  const email = params?.email;
+
   const [verifyCode, setVerifyCode] = useState('');
 
 
-  const handleVerify = async () => {    
-    const result = await fetchActiveAccount(email, verifyCode)
+  const handleVerify = async (e) => {  
+    e.preventDefault();  
+    const result = await fetchActivateAccount(email, verifyCode)
     console.log('result after fetch: ', result)
     if (result.data){
       Swal.fire({
         title: "Success",
-        text:  Notifications.LOGIN_SUCCESSFULLY,
+        text:  Notifications.ACTIVATE_SUCCESS,
         icon: "success",
         button: "Next",
       })
@@ -31,43 +33,38 @@ const VerifyAccountPage = ({email}) => {
     else if (result.error) {
       Swal.fire({
         title: "Login failed !",
-        text: result.error,
+        text: Notifications.ACTIVATE_FAILED,
         icon: "error",
         button: "Close",
       })
     }
-    
-    
   }
 
   const handleRequestVerify = async () => {    
-    const result = await fetchRequestActiveAccount(email)
+    const result = await fetchRequestActivateAccount(email)
     //console.log('result after fetch: ', result)
-    let alert = {
-      title: "Success",
-      text:  Notifications.LOGIN_SUCCESSFULLY,
-      icon: "success",
-      button: "Next",
-    } 
-    
     if (result.data){
-      setCurrentUser(result.data)
+      Swal.fire({
+        title: "Success",
+        text:  Notifications.REQUEST_ACTIVATE_SUCCESS,
+        icon: "success",
+        button: "Next",
+      })
     }
     else if (result.error) {
-      alert = {
+      Swal.fire({
         title: "Login failed !",
-        text: result.error,
+        text: Notifications.REQUEST_ACTIVATE_FAILED,
         icon: "error",
         button: "Close",
-      }
+      })
     }
-    Swal.fire(alert)
-    
   }
 
   return (
     <VerifyAccountForm
       handleVerify={handleVerify}
+      handleRequestVerify={handleRequestVerify}
       setCode={setVerifyCode}
     />
   )

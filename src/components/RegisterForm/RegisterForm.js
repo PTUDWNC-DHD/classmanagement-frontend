@@ -1,141 +1,57 @@
-import { useState, useEffect } from "react";
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+
 import { 
   Avatar, 
   Button, 
-  TextField, 
   Link, 
   Grid, 
   Box, 
-  Container, 
+  Container,
+  TextField, 
   Typography } from "@mui/material";
 import { LockOutlined } from '@mui/icons-material'
 
 import { Copyright } from "../components"
 
-import { validateEmail } from "../../utils/validateUtil";
+import * as Constant from "../../utils/constant"
+import { useEffect } from 'react';
 
-const RegisterForm = ({
-  setFullname,
-  setUsername,
-  setEmail,
-  password, setPassword,
-  handleSubmit,
-
-}) => {
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [isAllInputValid, setIsAllInputValid] = useState(false);
-  //
-  const defaultChecker = { error: false, hasChanged: false, text: '' };
-  // checker
-  const [fullnameChecker, setFullnameChecker] = useState(defaultChecker);
-  const [usernameChecker, setUsernameChecker] = useState(defaultChecker);
-  const [emailChecker, setEmailChecker] = useState(defaultChecker);
-  const [passwordChecker, setPasswordChecker] = useState(defaultChecker);
-  const [confirmPasswordChecker, setConfirmPasswordChecker] = useState(defaultChecker);
-  
+const RegisterForm = ({ handleSubmit }) => {
+  const formik = useFormik({
+    initialValues: {
+      fullname: "",
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: ""
+    },
+    validationSchema: Yup.object({
+      fullname: Yup.string()
+        .required("Required"),
+      username: Yup.string()
+        .required("Required"),
+      email: Yup.string()
+        .required("Required")
+        .matches(
+          Constant.EMAIL_VALIDATE_REGEX,
+          "Please enter a valid email address"
+        ),
+      password: Yup.string()
+        .required("Required"),
+      confirmPassword: Yup.string()
+        .required("Required")
+        .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+    }),
+    onSubmit: async (values, { setSubmitting }) => {
+      await handleSubmit(values)
+      setSubmitting(false);
+    },
+  })
 
   useEffect(()=>{
-    if (
-      !fullnameChecker.hasChanged ||
-      !usernameChecker.hasChanged ||
-      !emailChecker.hasChanged ||
-      !passwordChecker.hasChanged ||
-      !confirmPasswordChecker.hasChanged 
-    )
-      setIsAllInputValid(false)
-    else if (
-      (!fullnameChecker.error && fullnameChecker.hasChanged) &&
-      (!usernameChecker.error && usernameChecker.hasChanged) &&
-      (!emailChecker.error && emailChecker.hasChanged) &&
-      (!passwordChecker.error && passwordChecker.hasChanged) &&
-      (!confirmPasswordChecker.error && confirmPasswordChecker.hasChanged) 
-    )
-      setIsAllInputValid(true)
-    else
-      setIsAllInputValid(false)
-  },[fullnameChecker, usernameChecker, passwordChecker, confirmPasswordChecker, emailChecker])
-
-  const handleFullnameChange = (event) => {
-    const value = event.target.value;
-    setFullname(value);
-    if (value)
-      setFullnameChecker(defaultChecker)
-    else
-      setFullnameChecker({
-        error: true,
-        hasChanged: true,
-        text: 'Fullname must not be null !'
-      })
-  }
-
-  const handleUsernameChange = (event) => {
-    const value = event.target.value;
-    setUsername(value);
-    if (value)
-      setUsernameChecker({defaultChecker})
-    else
-      setUsernameChecker({
-        error: true,
-        hasChanged: true,
-        text: 'Username must not be null !'
-      })
-  }
-
-  const handleEmailChange = (event) => {
-    const value = event.target.value;
-    setEmail(value);
-    if (validateEmail(value))
-      setEmailChecker(defaultChecker)
-    else
-      setEmailChecker({
-        error: true,
-        hasChanged: true,
-        text: 'Email is invalid !'
-      })
-  }
-
-  const handlePasswordChange = (event) => {
-    const value = event.target.value;
-    setPassword(value);
-    if (!value) {
-      setPasswordChecker({
-        error: true,
-        hasChanged: true,
-        text: 'Password must not be null !'
-      })
-    } else {
-      setPasswordChecker(defaultChecker)
-      if (value !== confirmPassword) 
-        setConfirmPasswordChecker({
-          error: true,
-          hasChanged: true,
-          text: 'Password is not matched !'
-        })
-      else 
-        setConfirmPasswordChecker({
-          error: false,
-          hasChanged: true,
-          text: 'Password is matched !'
-        })
-    }
-  }
-
-  const handleConfirmPasswordChange = (event) => {
-    const value = event.target.value;
-    setConfirmPassword(value);
-    if (password === value)
-      setConfirmPasswordChecker({
-        error: false,
-        hasChanged: true,
-        text: 'Password is matched !'
-      })
-    else
-      setConfirmPasswordChecker({
-        error: true,
-        hasChanged: true,
-        text: 'Password is not matched !'
-      })
-  }
+    console.log('formik values: ', formik.values)
+  })
 
   return (
     <Container component="main" maxWidth="xs">
@@ -153,19 +69,20 @@ const RegisterForm = ({
         <Typography variant="h5">
           Sign up
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+        <Box component="form" onSubmit={formik.handleSubmit} noValidate sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
+                autoFocus
                 label="Full Name"
                 name="fullname"
-                onChange={handleFullnameChange}
-                autoComplete="full-name"
-                autoFocus
-                helperText={fullnameChecker.text}
-                error={fullnameChecker.error}
+                autoComplete="fullname"
+                value={formik.values.fullname}
+                onChange={formik.handleChange}
+                helperText={formik.touched.fullname && formik.errors.fullname}
+                error={formik.touched.fullname && formik.errors.fullname}
               />
             </Grid>
             <Grid item xs={12}>
@@ -174,10 +91,11 @@ const RegisterForm = ({
                 fullWidth
                 label="Username"
                 name="username"
-                onChange={handleUsernameChange}
                 autoComplete="username"
-                helperText={usernameChecker.text}
-                error={usernameChecker.error}
+                value={formik.values.username}
+                onChange={formik.handleChange}
+                helperText={formik.touched.username && formik.errors.username}
+                error={formik.touched.username && formik.errors.username}
               />
             </Grid>
             <Grid item xs={12}>
@@ -187,10 +105,11 @@ const RegisterForm = ({
                 label="Email Address"
                 name="email"
                 type="email"
-                onChange={handleEmailChange}
                 autoComplete="email"
-                helperText={emailChecker.text}
-                error={emailChecker.error}
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                helperText={formik.touched.email && formik.errors.email}
+                error={formik.touched.email && formik.errors.email}
               />
             </Grid>
             <Grid item xs={12}>
@@ -200,23 +119,23 @@ const RegisterForm = ({
                 label="Password"
                 name="password"
                 type="password"
-                onChange={handlePasswordChange}
-                autoComplete="new-password"
-                helperText={passwordChecker.text}
-                error={passwordChecker.error}
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                helperText={formik.touched.password && formik.errors.password}
+                error={formik.touched.password && formik.errors.password}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12}> 
               <TextField
                 required
                 fullWidth
                 label="Confirm Password"
-                name="confirm-password"
+                name="confirmPassword"
                 type="password"
-                onChange={handleConfirmPasswordChange}
-                autoComplete="new-password"
-                helperText={confirmPasswordChecker.text}
-                error={confirmPasswordChecker.error}
+                value={formik.values.confirmPassword}
+                onChange={formik.handleChange}
+                helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+                error={formik.touched.confirmPassword && formik.errors.confirmPassword}
               />
             </Grid>
           </Grid>
@@ -225,7 +144,7 @@ const RegisterForm = ({
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
-            disabled={!isAllInputValid}
+            disabled={formik.isSubmitting}
           >
             Sign Up
           </Button>

@@ -1,13 +1,12 @@
 import React, { useState, useContext } from "react";
+import Swal from 'sweetalert2'
 
 import { Button, DialogActions, TextField, FormControlLabel, Checkbox } from "@mui/material";
 
-import AuthContext from "../../contexts/authContext";
 import { sendInvitation } from "../../services/inviteService";
+
+import AuthContext from "../../contexts/authContext";
 import * as Notifications from "../../utils/notifications"
-
-import Swal from 'sweetalert2'
-
 
 
 const InviteForm = (props) => {
@@ -24,7 +23,7 @@ const InviteForm = (props) => {
     if (result.data) {
       Swal.fire({
         title: "Success",
-        text: Notifications.SEND_INVITATION_SUCCESSFULLY,
+        text: Notifications.SEND_INVITATION_SUCCESS,
         icon: "success",
         button: "Close",
       })

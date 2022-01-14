@@ -1,11 +1,10 @@
-import { TextFields } from "@mui/icons-material";
 import { Avatar, Button } from "@mui/material";
-import { Link, Grid, Box, Container, Typography } from "@mui/material";
+import { Link, Grid, Box, Container, Typography, TextField } from "@mui/material";
 
 import { Copyright } from '../components'
 
 
-const VerifyAccountForm = ({ handleVerify, setCode}) => {
+const VerifyAccountForm = ({ handleVerify, handleRequestVerify, setCode}) => {
   const mainLogoSrc = '/images/logo512.png';
 
 
@@ -23,31 +22,29 @@ const VerifyAccountForm = ({ handleVerify, setCode}) => {
         <Typography variant="h4">
           Verify Account
         </Typography>
-        <Box component="form" onSubmit={handleVerify}  sx={{ mt: 1 }}>
-          <TextFields
+        <Box component="form" onSubmit={handleVerify}  sx={{ mt: 2 }}>
+          <TextField
             required
             fullWidth
             label="Verify Code"
             name="code"
-            autoComplete="code"
+            placeholder="code"
             onChange={(e)=>{setCode(e.target.value)}}
             autoFocus
-            color="success"
           />
           <Button
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
-            color="success"
           >
             Sign In
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item xs>
-              <Link href="/register" variant="body2" >
+              <Button fullWidth variant="contained" onClick={handleRequestVerify} >
                 Don't receive email? Send again
-              </Link>
+              </Button>
             </Grid>
           </Grid>
         </Box>

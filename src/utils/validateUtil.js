@@ -1,4 +1,11 @@
-export const validateEmail = (email) => {
+
+export const INPUT_VALIDATE = {
+  notNull: 'notNull',
+  isEmail: 'isEmail',
+  confirmPass: 'confirmPass'
+}
+
+export const isValidEmail = (email) => {
   return String(email)
     .toLowerCase()
     .match(

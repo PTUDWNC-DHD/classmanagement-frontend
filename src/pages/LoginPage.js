@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import Swal from 'sweetalert2';
 
 import { LoginForm } from "../components/components";
 
@@ -11,22 +12,20 @@ import { saveToLocalStorage } from '../utils/localStorage'
 import * as Notifications from '../utils/notifications'
 import * as Constant from '../utils/constant'
 
-import Swal from 'sweetalert2';
 
 
-const LoginPage = (props) => {
+
+const LoginPage = () => {
   const { setCurrentUser } = useContext(AuthContext)
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
 
 
   //function fetch to get login checking from server
-  const callLoginAPI = async (usernameToFetch, passwordToFetch) => {
-    const result = await fetchLogin(usernameToFetch, passwordToFetch)
+  const callLoginAPI = async (usernameOrEmail, passwordOrToken) => {
+    const result = await fetchLogin(usernameOrEmail, passwordOrToken)
     //console.log('result after fetch: ', result)
     let alert = {
       title: "Success",
-      text:  Notifications.LOGIN_SUCCESSFULLY,
+      text:  Notifications.LOGIN_SUCCESS,
       icon: "success",
       button: "Next",
     } 
@@ -38,8 +37,8 @@ const LoginPage = (props) => {
     }
     else if (result.error) {
       alert = {
-        title: "Login failed !",
-        text: result.error,
+        title: "Error",
+        text: Notifications.LOGIN_FAILED,
         icon: "error",
         button: "Close",
       }
@@ -47,39 +46,33 @@ const LoginPage = (props) => {
     Swal.fire(alert)
   }
 
-  const handleLogin = (event, loginType) => {    
-    //switch two type of login
-    switch (loginType) {
-      case 'account': default:
-        event.preventDefault();
-        callLoginAPI(username, password)
-        break;
-      case 'google':
-        auth.signInWithPopup(googleProvider)
-        .then((res) => {
-          auth.currentUser.getIdToken().then((token)=>{
-            callLoginAPI(res.user.email, token)
-          })
-        })
-        .catch((error) => {
-          //console.log('Get account information by firebase error: ', error)
-          Swal.fire({
-            title: "Login failed !",
-            text: Notifications.GET_GG_ACCOUNT_FAILED,
-            icon: "error",
-            button: "Close",
-          })
-        })
-        break;
-    }
-    
+  const loginByAccount = async (values) => {    
+    //console.log('values: ', values)
+    await callLoginAPI(values.username, values.password)
+  }
+
+  const loginByGoogle = () => {
+    auth.signInWithPopup(googleProvider)
+    .then((res) => {
+      auth.currentUser.getIdToken().then((token)=>{
+        callLoginAPI(res.user.email, token)
+      })
+    })
+    .catch((error) => {
+      //console.log('Get account information by firebase error: ', error)
+      Swal.fire({
+        title: "Login failed !",
+        text: Notifications.GET_GG_ACCOUNT_FAILED,
+        icon: "error",
+        button: "Close",
+      })
+    })
   }
 
   return (
     <LoginForm
-      handleLogin={handleLogin}
-      setUsername={setUsername}
-      setPassword={setPassword}
+      handleLoginByAccount={loginByAccount}
+      handleLoginByGoogle={loginByGoogle}
     />
   )
 }

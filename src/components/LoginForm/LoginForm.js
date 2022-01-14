@@ -1,12 +1,32 @@
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+
 import { Avatar, Button, IconButton, TextField, FormControlLabel, Checkbox } from "@mui/material";
 import { Link, Grid, Box, Container, Typography } from "@mui/material";
 
 import { Copyright } from '../components'
 
 
-const LoginForm = ({ handleLogin, setUsername, setPassword}) => {
+const LoginForm = ({ handleLoginByAccount, handleLoginByGoogle}) => {
   const mainLogoSrc = '/images/logo512.png';
   const googleLogoSrc = './images/googleLogo.png';
+
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+      password: "",
+    },
+    validationSchema: Yup.object({
+      username: Yup.string()
+        .required("Required"),
+      password: Yup.string()
+        .required("Required")
+    }),
+    onSubmit: async (values, { setSubmitting }) => {
+      await handleLoginByAccount(values)
+      setSubmitting(false);
+    },
+  })
 
 
   return (
@@ -23,30 +43,32 @@ const LoginForm = ({ handleLogin, setUsername, setPassword}) => {
         <Typography variant="h4">
           Sign in
         </Typography>
-        <Box component="form" onSubmit={(e) => {handleLogin(e, 'account')}} noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={formik.handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
-            margin="normal"
+            autoFocus
             required
             fullWidth
-            id="username"
+            margin="normal"
             label="Username"
             name="username"
             autoComplete="username"
-            onChange={(e)=>{setUsername(e.target.value)}}
-            autoFocus
-            color="success"
+            value={formik.values.username}
+            onChange={formik.handleChange}
+            helperText={formik.touched.username && formik.errors.username}
+            error={formik.touched.username && formik.errors.username}
           />
           <TextField
-            margin="normal"
             required
             fullWidth
-            name="password"
+            margin="normal"
             label="Password"
+            name="password"
             type="password"
-            id="password"
-            onChange={(e)=>{setPassword(e.target.value)}}
-            autoComplete="current-password"
-            color="success"
+            autoComplete="password"
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            helperText={formik.touched.password && formik.errors.password}
+                error={formik.touched.password && formik.errors.password}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -57,7 +79,7 @@ const LoginForm = ({ handleLogin, setUsername, setPassword}) => {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
-            color="success"
+            disabled={formik.isSubmitting}
           >
             Sign In
           </Button>
@@ -78,7 +100,7 @@ const LoginForm = ({ handleLogin, setUsername, setPassword}) => {
           Or sign in with
         </Typography>
         <IconButton
-          onClick={(e) => {handleLogin(e, 'google')}}
+          onClick={handleLoginByGoogle}
         >
           <Avatar src={googleLogoSrc}  variant="rounded"/>
         </IconButton>

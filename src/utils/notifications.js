@@ -25,11 +25,11 @@ export const SEND_INVITATION_FAILED = "Send invitation failed !"
 export const JOIN_CLASS_SUCCESS = "Join classroom successfully !"
 export const JOIN_CLASS_FAILED = "Join classroom failed !"
 
-export const ACTIVE_SUCCESS = "Active account successfully !"
-export const ACTIVE_FAILED = "Active account failed !"
+export const ACTIVATE_SUCCESS = "Activate account successfully !"
+export const ACTIVATE_FAILED = "Activate account failed !"
 
-export const REQUEST_ACTIVE_SUCCESS = "Active code was sent successfully !"
-export const REQUEST_ACTIVE_FAILED = "Request to active account failed !"
+export const REQUEST_ACTIVATE_SUCCESS = "Activate code was sent successfully !"
+export const REQUEST_ACTIVATE_FAILED = "Request to activate account failed !"
 
 
 export const REQUEST_RESET_PASSWORD_FAILED = "Request to reset password failed !"

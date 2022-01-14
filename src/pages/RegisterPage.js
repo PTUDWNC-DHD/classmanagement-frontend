@@ -1,28 +1,23 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom"
 
 import { RegisterForm } from "../components/components";
 
-import AuthContext from '../contexts/authContext'
-
 import { fetchRegister } from '../services/authService'
 
+import AuthContext from '../contexts/authContext'
 import * as Notifications from '../utils/notifications'
 
 
 
 import Swal from 'sweetalert2';
 
-const RegisterPage = (props) => {
+const RegisterPage = () => {
+  const navigate = useNavigate();
   const { setIsRegistered, setIsEmailNotRegistered } = useContext(AuthContext)
 
-  const [fullname, setFullname] = useState('');
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (values) => {
+    const { username, fullname, email, password } = values;
     //call fetch to get register checking from server
     const result = await fetchRegister(username, fullname, email, password);
     if (result.data) {
@@ -30,15 +25,17 @@ const RegisterPage = (props) => {
       setIsRegistered(true)
       Swal.fire({
         title: "Success",
-        text: Notifications.REGISTER_SUCCESSFULLY,
+        text: Notifications.REGISTER_SUCCESS,
         icon: "success",
         button: "Close",
       })
+      //navigate to verify account page
+      navigate(`verify/${email}`);
     }
     else if (result.error) {
       Swal.fire({
         title: "Error",
-        text: result.error,
+        text: Notifications.REGISTER_FAILED,
         icon: "error",
         button: "Close",
       })
@@ -48,10 +45,6 @@ const RegisterPage = (props) => {
   
   return (
     <RegisterForm 
-      setFullname={setFullname}
-      setUsername={setUsername}
-      email={email} setEmail={setEmail}
-      password={password} setPassword={setPassword}
       handleSubmit={handleSubmit}
     />
   )

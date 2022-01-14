@@ -65,7 +65,7 @@ const fetchRegister = (username, fullname, email, password) => {
         })
 }
 
-const fetchActiveAccount = (email, code) => {
+const fetchActivateAccount = (email, code) => {
     return fetch(process.env.REACT_APP_API_URL + "/api/auth/active", {
         method: "POST",
         headers: {
@@ -86,7 +86,7 @@ const fetchActiveAccount = (email, code) => {
                     return { result: res.result, error: res.errors[0] }
                 })
             }
-            return { result: false, error: Notifications.ACTIVE_FAILED }
+            return { result: false, error: Notifications.ACTIVATE_FAILED }
         })
         .catch((error) => {
             //console.log('error: ', error)
@@ -94,7 +94,7 @@ const fetchActiveAccount = (email, code) => {
         })
 }
 
-const fetchRequestActiveAccount = (email) => {
+const fetchRequestActivateAccount = (email) => {
     return fetch(process.env.REACT_APP_API_URL + "/api/auth/requestactive", {
         method: "POST",
         headers: {
@@ -114,7 +114,7 @@ const fetchRequestActiveAccount = (email) => {
                     return { result: res.result, error: res.errors[0] }
                 })
             }
-            return { result: false, error: Notifications.REQUEST_ACTIVE_FAILED }
+            return { result: false, error: Notifications.REQUEST_ACTIVATE_FAILED }
         })
         .catch((error) => {
             //console.log('error: ', error)
@@ -211,8 +211,8 @@ const fetchResetPassword = (token, newPassword) => {
 export { 
   fetchLogin, 
   fetchRegister, 
-  fetchActiveAccount,
-  fetchRequestActiveAccount,
+  fetchActivateAccount,
+  fetchRequestActivateAccount,
   fetchForgotPassword,
   fetchCheckResetPasswordCode,
   fetchResetPassword,

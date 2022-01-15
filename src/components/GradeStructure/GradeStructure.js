@@ -1,17 +1,13 @@
 import React , { useState, useEffect, useContext } from 'react'
-
-import { Accordion,  AccordionSummary, AccordionDetails, Button, Typography, CircularProgress, IconButton} from '@mui/material';
-
-import { AddCircleOutline, DragIndicator, FilterNone, Delete } from '@mui/icons-material';
-
-import AuthContext from '../../contexts/authContext'
-import { updateGradeStructure } from '../../services/classroomService';
-
-//--------------
-
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Swal from 'sweetalert2'
 
+import { Accordion,  AccordionSummary, AccordionDetails, Button, Typography, CircularProgress, IconButton} from '@mui/material';
+import { AddCircleOutline, DragIndicator, FilterNone, Delete } from '@mui/icons-material';
+
+import { updateGradeStructure } from '../../services/classroomService';
+
+import AuthContext from '../../contexts/authContext'
 
 import "./user_form.css"
 

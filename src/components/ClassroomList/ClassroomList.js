@@ -1,10 +1,12 @@
 import { useEffect, useContext, useState } from 'react';
+
 import { CircularProgress, Container, Grid } from '@mui/material'
 
-import AuthContext from '../../contexts/authContext'
+import ClassroomCard from './ClassroomCard/ClassroomCard'
+
 import { getAllClassrooms } from '../../services/classroomService';
 
-import { ClassroomCard } from '../components'
+import AuthContext from '../../contexts/authContext'
 
 import classes from './style'
 import "./ClassroomCard/style.css";

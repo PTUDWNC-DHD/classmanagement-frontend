@@ -1,10 +1,9 @@
 import { Fragment, useState } from "react";
 
 import { Switch, SwipeableDrawer, List, Divider, ListSubheader, ListItemButton, ListItemIcon, ListItemText, IconButton} from "@mui/material";
-
 import { Menu, HomeRounded, CalendarTodayRounded, ArchiveRounded, Settings } from "@mui/icons-material";
 
-import { HeaderBar } from "../components";
+import HeaderBar from './HeaderBar/HeaderBar';
 
 
 export default function Header({check,change}) {

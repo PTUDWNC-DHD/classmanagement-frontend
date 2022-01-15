@@ -9,6 +9,7 @@ import AccountPage from '../pages/AccountPage'
 import UserPage from "../pages/UserPage"
 import LoginPage from '../pages/LoginPage'
 import RegisterPage from '../pages/RegisterPage'
+import VerifyAccountPage from '../pages/VerifyAccountPage'
 
 
 
@@ -26,6 +27,12 @@ const AppRouter = ()=>{
         <Route path='/register' element={
           <NonAuthRequired>
             <RegisterPage/>
+          </NonAuthRequired>
+        }/>
+
+        <Route path='/verify/:email' element={
+          <NonAuthRequired>
+            <VerifyAccountPage/>
           </NonAuthRequired>
         }/>
 

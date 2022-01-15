@@ -32,7 +32,7 @@ const Form = ({ setIsOpen}) => {
         })
         Swal.fire({
           title: "Success",
-          text: Notifications.CREATE_CLASS_SUCCESSFULLY,
+          text: Notifications.CREATE_CLASS_SUCCESS,
           icon: "success",
           button: "Close",
         });

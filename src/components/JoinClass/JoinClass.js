@@ -1,16 +1,16 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2'
 
 import { Button, Box, Checkbox, FormControlLabel, CardHeader, Card, CardContent, Grid, Divider, TextField } from "@mui/material";
 
-import AuthContext from "../../contexts/authContext";
 import { joinClassroom } from "../../services/joinService";
 
+import AuthContext from "../../contexts/authContext";
 import * as Notifications from "../../utils/notifications"
 
-import Swal from 'sweetalert2'
-
 import "./style.css";
+
 
 const JoinClass = (props) => {
   const { currentUser } = useContext(AuthContext);
@@ -31,7 +31,7 @@ const JoinClass = (props) => {
       if (result.data) {
         Swal.fire({
           title: "Success",
-          text: Notifications.JOIN_CLASS_SUCCESSFULLY,
+          text: Notifications.JOIN_CLASS_SUCCESS,
           icon: "success",
           button: "Close",
         })

@@ -6,12 +6,12 @@ import * as React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 
-const HomePage = (props) => {
-  const [darkMode,setDarkMode] = useState(false);
+const HomePage = () => {
+  const [darkMode, setDarkMode] = useState(false);
 
   const theme = createTheme({
         palette: {
-         mode:darkMode?"dark":"light"
+        mode:darkMode?"dark":"light"
         }
       })
   return (

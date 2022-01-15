@@ -1,9 +1,12 @@
 import { useState } from 'react';
-import { styled } from '@mui/material/styles';
 import { Button } from '@mui/material';
-import { UploadButton } from '../components'
-import { uploadStudentGrade, updateGradeStructure } from '../../services/classroomService';
+import { styled } from '@mui/material/styles';
 import { GridColumnMenu, GridColumnMenuContainer } from '@mui/x-data-grid';
+
+import { UploadButton } from '../components'
+
+import { uploadStudentGrade, updateGradeStructure } from '../../services/classroomService';
+
 
 
 const StyledGridColumnMenuContainer = styled(GridColumnMenuContainer)(

@@ -3,10 +3,10 @@ import { Link } from "react-router-dom"
 
 import { Box, IconButton, Badge, AppBar, Avatar, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
 import { Add, Logout, Notifications } from "@mui/icons-material";
-import { grey } from '@mui/material/colors';
+
+import { CreateClass } from "../../components";
 
 import AuthContext from "../../../contexts/authContext";
-import { CreateClass } from "../../components";
 import { removeFromLocalStorage } from "../../../utils/localStorage";
 import * as Constant from '../../../utils/constant'
 
@@ -101,7 +101,7 @@ const HeaderBar = ({ children }) => {
           <IconButton>
             <Link to='/account' className="link">
               <Avatar className="icon" >
-                {currentUser.user.name.charAt(0)}
+                {currentUser && currentUser.user.name.charAt(0)}
               </Avatar>
             </Link>
             </IconButton>

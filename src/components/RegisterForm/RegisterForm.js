@@ -1,76 +1,57 @@
-import React, { useContext, useState } from "react";
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
 
-import AuthContext from '../../contexts/authContext'
-import { fetchRegister } from '../../services/authService'
-import * as Notifications from '../../utils/notifications'
-
-import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox } from "@mui/material";
-import { Link, Grid, Box, Container, Typography } from "@mui/material";
+import { 
+  Avatar, 
+  Button, 
+  Link, 
+  Grid, 
+  Box, 
+  Container,
+  TextField, 
+  Typography } from "@mui/material";
 import { LockOutlined } from '@mui/icons-material'
-import Swal from 'sweetalert2';
+
+import { Copyright } from "../components"
+
+import * as Constant from "../../utils/constant"
 
 
+const RegisterForm = ({ handleSubmit }) => {
+  const formik = useFormik({
+    initialValues: {
+      fullname: "",
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: ""
+    },
+    validationSchema: Yup.object({
+      fullname: Yup.string()
+        .required("Required"),
+      username: Yup.string()
+        .required("Required"),
+      email: Yup.string()
+        .required("Required")
+        .matches(
+          Constant.EMAIL_VALIDATE_REGEX,
+          "Please enter a valid email address"
+        ),
+      password: Yup.string()
+        .required("Required"),
+      confirmPassword: Yup.string()
+        .required("Required")
+        .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+    }),
+    onSubmit: async (values, { setSubmitting }) => {
+      await handleSubmit(values)
+      setSubmitting(false);
+    },
+  })
 
-const RegisterForm = () => {
-  const { setIsRegistered, setIsEmailNotRegistered } = useContext(AuthContext)
-
-  const [fullname, setFullname] = useState('');
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordNoti, setPasswordNoti] = useState('Please enter password again !');
-  const [isValid, setIsValid] = useState(false);
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    //call fetch to get register checking from server
-    const result = await fetchRegister(username, fullname, email, password);
-    if (result.data) {
-      setIsEmailNotRegistered(false)
-      setIsRegistered(true)
-      Swal.fire({
-        title: "Success",
-        text: Notifications.REGISTER_SUCCESSFULLY,
-        icon: "success",
-        button: "Close",
-      })
-    }
-    else if (result.error) {
-      Swal.fire({
-        title: "Error",
-        text: result.error,
-        icon: "error",
-        button: "Close",
-      })
-    }
-  }
-
-  const handleConfirmPassword = (event) => {
-    const confirmPassword = event.target.value;
-    if (password !== confirmPassword) {
-      setPasswordNoti('Password not match !')
-      setIsValid(false);
-    }else{
-      setPasswordNoti('Password is valid !')
-      setIsValid(true);
-    }
-  }
-  function Copyright(props) {
-    return (
-      <Typography variant="body2" color="text.secondary" align="center" {...props}>
-        {'Copyright © '}
-        <Link color="inherit" href="https://mui.com/">
-          Your Website
-        </Link>{' '}
-        {new Date().getFullYear()}
-        {'.'}
-      </Typography>
-    );
-  }
-
+  
   return (
     <Container component="main" maxWidth="xs">
-      <CssBaseline />
       <Box
         sx={{
           marginTop: 8,
@@ -82,75 +63,76 @@ const RegisterForm = () => {
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
           <LockOutlined />
         </Avatar>
-        <Typography component="h1" variant="h5">
+        <Typography variant="h5">
           Sign up
         </Typography>
-        <Box component="form" noValidate onSubmit={(e)=>handleSubmit(e)} sx={{ mt: 3 }}>
+        <Box component="form" onSubmit={formik.handleSubmit} noValidate sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                autoComplete="full-name"
-                name="fullname"
                 required
                 fullWidth
-                id="fullname"
+                autoFocus
                 label="Full Name"
-                onChange={(e)=>{setFullname(e.target.value)}}
-                autoFocus
+                name="fullname"
+                autoComplete="fullname"
+                value={formik.values.fullname}
+                onChange={formik.handleChange}
+                helperText={formik.touched.fullname && formik.errors.fullname}
+                error={Boolean(formik.touched.fullname && formik.errors.fullname)}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
-                autoComplete="username"
-                name="username"
                 required
                 fullWidth
-                id="username"
                 label="Username"
-                onChange={(e)=>{setUsername(e.target.value)}}
-                autoFocus
+                name="username"
+                autoComplete="username"
+                value={formik.values.username}
+                onChange={formik.handleChange}
+                helperText={formik.touched.username && formik.errors.username}
+                error={Boolean(formik.touched.username && formik.errors.username)}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
-                id="email"
                 label="Email Address"
                 name="email"
-                onChange={(e)=>{setEmail(e.target.value)}}
+                type="email"
                 autoComplete="email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                helperText={formik.touched.email && formik.errors.email}
+                error={Boolean(formik.touched.email && formik.errors.email)}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
-                name="password"
                 label="Password"
+                name="password"
                 type="password"
-                id="password"
-                onChange={(e)=>{setPassword(e.target.value)}}
-                autoComplete="new-password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                helperText={formik.touched.password && formik.errors.password}
+                error={Boolean(formik.touched.password && formik.errors.password)}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12}> 
               <TextField
                 required
                 fullWidth
-                name="confirm-password"
                 label="Confirm Password"
+                name="confirmPassword"
                 type="password"
-                id="confirm-password"
-                onChange={(e)=>{handleConfirmPassword(e)}}
-                autoComplete="new-password"
-                helperText={passwordNoti}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
+                value={formik.values.confirmPassword}
+                onChange={formik.handleChange}
+                helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+                error={Boolean(formik.touched.confirmPassword && formik.errors.confirmPassword)}
               />
             </Grid>
           </Grid>
@@ -159,7 +141,7 @@ const RegisterForm = () => {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
-            disabled={!isValid}
+            disabled={formik.isSubmitting}
           >
             Sign Up
           </Button>

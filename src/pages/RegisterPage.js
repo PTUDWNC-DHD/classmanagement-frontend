@@ -1,11 +1,10 @@
-import { useContext } from "react";
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 
 import { RegisterForm } from "../components/components";
 
 import { fetchRegister } from '../services/authService'
 
-import AuthContext from '../contexts/authContext'
 import * as Notifications from '../utils/notifications'
 
 
@@ -14,23 +13,27 @@ import Swal from 'sweetalert2';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const { setIsRegistered, setIsEmailNotRegistered } = useContext(AuthContext)
+  const [verifyEmail, setVerifyEmail] = useState('');
+
+  useEffect(()=>{
+    //navigate to verify account page
+    if (verifyEmail)
+      navigate(`/verify/${verifyEmail}`);
+  },[verifyEmail])
 
   const handleSubmit = async (values) => {
     const { username, fullname, email, password } = values;
     //call fetch to get register checking from server
     const result = await fetchRegister(username, fullname, email, password);
     if (result.data) {
-      setIsEmailNotRegistered(false)
-      setIsRegistered(true)
+      setVerifyEmail(email);
       Swal.fire({
         title: "Success",
         text: Notifications.REGISTER_SUCCESS,
         icon: "success",
         button: "Close",
       })
-      //navigate to verify account page
-      navigate(`verify/${email}`);
+      
     }
     else if (result.error) {
       Swal.fire({

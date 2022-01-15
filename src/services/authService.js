@@ -79,18 +79,18 @@ const fetchActivateAccount = (email, code) => {
         .then((resJS) => {
             if (resJS.status === 200)
                 return resJS.json().then((res) => {
-                    return { result: res.result }
+                    return { data: res.result }
                 })
             if (resJS.status === 400) {
                 return resJS.json().then((res) => {
-                    return { result: res.result, error: res.errors[0] }
+                    return { error: res.errors[0] }
                 })
             }
-            return { result: false, error: Notifications.ACTIVATE_FAILED }
+            return { error: Notifications.ACTIVATE_FAILED }
         })
         .catch((error) => {
             //console.log('error: ', error)
-            return { result: false, error: error }
+            return { error: error }
         })
 }
 
@@ -107,18 +107,18 @@ const fetchRequestActivateAccount = (email) => {
         .then((resJS) => {
             if (resJS.status === 200)
                 return resJS.json().then((res) => {
-                    return { result: res.result }
+                    return { data: res.result }
                 })
             if (resJS.status === 400) {
                 return resJS.json().then((res) => {
-                    return { result: res.result, error: res.errors[0] }
+                    return { error: res.errors[0] }
                 })
             }
-            return { result: false, error: Notifications.REQUEST_ACTIVATE_FAILED }
+            return { error: Notifications.REQUEST_ACTIVATE_FAILED }
         })
         .catch((error) => {
             //console.log('error: ', error)
-            return { result: false, error: error }
+            return { error: error }
         })
 }
 

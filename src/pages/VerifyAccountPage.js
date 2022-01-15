@@ -1,5 +1,6 @@
-import React, { useContext, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 import VerifyAccountForm from '../components/VerifyAccountForm/VerifyAccountForm'
 
@@ -8,21 +9,25 @@ import { fetchActivateAccount, fetchRequestActivateAccount } from '../services/a
 import * as Notifications from '../utils/notifications'
 
 
-import Swal from 'sweetalert2';
-
 
 const VerifyAccountPage = () => {
+  const navigate = useNavigate();
   const params = useParams();
+  const [navigateTo, setNavigateTo] = useState('');
+  
   const email = params?.email;
 
-  const [verifyCode, setVerifyCode] = useState('');
+  useEffect(()=>{
+    if (navigateTo)
+      navigate(navigateTo);
+  },[navigateTo])
 
-
-  const handleVerify = async (e) => {  
-    e.preventDefault();  
-    const result = await fetchActivateAccount(email, verifyCode)
+  const handleVerify = async (values) => {  
+    const { code } = values;
+    const result = await fetchActivateAccount(email, code)
     console.log('result after fetch: ', result)
     if (result.data){
+      setNavigateTo('/login');
       Swal.fire({
         title: "Success",
         text:  Notifications.ACTIVATE_SUCCESS,
@@ -32,7 +37,7 @@ const VerifyAccountPage = () => {
     }
     else if (result.error) {
       Swal.fire({
-        title: "Login failed !",
+        title: "Error",
         text: Notifications.ACTIVATE_FAILED,
         icon: "error",
         button: "Close",
@@ -53,7 +58,7 @@ const VerifyAccountPage = () => {
     }
     else if (result.error) {
       Swal.fire({
-        title: "Login failed !",
+        title: "Error",
         text: Notifications.REQUEST_ACTIVATE_FAILED,
         icon: "error",
         button: "Close",
@@ -65,7 +70,6 @@ const VerifyAccountPage = () => {
     <VerifyAccountForm
       handleVerify={handleVerify}
       handleRequestVerify={handleRequestVerify}
-      setCode={setVerifyCode}
     />
   )
 }

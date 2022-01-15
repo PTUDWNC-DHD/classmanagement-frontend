@@ -101,7 +101,7 @@ const HeaderBar = ({ children }) => {
           <IconButton>
             <Link to='/account' className="link">
               <Avatar className="icon" >
-                {currentUser.user.name.charAt(0)}
+                {currentUser && currentUser.user.name.charAt(0)}
               </Avatar>
             </Link>
             </IconButton>

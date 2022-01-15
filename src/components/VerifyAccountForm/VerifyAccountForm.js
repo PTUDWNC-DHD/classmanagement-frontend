@@ -1,12 +1,28 @@
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+
 import { Avatar, Button } from "@mui/material";
-import { Link, Grid, Box, Container, Typography, TextField } from "@mui/material";
+import { Grid, Box, Container, Typography, TextField } from "@mui/material";
 
 import { Copyright } from '../components'
 
 
-const VerifyAccountForm = ({ handleVerify, handleRequestVerify, setCode}) => {
+const VerifyAccountForm = ({ handleVerify, handleRequestVerify}) => {
   const mainLogoSrc = '/images/logo512.png';
 
+  const formik = useFormik({
+    initialValues: {
+      code: "",
+    },
+    validationSchema: Yup.object({
+      code: Yup.string()
+        .required("Required")
+    }),
+    onSubmit: async (values, { setSubmitting }) => {
+      await handleVerify(values)
+      setSubmitting(false);
+    },
+  })
 
   return (
     <Container component="main" maxWidth="xs">
@@ -22,23 +38,28 @@ const VerifyAccountForm = ({ handleVerify, handleRequestVerify, setCode}) => {
         <Typography variant="h4">
           Verify Account
         </Typography>
-        <Box component="form" onSubmit={handleVerify}  sx={{ mt: 2 }}>
+        <Box component="form" onSubmit={formik.handleSubmit} noValidate sx={{ mt: 2 }}>
           <TextField
+            autoFocus
             required
             fullWidth
+            margin="normal"
             label="Verify Code"
             name="code"
             placeholder="code"
-            onChange={(e)=>{setCode(e.target.value)}}
-            autoFocus
+            value={formik.values.code}
+            onChange={formik.handleChange}
+            helperText={formik.touched.code && formik.errors.code}
+            error={Boolean(formik.touched.code && formik.errors.code)}
           />
           <Button
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            disabled={formik.isSubmitting}
           >
-            Sign In
+            Verify Account
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item xs>

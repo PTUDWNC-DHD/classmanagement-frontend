@@ -1,4 +1,5 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 
 import { LoginForm } from "../components/components";
@@ -16,8 +17,15 @@ import * as Constant from '../utils/constant'
 
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const { setCurrentUser } = useContext(AuthContext)
 
+  const [navigateTo, setNavigateTo] = useState('');
+
+  useEffect(()=>{
+    if (navigateTo)
+      navigate(navigateTo);
+  },[navigateTo])
 
   //function fetch to get login checking from server
   const callLoginAPI = async (usernameOrEmail, passwordOrToken) => {
@@ -34,6 +42,7 @@ const LoginPage = () => {
       setCurrentUser(result.data)
       //console.log('curr: ', result.data)
       saveToLocalStorage(result.data, Constant.LOCAL_STORAGE_USER)
+      setNavigateTo('/');
     }
     else if (result.error) {
       alert = {

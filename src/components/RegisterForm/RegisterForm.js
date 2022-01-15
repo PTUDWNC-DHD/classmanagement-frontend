@@ -15,7 +15,7 @@ import { LockOutlined } from '@mui/icons-material'
 import { Copyright } from "../components"
 
 import * as Constant from "../../utils/constant"
-import { useEffect } from 'react';
+
 
 const RegisterForm = ({ handleSubmit }) => {
   const formik = useFormik({
@@ -49,10 +49,7 @@ const RegisterForm = ({ handleSubmit }) => {
     },
   })
 
-  useEffect(()=>{
-    console.log('formik values: ', formik.values)
-  })
-
+  
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -82,7 +79,7 @@ const RegisterForm = ({ handleSubmit }) => {
                 value={formik.values.fullname}
                 onChange={formik.handleChange}
                 helperText={formik.touched.fullname && formik.errors.fullname}
-                error={formik.touched.fullname && formik.errors.fullname}
+                error={Boolean(formik.touched.fullname && formik.errors.fullname)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -95,7 +92,7 @@ const RegisterForm = ({ handleSubmit }) => {
                 value={formik.values.username}
                 onChange={formik.handleChange}
                 helperText={formik.touched.username && formik.errors.username}
-                error={formik.touched.username && formik.errors.username}
+                error={Boolean(formik.touched.username && formik.errors.username)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -109,7 +106,7 @@ const RegisterForm = ({ handleSubmit }) => {
                 value={formik.values.email}
                 onChange={formik.handleChange}
                 helperText={formik.touched.email && formik.errors.email}
-                error={formik.touched.email && formik.errors.email}
+                error={Boolean(formik.touched.email && formik.errors.email)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -122,7 +119,7 @@ const RegisterForm = ({ handleSubmit }) => {
                 value={formik.values.password}
                 onChange={formik.handleChange}
                 helperText={formik.touched.password && formik.errors.password}
-                error={formik.touched.password && formik.errors.password}
+                error={Boolean(formik.touched.password && formik.errors.password)}
               />
             </Grid>
             <Grid item xs={12}> 
@@ -135,7 +132,7 @@ const RegisterForm = ({ handleSubmit }) => {
                 value={formik.values.confirmPassword}
                 onChange={formik.handleChange}
                 helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
-                error={formik.touched.confirmPassword && formik.errors.confirmPassword}
+                error={Boolean(formik.touched.confirmPassword && formik.errors.confirmPassword)}
               />
             </Grid>
           </Grid>

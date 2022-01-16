@@ -8,18 +8,13 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Header, AccountDetail } from "../components/components";
 
 const AccountPage = (props) => {
-  const [darkMode,setDarkMode] = useState(false);
 
-  const theme = createTheme({
-        palette: {
-          mode:darkMode?"dark":"light"
-        }
-      })
+
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider >
     <Paper style={{height:"250vh"}}>
     <Fragment>
-      <Header check={darkMode} change={()=>setDarkMode(!darkMode)}/>
+      <Header />
       <Box
           component="main"
           sx={{

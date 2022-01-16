@@ -1,16 +1,44 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useContext } from "react";
 
-import { Switch, SwipeableDrawer, List, Divider, ListSubheader, ListItemButton, ListItemIcon, ListItemText, IconButton} from "@mui/material";
+import { 
+  Switch, 
+  SwipeableDrawer, 
+  List, 
+  ListItem, 
+  Divider, 
+  ListSubheader, 
+  ListItemButton, 
+  ListItemIcon, 
+  ListItemText, 
+  IconButton,
+  Typography
+} from "@mui/material";
 import { Menu, HomeRounded, CalendarTodayRounded, ArchiveRounded, Settings } from "@mui/icons-material";
 
-import HeaderBar from './HeaderBar/HeaderBar';
+import HeaderBar from './HeaderBar';
+
+import DisplayContext from "../../contexts/displayContext";
 
 
-export default function Header({check,change}) {
-  const [isOpen, setIsOpen] = useState(false);
+const Header = () => {
+  const { currentMode, setCurrentMode } = useContext(DisplayContext)
+  const [isOpenDrawer, setIsOpenDrawer] = useState(false);
 
-  const toggleDrawer = (value) => {
-    setIsOpen(value)
+  const handleOpenDrawer = () => {
+    setIsOpenDrawer(true)
+  }
+
+  const handleCloseDrawer = () => {
+    setIsOpenDrawer(false)
+  }
+
+  const handleChangeMode = () => {
+    setCurrentMode(prevMode => {
+      if (prevMode === "light")
+        return "dark";
+      else
+        return "light"
+    })
   }
 
   const openHomePage = () => {
@@ -32,11 +60,15 @@ export default function Header({check,change}) {
   return (
     <Fragment>
       <HeaderBar>
-        <IconButton edge="start" color="inherit" aria-label="menu" onClick={() => toggleDrawer(true)}>
+        <IconButton sx={{ mx: 1}} onClick={handleOpenDrawer}>
           <Menu />
         </IconButton>
       </HeaderBar>
-      <SwipeableDrawer open={isOpen} onClose={() => toggleDrawer(false)} onOpen={() => toggleDrawer(true)}>
+      <SwipeableDrawer 
+        open={isOpenDrawer} 
+        onOpen={handleOpenDrawer}
+        onClose={handleCloseDrawer} 
+      >
         <List
           sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
           component="nav"
@@ -76,15 +108,27 @@ export default function Header({check,change}) {
               <Settings />
             </ListItemIcon>
             <ListItemText primary="Settings" />
-            <Switch 
-            inputProps={{'aria-label':'checkbox with default color'}}
-            onChange={change}
-            checked={check}
-            />
           </ListItemButton>
+        </List>
+
+        <Divider />
+
+        <List>
+          <ListItem>
+            <Typography variant="subtitle2">Main Theme</Typography>
+          </ListItem>
+          <ListItem>
+            <Typography>Light</Typography>
+            <Switch 
+              checked={currentMode === "light" ? false: true}
+              onChange={handleChangeMode} 
+            />
+            <Typography>Dark</Typography>
+          </ListItem>
         </List>
       </SwipeableDrawer>
     </Fragment>
   );
 }
 
+export default Header;

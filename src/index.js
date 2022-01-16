@@ -2,13 +2,17 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import App from "./App";
-
-import "./styles/index.css";
+import { AuthProvider } from "./contexts/authContext";
+import { DisplayProvider } from "./contexts/displayContext";
 
 
 ReactDOM.render(
   <React.StrictMode>
-    <App/>
+    <AuthProvider>
+      <DisplayProvider>
+        <App/>
+      </DisplayProvider>
+    </AuthProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

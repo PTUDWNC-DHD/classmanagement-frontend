@@ -6,10 +6,9 @@ const DisplayContext = createContext();
 
 export const DisplayProvider = ({ children }) => {
   const [currentMode, setCurrentMode] = useState("light");
-
   
   const value = {
-    currentMode, setCurrentMode
+    currentMode, setCurrentMode,
     
   };
 

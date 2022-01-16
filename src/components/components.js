@@ -5,6 +5,9 @@ export { default as Header } from "./Header/Header";
 export { default as Copyright } from './Copyright/Copyright';
 export { default as UploadButton } from './UploadButton/UploadButton';
 export { default as DownloadButton } from './DownloadButton/DownloadButton';
+//
+export { default as LoadingIndicator } from './Indicator/LoadingIndicator';
+export { default as ErrorIndicator } from './Indicator/ErrorIndicator';
 
 //auth
 export { default as RegisterForm } from "./RegisterForm/RegisterForm";

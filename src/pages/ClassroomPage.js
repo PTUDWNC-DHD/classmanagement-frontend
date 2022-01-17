@@ -4,7 +4,7 @@ import {  useParams } from "react-router-dom";
 import { Paper, Tab, Box } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 
-import { Header, ClassroomDetail, MemberList, GradeStructure, GradeTable} from "../components/components";
+import { Header, ClassroomDetail, MemberList, GradeStructure, GradeTable, StudentGradeTable} from "../components/components";
 
 import { getClassroomDetail, getAllClassroomMembers } from '../services/classroomService';
 
@@ -144,7 +144,10 @@ const ClassroomPage = () => {
                   studentList={students}
                 /> 
               ) : (
-                <div>student view</div>
+                <StudentGradeTable
+                  classroomId={classroomId}
+                  gradeStructure={gradeStructure}
+                />
               )
             }
             

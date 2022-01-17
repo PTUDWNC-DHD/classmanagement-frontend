@@ -38,3 +38,6 @@ export const RESET_CODE_WRONG = "Reset code is wrong !"
 
 export const RESET_PASSWORD_SUCCESS = "Reset password successfully !"
 export const RESET_PASSWORD_FAILED = "Reset password failed !"
+
+export const ADD_REVIEW_SUCCESS = "Add review successfully !"
+export const ADD_REVIEW_FAILED = "Add review failed !"

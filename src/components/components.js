@@ -33,3 +33,4 @@ export { default as MemberList } from "./MemberList/MemberList";
 //
 export { default as GradeStructure } from './GradeStructure/GradeStructure';
 export { default as GradeTable } from './GradeTable/GradeTable';
+export { default as StudentGradeTable } from './StudentGradeTable/StudentGradeTable';

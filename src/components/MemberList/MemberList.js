@@ -1,45 +1,69 @@
-import { Fragment } from 'react';
+import { Link } from "react-router-dom";
 
-import { CircularProgress, Avatar, ListItemAvatar, ListItemText, Table, TableBody, TableCell, TableRow } from "@mui/material";
-
-import Title from './Title';
+import { 
+  Box, 
+  Container, 
+  Avatar, 
+  ListItemAvatar, 
+  ListItemText, 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableRow, 
+  Typography 
+} from "@mui/material";
 
 
 
 const MemberList = ({students, teachers}) => {
 
   return (
-    <Fragment>
-      <Title>Teachers</Title>
-      <Table size="small" >
-        <TableBody>
-          {!teachers.length ? <TableRow><TableCell>Class has no teacher</TableCell></TableRow> :
-          teachers.map((teacher, index) => (
-            <TableRow key={index}>
-              <TableCell><ListItemAvatar><Avatar src={'./avatar.jpg'}></Avatar></ListItemAvatar></TableCell>
-              <TableCell><ListItemText><h4>{teacher.name}</h4></ListItemText></TableCell>
-              
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <br/><br/>
-      <Title>Students</Title>
-      <Table size="small">
-        
-        <TableBody>
-          {!students.length ? <TableRow><TableCell>Class has no student</TableCell></TableRow> :
-          students.map((student, index) => (
-            <TableRow key={index}>
-              <TableCell><ListItemAvatar><Avatar src={'./avatar.jpg'}></Avatar></ListItemAvatar></TableCell>
-              <TableCell><ListItemText><h4>{student.name}</h4></ListItemText></TableCell>
-              
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <Container maxWidth='sm'>
+      <Box sx={{ mb: 10}}>
+        <Typography variant='h5'>Teachers</Typography>
+        <Table size="medium" >
+          <TableBody>
+            {!teachers.length ? <TableRow><TableCell>Class has no teacher</TableCell></TableRow> :
+            teachers.map((teacher, index) => (
+              <TableRow key={index}>
+                <TableCell>
+                  <Avatar>{teacher.name.charAt(0)}</Avatar>
+                  </TableCell>
+                <TableCell>
+                  <Link to={`/users/${teacher._id}`}>
+                    <Typography variant='h6'>{teacher.name}</Typography>
+                  </Link>
+                </TableCell>
+                
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Box>
       
-    </Fragment>
+      <Box>
+        <Typography variant='h5'>Students</Typography>
+        <Table size="medium">
+          <TableBody>
+            {!students.length ? <TableRow><TableCell>Class has no student</TableCell></TableRow> :
+            students.map((student, index) => (
+              <TableRow key={index}>
+                <TableCell>
+                  <Avatar>{student.name.charAt(0)}</Avatar>
+                </TableCell>
+                <TableCell>
+                  <Link to={`/users/${student._id}`}>
+                    <Typography variant='h6'>{student.name}</Typography>
+                  </Link>
+                  
+                </TableCell>
+                
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Box>
+    </Container>
   );
 }
 

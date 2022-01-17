@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import { Box, IconButton, Badge, AppBar, Avatar, Menu, MenuItem, Toolbar, Link, Typography } from "@mui/material";
 import { Add, Logout, Notifications } from "@mui/icons-material";
 
-import { CreateClass } from "../components";
+import { CreateClass, JoinClassByCode } from "../components";
 
 import AuthContext from "../../contexts/authContext";
 import { removeFromLocalStorage } from "../../utils/localStorage";
@@ -107,7 +107,7 @@ const HeaderBar = ({ children }) => {
             </Menu>
             {/* Account button */}
             <IconButton sx={{ mr: 1}}>
-              <Link href={`/account/${currentUser.user._id}`} underline="none">
+              <Link href={`/account`} underline="none">
                 <Avatar >
                   {currentUser && currentUser.user.name.charAt(0)}
                 </Avatar>
@@ -121,6 +121,7 @@ const HeaderBar = ({ children }) => {
         </Toolbar>
       </AppBar>
       <CreateClass isOpen={isOpenCreateDialog} setIsOpen={setIsOpenCreateDialog} />
+      <JoinClassByCode studentId={currentUser.user.studentId} isOpen={isOpenJoinDialog} setIsOpen={setIsOpenJoinDialog} />
     </Box>
   );
 };

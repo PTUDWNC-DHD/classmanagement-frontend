@@ -25,6 +25,9 @@ const NonAuthRequired = ({ children }) => {
 
 const AuthRequired = ({ children }) => {
   const { currentUser, setCurrentUser } = useContext(AuthContext);
+  const location = useLocation();
+
+  //console.log('location: ', location)
 
   useEffect(()=>{
     const checkIsLoginExpired = async () => {

@@ -1,43 +1,38 @@
-import { useState, useRef, useContext, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useState, useContext, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 import {Container, Paper, Grid, Box} from '@mui/material'
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import { Header, UserDetail } from "../components/components";
+import { Header, AccountDetail , LoadingIndicator, ErrorIndicator } from "../components/components";
 
 import { getUserDetail } from "../services/userService";
+
 import AuthContext from "../contexts/authContext";
 
-const UserPage = (props) => {
-  const location = useLocation();
+
+const UserPage = () => {
+  const params = useParams();
+  const userId = params?.id;
   const { currentUser } = useContext(AuthContext)
 
-  const [darkMode,setDarkMode] = useState(false);
   const [userDetail, setUserDetail] = useState(null);
 
   // state for display
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  // get userId from path
-  const path = location.pathname.split('/')
-  const userId = useRef(path.at(-1));
-  // create theme
-  const theme = createTheme({
-    palette: { mode: darkMode ? "dark" : "light" }
-  })
 
 
 
   const callFetchUserDetail = async () => {
+    
     setIsLoading(true);
-    const result = await getUserDetail(currentUser.token, userId.current)
+    const result = await getUserDetail(currentUser.token, userId)
+    console.log('user id: ', result)
     if (result.data) {
       setUserDetail(result.data)
     }
     else if (result.error) {
-      setErrorMessage(result.error)
+      setHasError(true)
     }
     setIsLoading(false);
   }
@@ -48,26 +43,23 @@ const UserPage = (props) => {
 
 
   return (
-    <ThemeProvider theme={theme}>
     <Paper style={{height:"250vh"}}>
-      <Header check={darkMode} change={()=>setDarkMode(!darkMode)}/>
-      <Box
-        component="main"
-        sx={{
-          backgroundColor: (theme) =>
-            theme.palette.mode === 'light'
-              ? theme.palette.grey[100]
-              : theme.palette.grey[900],
-          flexGrow: 1,
-          height: '100vh',
-          overflow: 'auto',
-        }}
-      >
+      <Header />
+      <Box >
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-              <UserDetail name={userDetail?.name} studentId={userDetail?.studentId} email={userDetail?.email}/>
+              {
+                isLoading ? <Container sx={{ display: 'flex', justifyContent:'center', my: 5}}><LoadingIndicator /></Container> :
+                hasError ? <Container sx={{ display: 'flex', justifyContent:'center', my: 5}}><ErrorIndicator /></Container> : 
+                <AccountDetail 
+                  canEdit={false}
+                  fullname={userDetail?.name}
+                  email={userDetail?.email}
+                  studentId={userDetail?.studentId}
+                />
+              }
               </Paper>
             </Grid>
           </Grid>
@@ -75,7 +67,6 @@ const UserPage = (props) => {
         </Container>
       </Box>
     </Paper>
-  </ThemeProvider>
   )
 }
 

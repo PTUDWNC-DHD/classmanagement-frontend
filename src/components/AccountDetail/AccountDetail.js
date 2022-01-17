@@ -18,7 +18,7 @@ const AccountDetail = ({
   username,
   fullname, setFullname,
   email, setEmail,
-  studentId, setStudentId,
+  studentId="", setStudentId,
 
 }) => {
   const { currentUser, setCurrentUser } = useContext(AuthContext);
@@ -98,15 +98,17 @@ const AccountDetail = ({
             }}
           >
             <Avatar >
-              {fullname.charAt(0)}
+              {fullname?.charAt(0)}
             </Avatar>
-            <Typography
-              color="textPrimary"
-              gutterBottom
-              variant="h5"
-            > 
-              {username}
-            </Typography>
+            {
+              canEdit && <Typography
+                color="textPrimary"
+                gutterBottom
+                variant="h5"
+              > 
+                {username}
+              </Typography>
+            }
           </Box>
         </CardContent>
       </Card>

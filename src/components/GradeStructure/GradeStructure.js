@@ -6,12 +6,9 @@ import Swal from 'sweetalert2'
 import { 
   Box,
   Card,
-  Grid,
   Button, 
   Typography,
   TextField, 
-  CircularProgress, 
-  IconButton,
   Container
 } from '@mui/material';
 import { AddCircleOutline, DragIndicator, Delete } from '@mui/icons-material';
@@ -37,7 +34,6 @@ function GradeStructure({classroomId, gradeStructure, setGradeStructure, isTeach
   const [errorMessage, setErrorMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   
-
 
 
   const fetchToSaveGrades = async (token, classroomId, grades) => {
@@ -95,7 +91,7 @@ function GradeStructure({classroomId, gradeStructure, setGradeStructure, isTeach
   }
 
   function handleAddGrade(){
-    setGradeArray([...gradeArray, {
+    setGradeArray(prev => [...prev, {
       name: "",
       weight: ""
     }]);
@@ -212,7 +208,7 @@ function GradeStructure({classroomId, gradeStructure, setGradeStructure, isTeach
     
   }
   
-  if (gradeStructure.length < 1) {
+  if (gradeArray.length < 1) {
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
         <Typography>No grade structure</Typography>
@@ -225,7 +221,7 @@ function GradeStructure({classroomId, gradeStructure, setGradeStructure, isTeach
       </Box>
     )
   } else {
-    if (false) {
+    if (isTeacher) {
       return (
         <Container maxWidth='sm' >
           <DragDropContext onDragEnd={onDragEnd}>

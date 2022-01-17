@@ -23,6 +23,7 @@ export { default as UserDetail } from './UserDetail/UserDetail';
 //classroom
 export { default as CreateClass } from "./CreateClass/CreateClass";
 export { default as JoinClass } from "./JoinClass/JoinClass";
+export { default as JoinClassByCode } from "./JoinClass/JoinClassByCode";
 export { default as InvitePopup } from "./InvitePopup/InvitePopup";
 //
 export { default as ClassroomList } from "./ClassroomList/ClassroomList";

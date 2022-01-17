@@ -36,7 +36,7 @@ const HomePage = () => {
 
 
   return (
-    <Paper sx={{ height: '100vh'}}>
+    <Paper sx={{ minHeight: '100vh'}}>
       <Header />
       {
         isLoading ? <Container sx={{ display: 'flex', justifyContent:'center', my: 5}}><LoadingIndicator /></Container> :

@@ -1,6 +1,6 @@
 import { useEffect, useContext, useState } from 'react';
 
-import { Paper } from "@mui/material"
+import { Paper, Container } from "@mui/material"
 
 import { Header, ClassroomList, LoadingIndicator, ErrorIndicator } from "../components/components";
 
@@ -39,8 +39,8 @@ const HomePage = () => {
     <Paper sx={{ height: '100vh'}}>
       <Header />
       {
-        isLoading ? <LoadingIndicator /> :
-        hasError ? <ErrorIndicator /> : <ClassroomList classrooms={currentUser.classrooms} />
+        isLoading ? <Container sx={{ display: 'flex', justifyContent:'center', my: 5}}><LoadingIndicator /></Container> :
+        hasError ? <ErrorIndicator sx={{ display: 'flex', justifyContent:'center', my: 5}}/> : <ClassroomList classrooms={currentUser.classrooms} />
       }
       
     </Paper>

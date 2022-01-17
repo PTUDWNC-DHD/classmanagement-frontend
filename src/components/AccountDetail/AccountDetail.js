@@ -1,37 +1,72 @@
 import { useState, useContext } from 'react';
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
 import Swal from 'sweetalert2';
 
-import { Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField, Avatar, Typography, CardActions } from '@mui/material';
+import { Container, Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField, Avatar, Typography } from '@mui/material';
 
 import { updateUserAccountInformation } from '../../services/userService'
 
 import AuthContext from '../../contexts/authContext'
-
 import * as Notifications from '../../utils/notifications'
+import * as Constant from "../../utils/constant"
+import { saveToLocalStorage } from '../../utils/localStorage'
 
 
+const AccountDetail = ({ 
+  canEdit, 
+  username,
+  fullname, setFullname,
+  email, setEmail,
+  studentId, setStudentId,
 
-const AccountDetail = (props) => {
-  const { currentUser, setCurrentUser } = useContext(AuthContext)
-  //console.log('currUser: ', currentUser)
+}) => {
+  const { currentUser, setCurrentUser } = useContext(AuthContext);
+  const [canChange, setCanChange] = useState(false);
 
-  const [username, setUsername] = useState(currentUser.user.username);
-  const [fullname, setFullname] = useState(currentUser.user.name);
-  const [email, setEmail] = useState(currentUser.user.email);
-  const [studentId, setStudentId] = useState(currentUser.user.studentId);
+  console.log('curr: ', currentUser)
+
+  const formik = useFormik({
+    initialValues: {
+      email: email,
+      fullname: fullname,
+      studentId: studentId
+    },
+    validationSchema: Yup.object({
+      email: Yup.string()
+        .required("Required")
+        .matches(
+          Constant.EMAIL_VALIDATE_REGEX,
+          "Please enter a valid email address"
+        ),
+      fullname: Yup.string()
+        .required("Required")
+    }),
+    onSubmit: async (values, { setSubmitting }) => {
+      await handleSaveDetail(values)
+      setSubmitting(false);
+    },
+  })
+
   
-
-  const [hasChanged, setHasChanged] = useState(false)
-  const [isLoading, setIsLoading] = useState(true);
-  
-  
-  const handleSaveDetail = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
+  const handleSaveDetail = async (values) => {
+    const { email, fullname, studentId } = values;
+    
     const result = await updateUserAccountInformation(currentUser.token, fullname, email, studentId)
     if (result.data) {
-      //console.log('user: ', result)
-      setCurrentUser({...currentUser, user: {...result.data}})
+      console.log('user: ', result)
+      setCurrentUser(prev => {
+        saveToLocalStorage({
+          ...prev, user: {...result.data}
+        }, Constant.LOCAL_STORAGE_USER)
+        return ({
+          ...prev, user: {...result.data}
+        })
+      })
+      
+      setFullname(result.data.name);
+      setEmail(result.data.email);
+      setStudentId(result.data.studentId);
       Swal.fire({
         title: "Success",
         text: Notifications.UPDATE_ACCOUNT_SUCCESS,
@@ -47,37 +82,12 @@ const AccountDetail = (props) => {
         button: "Close",
       });
     }
-    setIsLoading(false);
-  }
-
-  const handleCancel = (e) => {
-    setFullname(currentUser.user.name)
-    setEmail(currentUser.user.email)
-    setStudentId(currentUser.user.studentId)
-    setHasChanged(false)
-  }
-
-  const handleChangeFullname = (e) => {
-    setFullname(e.target.value)
-    setHasChanged(true)
-  }
-
-  const handleChangeEmail = (e) => {
-    setEmail(e.target.value)
-    setHasChanged(true)
-  }
-  const handleChangeUsername = (e) => {
-    setUsername(e.target.value)
-    setHasChanged(true)
+    setCanChange(false);
   }
   
-  const handleChangeStudentId = (e) => {
-    setStudentId(e.target.value)
-    setHasChanged(true)
-  }
   
   return (
-    <form autoComplete="off" noValidate >
+    <Container>
       <Card >
         <CardContent>
           <Box
@@ -87,79 +97,82 @@ const AccountDetail = (props) => {
               flexDirection: 'column'
             }}
           >
-            <Avatar src={'./avatar.jpg'}></Avatar>
+            <Avatar >
+              {fullname.charAt(0)}
+            </Avatar>
             <Typography
               color="textPrimary"
               gutterBottom
               variant="h5"
-            >
+            > 
               {username}
             </Typography>
           </Box>
         </CardContent>
-        <Divider />
-        <CardActions>
-          <Button
-            color="primary"
-            fullWidth
-            variant="text"
-          >
-            Upload picture
-          </Button>
-        </CardActions>
       </Card>
       <Card>
-        <CardHeader
-          subheader="The information can be edited"
-          title="Profile"
-        />
+        <CardHeader title="Profile" />
         <Divider />
         <CardContent>
           <Grid container spacing={3} >
             <Grid item md={6} xs={12} >
-              <TextField
-                fullWidth
-                label="Full name"
-                name="fullName"
-                onChange={handleChangeFullname}
-                required
-                value={fullname}
-                variant="outlined"
-              />
+              {
+                (canEdit && canChange) ? <TextField
+                  required
+                  fullWidth
+                  label="Full Name"
+                  name="fullname"
+                  value={formik.values.fullname}
+                  onChange={formik.handleChange}
+                  helperText={formik.touched.fullname && formik.errors.fullname}
+                  error={Boolean(formik.touched.fullname && formik.errors.fullname)}
+                />
+                :
+                <Box sx={{ display: 'flex'}}>
+                  <Typography sx={{ mr: 12}}>Full Name:</Typography>
+                  <Typography>{fullname}</Typography>
+                </Box>
+                
+              }
             </Grid>
             <Grid item md={6} xs={12} >
-              <TextField
-                fullWidth
-                label="Email Address"
-                name="email"
-                onChange={handleChangeEmail}
-                required
-                value={email}
-                variant="outlined"
-              />
+              {
+                (canEdit && canChange) ? <TextField
+                  required
+                  fullWidth
+                  label="Email Address"
+                  name="email"
+                  value={formik.values.email}
+                  onChange={formik.handleChange}
+                  helperText={formik.touched.email && formik.errors.email}
+                  error={Boolean(formik.touched.email && formik.errors.email)}
+                />
+                : 
+                <Box sx={{ display: 'flex'}}>
+                  <Typography sx={{ mr: 12}}>Email:</Typography>
+                  <Typography>{email}</Typography>
+                </Box>
+              }
+              
             </Grid>
             <Grid item md={6} xs={12} >
-              <TextField
-                fullWidth
-                label="User name"
-                name="username"
-                onChange={handleChangeUsername}
-                required
-                value={username}
-                variant="outlined"
-                disabled
-              />
-            </Grid>
-            
-            <Grid item md={6} xs={12} >
-              <TextField
-                fullWidth
-                label="MSSV"
-                name="studentID"
-                onChange={handleChangeStudentId}
-                required
-                value={studentId}
-              />
+              {
+                (canEdit && canChange && !studentId) ? <TextField
+                  required
+                  fullWidth
+                  label="Student ID"
+                  name="studentId"
+                  value={formik.values.studentId}
+                  onChange={formik.handleChange}
+                  helperText={formik.touched.studentId && formik.errors.studentId}
+                  error={Boolean(formik.touched.studentId && formik.errors.studentId)}
+                />
+                : 
+                <Box sx={{ display: 'flex'}}>
+                  <Typography sx={{ mr: 12}}>Student ID:</Typography>
+                  <Typography>{studentId}</Typography>
+                </Box>
+              }
             </Grid>
           </Grid>
         </CardContent>
@@ -171,15 +184,22 @@ const AccountDetail = (props) => {
             p: 2
           }}
         >
-          <Button sx={{marginRight: 2}} color="primary" variant="contained" onClick={handleCancel} disabled={!hasChanged}>
-            Cancel
-          </Button>
-          <Button color="primary" variant="contained" onClick={handleSaveDetail} disabled={!hasChanged}>
-            Save details
-          </Button>
+          {
+            canEdit && (
+              canChange ? 
+                <Button color="primary" variant="contained" onClick={formik.handleSubmit} disabled={formik.isSubmitting}>
+                  Save details
+                </Button>
+              :
+                <Button color="primary" variant="contained" onClick={()=> setCanChange(true)}>
+                  Edit
+                </Button>
+            )
+          }
+          
         </Box>
       </Card>
-    </form>
+    </Container>
   );
 };
 

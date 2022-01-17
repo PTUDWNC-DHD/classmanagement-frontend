@@ -107,7 +107,7 @@ const HeaderBar = ({ children }) => {
             </Menu>
             {/* Account button */}
             <IconButton sx={{ mr: 1}}>
-              <Link href='/account' underline="none">
+              <Link href={`/account/${currentUser.user._id}`} underline="none">
                 <Avatar >
                   {currentUser && currentUser.user.name.charAt(0)}
                 </Avatar>

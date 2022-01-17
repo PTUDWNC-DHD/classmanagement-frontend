@@ -68,7 +68,7 @@ const AppRouter = ()=>{
           </AuthRequired>
         }/>
 
-        <Route path='/account' element={
+        <Route path='/account/:id' element={
           <AuthRequired>
             <AccountPage />
           </AuthRequired>

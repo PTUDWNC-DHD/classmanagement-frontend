@@ -1,5 +1,5 @@
-import { Fragment, useState, useContext, useEffect } from 'react'
-import { useLocation } from "react-router-dom";
+import { useState, useContext, useEffect } from 'react'
+import { useLocation, useParams } from "react-router-dom";
 
 import {Container, Paper, Grid, Tab, Box } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab';
@@ -17,9 +17,8 @@ import AuthContext from '../contexts/authContext';
 
 const ClassroomPage = () => {
   const location = useLocation();
-  // get classroomId from path
-  const path = location.pathname.split('/')
-  const classroomId = path.at(-1);
+  const params = useParams();
+  const classroomId = params?.id;
 
   const { currentUser } = useContext(AuthContext)
 

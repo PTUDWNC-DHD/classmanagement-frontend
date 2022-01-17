@@ -15,7 +15,7 @@ export const fetchGetReview = async (token, classId, structureId, studentId) => 
         if (res.status === 200) {
             return res.json().then((result) => {
                 console.log("result: ", result)
-                return { result }
+                return { data: result }
             })
         }
         if (res.status === 400) 
@@ -27,7 +27,7 @@ export const fetchGetReview = async (token, classId, structureId, studentId) => 
         }
         throw notifications.API_FAILED
     }).catch((error) => {
-        return { error }
+        return { error: error }
     })
 }
 
@@ -46,7 +46,7 @@ export const fetchGetReviewByGrade = async (token, classId, structureId) => {
         if (res.status === 200) {
             return res.json().then((result) => {
                 console.log("result: ", result)
-                return { result }
+                return { data: result }
             })
         }
         if (res.status === 400) 
@@ -58,7 +58,7 @@ export const fetchGetReviewByGrade = async (token, classId, structureId) => {
         }
         throw notifications.API_FAILED
     }).catch((error) => {
-        return { error }
+        return { error: error }
     })
 }
 
@@ -77,7 +77,7 @@ export const fetchGetReviewByClass = async (token, classId) => {
         if (res.status === 200) {
             return res.json().then((result) => {
                 console.log("result: ", result)
-                return { result }
+                return { data: result }
             })
         }
         if (res.status === 400) 
@@ -89,7 +89,7 @@ export const fetchGetReviewByClass = async (token, classId) => {
         }
         throw notifications.API_FAILED
     }).catch((error) => {
-        return { error }
+        return { error: error }
     })
 }
 
@@ -113,7 +113,7 @@ export const fetchPostReview = async (token, classId, structureId, studentId, cu
         if (res.status === 200) {
             return res.json().then((result) => {
                 console.log("result: ", result)
-                return { result }
+                return { data: result }
             })
         }
         if (res.status === 400) 
@@ -125,7 +125,7 @@ export const fetchPostReview = async (token, classId, structureId, studentId, cu
         }
         throw notifications.API_FAILED
     }).catch((error) => {
-        return { error }
+        return { error: error }
     })
 }
 
@@ -147,7 +147,7 @@ export const fetchAddMessageToReview = async (token, classId, structureId, stude
         if (res.status === 200) {
             return res.json().then((result) => {
                 console.log("result: ", result)
-                return { result }
+                return { data: result }
             })
         }
         if (res.status === 400) 
@@ -159,7 +159,7 @@ export const fetchAddMessageToReview = async (token, classId, structureId, stude
         }
         throw notifications.API_FAILED
     }).catch((error) => {
-        return { error }
+        return { error: error }
     })
 }
 
@@ -181,7 +181,7 @@ export const fetchUpdateGradeToReview = async (token, classId, structureId, stud
         if (res.status === 200) {
             return res.json().then((result) => {
                 console.log("result: ", result)
-                return { result }
+                return { data: result }
             })
         }
         if (res.status === 400) 
@@ -193,7 +193,7 @@ export const fetchUpdateGradeToReview = async (token, classId, structureId, stud
         }
         throw notifications.API_FAILED
     }).catch((error) => {
-        return { error }
+        return { error: error }
     })
 }
 
@@ -212,7 +212,7 @@ export const fetchDeleteReview = async (token, classId, structureId, studentId) 
         if (res.status === 200) {
             return res.json().then((result) => {
                 console.log("result: ", result)
-                return { result }
+                return { data: result }
             })
         }
         if (res.status === 400) 
@@ -224,6 +224,6 @@ export const fetchDeleteReview = async (token, classId, structureId, studentId) 
         }
         throw notifications.API_FAILED
     }).catch((error) => {
-        return { error }
+        return { error: error }
     })
 }

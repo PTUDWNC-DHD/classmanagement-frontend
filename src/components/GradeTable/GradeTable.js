@@ -41,7 +41,7 @@ const GradeTable = ({ currentUser, isOwner, isTeacher, classroomId, gradeStructu
 
   // do once after render
   useEffect(()=>{
-    console.log('start effect')
+    //console.log('start effect')
     const gradeNames = [];
     const gradeFields = [];
     const newGradesWeight = {};
@@ -65,7 +65,7 @@ const GradeTable = ({ currentUser, isOwner, isTeacher, classroomId, gradeStructu
 
   // map header names and fields to columns
   useEffect(()=>{
-    console.log('column effect')
+    //console.log('column effect')
     const columnsData = [];
     const csvGradeBoardHeader = [];
     for (let index = 0; index < headers.length; index++) {
@@ -103,7 +103,7 @@ const GradeTable = ({ currentUser, isOwner, isTeacher, classroomId, gradeStructu
 
   // run when grades has been fetch and all data is ready to calculate
   useEffect(()=>{
-    console.log('grades effect')
+    //console.log('grades effect')
     
     if (grades) {
       const getUserIdAccount = (studentId) => {
@@ -176,7 +176,8 @@ const GradeTable = ({ currentUser, isOwner, isTeacher, classroomId, gradeStructu
 
   const callFetchToSaveGrade = async (token, classroomId, studentId, gradeId, score) => {
     setIsLoading(true);
-    const result = await saveStudentGrade(token, classroomId, studentId, gradeId, score)    
+    const result = await saveStudentGrade(token, classroomId, studentId, gradeId, score) 
+    console.log('save result: ', studentId)   
     if (result.error)
       setErrorMessage(result.error)
     setIsLoading(false);
@@ -201,7 +202,7 @@ const GradeTable = ({ currentUser, isOwner, isTeacher, classroomId, gradeStructu
   }
 
   const handleCellEditCommit = (params) => {
-    
+    console.log('params: ', params)
     console.log('debug: ', rows)
     callFetchToSaveGrade(currentUser.token, classroomId, params.id, params.field, params.value)
     //update new grades

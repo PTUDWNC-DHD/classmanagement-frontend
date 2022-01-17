@@ -33,6 +33,39 @@ const getUserDetail = (token, userId) => {
   })
 }
 
+// PATCH new user detail
+const updateAndGetNewUserDetail = (token, user) => {
+  return fetch(process.env.REACT_APP_API_URL + '/api/user/me', { 
+    method: 'PATCH',
+    headers: {
+      'Authorization': 'Bearer '+ token,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(user)
+  })
+  .then(res => {
+    //console.log('res: ', res)
+    if (res.ok) {
+      return res.json().then((result) => {
+        //console.log('result: ', result)
+        if (!result)
+          return { error: Notifications.API_RETURN_NULL_RESULT}
+        else if (result.errors)
+          return { error: result.errors}
+        else
+          return { data: result }
+      })
+    } 
+    else {
+      return { error: Notifications.API_FAILED}
+    }
+  })
+  .catch((error) => {
+    //console.log('error: ', error)
+    return { error: error}
+  })
+}
+
 //PATCH to update user account information
 const updateUserAccountInformation = (token, fullname, email, studentId) => {
   return fetch(process.env.REACT_APP_API_URL + '/api/user/me', { 
@@ -72,5 +105,6 @@ const updateUserAccountInformation = (token, fullname, email, studentId) => {
 
 export {
   getUserDetail,
-  updateUserAccountInformation
+  updateUserAccountInformation,
+  updateAndGetNewUserDetail
 }

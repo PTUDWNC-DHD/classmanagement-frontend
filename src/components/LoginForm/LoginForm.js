@@ -55,7 +55,7 @@ const LoginForm = ({ handleLoginByAccount, handleLoginByGoogle}) => {
             value={formik.values.username}
             onChange={formik.handleChange}
             helperText={formik.touched.username && formik.errors.username}
-            error={formik.touched.username && formik.errors.username}
+            error={Boolean(formik.touched.username && formik.errors.username)}
           />
           <TextField
             required
@@ -68,7 +68,7 @@ const LoginForm = ({ handleLoginByAccount, handleLoginByGoogle}) => {
             value={formik.values.password}
             onChange={formik.handleChange}
             helperText={formik.touched.password && formik.errors.password}
-                error={formik.touched.password && formik.errors.password}
+            error={Boolean(formik.touched.password && formik.errors.password)}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -85,7 +85,7 @@ const LoginForm = ({ handleLoginByAccount, handleLoginByGoogle}) => {
           </Button>
           <Grid container>
             <Grid item xs >
-              <Link href="#" variant="body2">
+              <Link href="/forgot" variant="body2">
                 Forgot password?
               </Link>
             </Grid>

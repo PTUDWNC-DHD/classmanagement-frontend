@@ -31,6 +31,10 @@ export const ACTIVATE_FAILED = "Activate account failed !"
 export const REQUEST_ACTIVATE_SUCCESS = "Activate code was sent successfully !"
 export const REQUEST_ACTIVATE_FAILED = "Request to activate account failed !"
 
+export const REQUEST_RESET_PASSWORD_SUCCESS = "Please check your email to get reset password code !"
+export const REQUEST_RESET_PASSWORD_FAILED = "Send mail to reset password failed !"
 
-export const REQUEST_RESET_PASSWORD_FAILED = "Request to reset password failed !"
+export const RESET_CODE_WRONG = "Reset code is wrong !"
+
+export const RESET_PASSWORD_SUCCESS = "Reset password successfully !"
 export const RESET_PASSWORD_FAILED = "Reset password failed !"

@@ -1,63 +1,33 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Swal from 'sweetalert2'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+
 
 import { Button, Box, Checkbox, FormControlLabel, CardHeader, Card, CardContent, Grid, Divider, TextField } from "@mui/material";
 
-import { joinClassroom } from "../../services/joinService";
-
-import AuthContext from "../../contexts/authContext";
-import * as Notifications from "../../utils/notifications"
-
-import "./style.css";
 
 
-const JoinClass = (props) => {
-  const { currentUser } = useContext(AuthContext);
+
+
+const JoinClass = ({ studentId = "", handleJoinClass, }) => {
   const navigate = useNavigate()
-
-  const [studentId, setStudentId] = useState(currentUser.user.studentId);
   const [isAccepted, setIsAccepted] = useState(false);
-  
 
-  const handleChangeStudentId = (e) => {
-    setStudentId(e.target.value)
-  }
+  const formik = useFormik({
+    initialValues: {
+      studentId: studentId
+    },
+    validationSchema: Yup.object({
+      studentId: Yup.string()
+        .required("Required")
+    }),
+    onSubmit: async (values, { setSubmitting }) => {
+      await handleJoinClass(values)
+      setSubmitting(false);
+    },
+  })
 
-  const handleJoinClass = async (e) => {
-    e.preventDefault();
-    if (studentId){
-      const result = await joinClassroom(currentUser.token, props.joinCode, props.type)
-      if (result.data) {
-        Swal.fire({
-          title: "Success",
-          text: Notifications.JOIN_CLASS_SUCCESS,
-          icon: "success",
-          button: "Close",
-        })
-      }
-      else if (result.error) {
-        let text = Notifications.JOIN_CLASS_FAILED
-        if (result.error[0].indexOf('already been in class'))
-          text = Notifications.ALREADY_BEEN_IN_CLASS
-        Swal.fire({
-          title: "Error",
-          text: text,
-          icon: "error",
-          button: "Close",
-        })
-      }
-      navigate('/')
-    }
-    else {
-      Swal.fire({
-        title: "Warning",
-        text: Notifications.PLEASE_ENTER_STUDENT_ID,
-        icon: "warning",
-        button: "Close",
-      })
-    }
-  }
 
   const handleCancel = (e) => {
     navigate('/')
@@ -65,49 +35,47 @@ const JoinClass = (props) => {
 
   return (
     <Card>
-        <CardHeader
-          subheader="You are invited to join a classroom"
-          title="Join class Dialog"
+      <CardHeader
+        title="Join class Dialog"
+        subheader="You are invited to join a classroom"
+      />
+      <Divider />
+      <CardContent>
+        <TextField
+          required
+          fullWidth
+          margin="normal"
+          label="Student ID"
+          name="studentId"
+          value={formik.values.studentId}
+          onChange={formik.handleChange}
+          helperText={formik.touched.studentId && formik.errors.studentId}
+          error={Boolean(formik.touched.studentId && formik.errors.studentId)}
+          disabled={Boolean(studentId)}
         />
-        <Divider />
-        <CardContent>
-          <Grid item md={6} xs={12} >
-            <TextField
-              fullWidth
-              label="Your student ID"
-              name="studentId"
-              onChange={handleChangeStudentId}
-              required
-              value={studentId}
-              variant="outlined"
-              disabled={studentId ? true : false}
-              helperText="Your student ID can not be changed after updated !!!"
-            />
-          </Grid>
+        <FormControlLabel
+          control={<Checkbox color="primary" onChange={() => setIsAccepted(!isAccepted)} />}
+          label= {
+            Boolean(studentId) ? "I accept to join class"
+            : "I accept to update my student ID (it can not be changed in the future)"
+          }
+        />
         </CardContent>
-        <Divider />
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: "space-between",
-            p: 2
-          }}
-        >
-          <FormControlLabel
-            control={<Checkbox color="primary" onChange={() => setIsAccepted(!isAccepted)} />}
-            label="I accept to join"
-          />
-          <div>
-            <Button sx={{marginRight: 2}} color="primary" variant="contained" onClick={handleCancel}>
-              Cancel
-            </Button>
-            <Button onClick={handleJoinClass} color="primary" variant="contained" disabled={!isAccepted}>
-              Join class
-            </Button>  
-          </div>
-          
-        </Box>
-      </Card>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          p: 2
+        }}
+      >
+          <Button sx={{marginRight: 2}} color="primary" variant="contained" onClick={handleCancel}>
+            Cancel
+          </Button>
+          <Button onClick={formik.handleSubmit} color="primary" variant="contained" disabled={!isAccepted}>
+            Join class
+          </Button>  
+      </Box>
+    </Card>
   );
 };
 

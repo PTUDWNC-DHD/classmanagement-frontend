@@ -2,7 +2,7 @@ import * as Notifications from '../utils/notifications'
 
 // JOIN classroom
 const joinClassroom = (token, joinCode, type) => {
-  console.log('token, joincode, type: ', token, joinCode, type)
+  //console.log('token, joincode, type: ', token, joinCode, type)
   return fetch(`${process.env.REACT_APP_API_URL}/api/join/${joinCode}/${type}`, {
     method: 'POST',
     headers: {

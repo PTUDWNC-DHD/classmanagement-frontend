@@ -1,21 +1,21 @@
-import { Fragment, useState, useContext, useEffect } from 'react'
-import { useLocation } from "react-router-dom";
+import { useState, useContext, useEffect } from 'react'
+import {  useParams } from "react-router-dom";
 
-import {Container, Paper, Grid, Tab, Box } from '@mui/material'
+import { Paper, Tab, Box } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 
-import AuthContext from '../contexts/authContext';
+import { Header, ClassroomDetail, MemberList, GradeStructure, GradeTable} from "../components/components";
+
 import { getClassroomDetail, getAllClassroomMembers } from '../services/classroomService';
 
-import { Header, ClassroomDetail, MemberList, GradeStructure, GradeTable} from "../components/components";
+import AuthContext from '../contexts/authContext';
+
 
 
 
 const ClassroomPage = () => {
-  const location = useLocation();
-  // get classroomId from path
-  const path = location.pathname.split('/')
-  const classroomId = path.at(-1);
+  const params = useParams();
+  const classroomId = params?.id;
 
   const { currentUser } = useContext(AuthContext)
 
@@ -35,8 +35,8 @@ const ClassroomPage = () => {
 
   // do once after render
   useEffect(() => {
-    callFetchClassroomDetail();
-    callFetchAllClassroomMembers(currentUser.token, classroomId)
+    fetchClassroomDetail();
+    fetchAllClassroomMembers(currentUser.token, classroomId)
   }, [])
 
 
@@ -69,10 +69,11 @@ const ClassroomPage = () => {
   };
 
   // call fetch func
-  const callFetchClassroomDetail = async () => {
+  const fetchClassroomDetail = async () => {
     setIsLoading(true);
     const result = await getClassroomDetail(currentUser.token, classroomId)
     if (result.data) {
+      console.log('classroom detail: ', result.data)
       setClassroom(result.data)
     }
     else if (result.error) {
@@ -80,7 +81,7 @@ const ClassroomPage = () => {
     }
     setIsLoading(false);
   }
-  const callFetchAllClassroomMembers = async (token, classroomId) => {
+  const fetchAllClassroomMembers = async (token, classroomId) => {
     setIsLoading(true);
     const result = await getAllClassroomMembers(token, classroomId);
     if (result.data) {
@@ -95,7 +96,7 @@ const ClassroomPage = () => {
   }
 
   return (
-    <Fragment>
+    <Paper sx={{ minHeight: '100vh'}}>
       <Header />
       <Box sx={{ width: '100%', typography: 'body1' }} >
         <TabContext value={tab}>
@@ -120,30 +121,7 @@ const ClassroomPage = () => {
           </TabPanel>
 
           <TabPanel value="2">
-            <Box sx={{ display: 'flex' }}>
-              <Box
-                component="main"
-                sx={{
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === 'light'
-                      ? theme.palette.grey[0]
-                      : theme.palette.grey[0],
-                  flexGrow: 1,
-                  height: '100vh',
-                  overflow: 'auto',
-                }}
-              >
-                <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                      <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                      <MemberList teachers={teachers} students={students} />
-                      </Paper>
-                    </Grid>
-                  </Grid>
-                </Container>
-              </Box>
-            </Box>
+            <MemberList teachers={teachers} students={students} />
           </TabPanel>
 
           <TabPanel value="3">
@@ -155,18 +133,25 @@ const ClassroomPage = () => {
             /> 
           </TabPanel>
           <TabPanel value="4">
-            <GradeTable 
-              currentUser={currentUser} 
-              isOwner={isOwner}
-              isTeacher={isTeacher} 
-              classroomId={classroomId}
-              gradeStructure={gradeStructure}
-              studentList={students}
-            /> 
+            {
+              isTeacher ? (
+                <GradeTable 
+                  currentUser={currentUser} 
+                  isOwner={isOwner}
+                  isTeacher={isTeacher} 
+                  classroomId={classroomId}
+                  gradeStructure={gradeStructure}
+                  studentList={students}
+                /> 
+              ) : (
+                <div>student view</div>
+              )
+            }
+            
           </TabPanel>
         </TabContext>
       </Box>
-    </Fragment>
+    </Paper>
   );
 }
 

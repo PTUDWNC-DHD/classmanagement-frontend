@@ -1,29 +1,51 @@
-import { Fragment } from 'react'
-import { useState } from "react";
+import { useEffect, useContext, useState } from 'react';
 
-import { Header, ClassroomList } from "../components/components";
-import * as React from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
+import { Paper, Container } from "@mui/material"
+
+import { Header, ClassroomList, LoadingIndicator, ErrorIndicator } from "../components/components";
+
+import { getAllClassrooms } from '../services/classroomService';
+
+import AuthContext from '../contexts/authContext'
+
+
 
 const HomePage = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const { currentUser, setCurrentUser } = useContext(AuthContext);
+  const [hasError, setHasError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const theme = createTheme({
-        palette: {
-        mode:darkMode?"dark":"light"
-        }
-      })
+
+  useEffect(() => {
+    fetchClassrooms(currentUser.token);
+  }, [])
+
+
+  const fetchClassrooms = async (token) => {
+    setIsLoading(true);
+    const result = await getAllClassrooms(token)
+    if (result.data) {
+      setCurrentUser({...currentUser, classrooms: result.data})
+    }
+    else if (result.error) {
+      setHasError(true)
+    }
+    setIsLoading(false);
+  }
+
+
+
   return (
-    <ThemeProvider theme={theme}>
-    <Paper style={{height:"250vh"}}>
-    <Fragment>
-      <Header check={darkMode} change={()=>setDarkMode(!darkMode)} />
-      <ClassroomList />
-    </Fragment>
+    <Paper sx={{ minHeight: '100vh'}}>
+      <Header />
+      {
+        isLoading ? <Container sx={{ display: 'flex', justifyContent:'center', my: 5}}><LoadingIndicator /></Container> :
+        hasError ? <ErrorIndicator sx={{ display: 'flex', justifyContent:'center', my: 5}}/> : <ClassroomList classrooms={currentUser.classrooms} />
+      }
+      
     </Paper>
-  </ThemeProvider>
   );
+  
 }
 
 export default HomePage;

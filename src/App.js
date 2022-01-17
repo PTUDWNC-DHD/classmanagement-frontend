@@ -1,13 +1,32 @@
-import { AuthProvider } from "./contexts/authContext";
+import { useContext, useEffect } from 'react';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+
+import DisplayContext from './contexts/displayContext';
+
 import AppRouter from './routes'
 
 
 
 const App = () => {
+  const { currentMode } = useContext(DisplayContext);
+  
+
+  const appTheme = createTheme({
+    palette: {
+      mode: currentMode
+    }
+  })
+
+  useEffect(()=>{
+    console.log('current mode: ', currentMode)
+  },[currentMode])
+
+
   return (
-    <AuthProvider>
+    <ThemeProvider theme={appTheme}>
       <AppRouter />
-    </AuthProvider>
+    </ThemeProvider>
   );
 }
 

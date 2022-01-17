@@ -10,6 +10,8 @@ import UserPage from "../pages/UserPage"
 import LoginPage from '../pages/LoginPage'
 import RegisterPage from '../pages/RegisterPage'
 import VerifyAccountPage from '../pages/VerifyAccountPage'
+import ResetPasswordPage from "../pages/ResetPasswordPage";
+import ForgotPasswordPage from "../pages/ForgotPasswordPage";
 
 
 
@@ -33,6 +35,18 @@ const AppRouter = ()=>{
         <Route path='/verify/:email' element={
           <NonAuthRequired>
             <VerifyAccountPage/>
+          </NonAuthRequired>
+        }/>
+
+        <Route path='/forgot' element={
+          <NonAuthRequired>
+            <ForgotPasswordPage/>
+          </NonAuthRequired>
+        }/>
+
+        <Route path='/reset/:email' element={
+          <NonAuthRequired>
+            <ResetPasswordPage/>
           </NonAuthRequired>
         }/>
 

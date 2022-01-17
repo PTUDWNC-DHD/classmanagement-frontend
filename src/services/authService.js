@@ -135,18 +135,18 @@ const fetchForgotPassword = (email) => {
       .then((resJS) => {
           if (resJS.status === 200)
               return resJS.json().then((res) => {
-                  return { result: res.result }
+                  return { data: res.result }
               })
           if (resJS.status === 400) {
               return resJS.json().then((res) => {
-                  return { result: res.result, error: res.errors[0] }
+                  return { error: res.errors[0] }
               })
           }
-          return { result: false, error: Notifications.REQUEST_RESET_PASSWORD_FAILED }
+          return { error: Notifications.REQUEST_RESET_PASSWORD_FAILED }
       })
       .catch((error) => {
           //console.log('error: ', error)
-          return { result: false, error: error }
+          return { error: error }
       })
 }
 
@@ -164,18 +164,18 @@ const fetchCheckResetPasswordCode = (email, code) => {
       .then((resJS) => {
           if (resJS.status === 200)
               return resJS.json().then((res) => {
-                  return { result: res.result, token: res.token }
+                  return { data: res.token }
               })
           if (resJS.status === 400) {
               return resJS.json().then((res) => {
-                  return { result: res.result, error: res.errors[0] }
+                  return { error: res.errors[0] }
               })
           }
-          return { result: false, error: Notifications.API_FAILED }
+          return { error: Notifications.API_FAILED }
       })
       .catch((error) => {
           //console.log('error: ', error)
-          return { result: false, error: error }
+          return { error: error }
       })
 }
 
@@ -193,18 +193,18 @@ const fetchResetPassword = (token, newPassword) => {
       .then((resJS) => {
           if (resJS.status === 200)
               return resJS.json().then((res) => {
-                  return { result: res.result }
+                  return { data: res.result }
               })
           if (resJS.status === 400) {
               return resJS.json().then((res) => {
-                  return { result: res.result, error: res.errors[0] }
+                  return { error: res.errors[0] }
               })
           }
-          return { result: false, error: Notifications.RESET_PASSWORD_FAILED }
+          return { error: Notifications.RESET_PASSWORD_FAILED }
       })
       .catch((error) => {
           //console.log('error: ', error)
-          return { result: false, error: error }
+          return { error: error }
       })
 }
 

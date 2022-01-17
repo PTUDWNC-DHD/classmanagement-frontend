@@ -12,7 +12,9 @@ export { default as ErrorIndicator } from './Indicator/ErrorIndicator';
 //auth
 export { default as RegisterForm } from "./RegisterForm/RegisterForm";
 export { default as LoginForm } from "./LoginForm/LoginForm";
-export { default as VerifyAccountForm } from './VerifyAccountForm/VerifyAccountForm'
+export { default as VerifyForm } from './VerifyForm/VerifyForm'
+export { default as ForgotPasswordForm } from './ForgotPasswordForm/ForgotPasswordForm'
+export { default as ResetPasswordForm } from './ResetPasswordForm/ResetPasswordForm'
 
 //account
 export { default as AccountDetail } from './AccountDetail/AccountDetail';

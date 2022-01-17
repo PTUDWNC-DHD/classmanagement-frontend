@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 
-import VerifyAccountForm from '../components/VerifyAccountForm/VerifyAccountForm'
+import { VerifyForm } from '../components/components'
 
 import { fetchActivateAccount, fetchRequestActivateAccount } from '../services/authService'
 
@@ -67,7 +67,8 @@ const VerifyAccountPage = () => {
   }
 
   return (
-    <VerifyAccountForm
+    <VerifyForm
+      title="Verify Account"
       handleVerify={handleVerify}
       handleRequestVerify={handleRequestVerify}
     />

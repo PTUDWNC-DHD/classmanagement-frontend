@@ -6,20 +6,26 @@ import { Grid, Box, Container, Typography, TextField } from "@mui/material";
 
 import { Copyright } from '../components'
 
+import * as Constant from '../../utils/constant'
 
-const VerifyAccountForm = ({ handleVerify, handleRequestVerify}) => {
+
+const ForgotPasswordForm = ({ handleRequestVerify}) => {
   const mainLogoSrc = '/images/logo512.png';
 
   const formik = useFormik({
     initialValues: {
-      code: "",
+      email: "",
     },
     validationSchema: Yup.object({
-      code: Yup.string()
-        .required("Required")
+      email: Yup.string()
+      .required("Required")
+      .matches(
+        Constant.EMAIL_VALIDATE_REGEX,
+        "Please enter a valid email address"
+      )
     }),
     onSubmit: async (values, { setSubmitting }) => {
-      await handleVerify(values)
+      await handleRequestVerify(values)
       setSubmitting(false);
     },
   })
@@ -36,7 +42,7 @@ const VerifyAccountForm = ({ handleVerify, handleRequestVerify}) => {
       >
         <Avatar src={mainLogoSrc}  variant="rounded"/>
         <Typography variant="h4">
-          Verify Account
+          Forgot Password
         </Typography>
         <Box component="form" onSubmit={formik.handleSubmit} noValidate sx={{ mt: 2 }}>
           <TextField
@@ -44,13 +50,13 @@ const VerifyAccountForm = ({ handleVerify, handleRequestVerify}) => {
             required
             fullWidth
             margin="normal"
-            label="Verify Code"
-            name="code"
-            placeholder="code"
-            value={formik.values.code}
+            label="Your Email"
+            name="email"
+            placeholder="email"
+            value={formik.values.email}
             onChange={formik.handleChange}
-            helperText={formik.touched.code && formik.errors.code}
-            error={Boolean(formik.touched.code && formik.errors.code)}
+            helperText={formik.touched.email && formik.errors.email}
+            error={Boolean(formik.touched.email && formik.errors.email)}
           />
           <Button
             type="submit"
@@ -59,15 +65,8 @@ const VerifyAccountForm = ({ handleVerify, handleRequestVerify}) => {
             sx={{ mt: 3, mb: 2 }}
             disabled={formik.isSubmitting}
           >
-            Verify Account
+            Submit
           </Button>
-          <Grid container justifyContent="flex-end">
-            <Grid item xs>
-              <Button fullWidth variant="contained" onClick={handleRequestVerify} >
-                Don't receive email? Send again
-              </Button>
-            </Grid>
-          </Grid>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Box>
@@ -75,4 +74,4 @@ const VerifyAccountForm = ({ handleVerify, handleRequestVerify}) => {
   );
 }
 
-export default VerifyAccountForm;
+export default ForgotPasswordForm;

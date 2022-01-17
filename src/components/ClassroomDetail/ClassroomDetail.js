@@ -1,29 +1,34 @@
-import { useState, useEffect, useContext } from 'react';
+import { useEffect, useState  } from 'react';
 
-import { CircularProgress, Button, IconButton, List, ListItem, ListItemText } from "@mui/material";
+import { 
+  Paper,
+  Box,
+  Grid,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  Container,
+  Card,
+  CardContent,
+  CardActions,
+  Button,
+  IconButton
+} from "@mui/material";
 import { ContentCopy } from '@mui/icons-material'
 
 import { InvitePopup } from '../components'
 
-import { getClassroomDetail } from '../../services/classroomService';
-
-import AuthContext from '../../contexts/authContext'
-
-import './style.css'
+import { getPercent } from '../../utils/calculateUtil';
 
 
 
-const ClassroomDetail = ({classroomId, classroom, gradeStructure, isTeacher, isLoading, errorMessage}) => {
-  const { currentUser } = useContext(AuthContext)
 
-  const [showInput, setShowInput] = useState(false);
-  const [inputValue, setInput] = useState("");
-  //const [image, setImage] = useState(null);
+const ClassroomDetail = ({ classroomId, classroom, gradeStructure, isTeacher }) => {
   const [showInvitePopup, setShowInvitePopup] = useState(false);
 
-  const handleUpload = (e) => {}
+  const [totalGrade, setTotalGrade] = useState();
 
-  const handleChange = (e) => {}
 
   const handleOpenInvitePopup = (e) => {
     setShowInvitePopup(true);
@@ -33,97 +38,142 @@ const ClassroomDetail = ({classroomId, classroom, gradeStructure, isTeacher, isL
     navigator.clipboard.writeText(process.env.REACT_APP_CLIENT_URL + process.env.REACT_APP_INVITE_LINK + classroom.invite + '/public')
   }
   
-  if (errorMessage) {
-    return <div>Error: {errorMessage}</div>;
-  } 
-  else if (isLoading) {
-    return(
-      <div className="center-parent">
-      <CircularProgress  />
-      </div>
-    );
-  } 
-  else {
-    return (
-      <div className="main">
-        <div className="main__wrapper">
-          <div className="main__content">
-            <div className="main__wrapper1">
-              <div className="main__bgImage">
-                <div className="main__emptyStyles" />
-              </div>
-              <div className="main__text">
-                <h1 className="main__heading main__overflow">
-                  {classroom.name}
-                </h1>
-                <div className="main__section main__overflow">
-                  {classroom.subject}
-                </div>
-                { isTeacher && (
-                  <div className="main__wrapper2">
-                    <em className="main__code">Class Invite Code:</em>
-                    <div className="main__id">
-                      {classroom.invite}
-                    </div>
-                    <div>
-                    <em className="main__code">Copy Link Invite:</em>
-                      <IconButton edge="end" color="inherit" aria-label="copy" onClick={handleCopyInviteCode}>
-                        <ContentCopy />
-                      </IconButton>
-                    </div>
-                    <Button
-                      onClick={handleOpenInvitePopup}
-                      color="primary"
-                      variant="contained"
-                    >
-                      Invite
-                    </Button>
-                  </div>
-                  )
-                }
-              </div>
-            </div>
-          </div>
-          <div className="main__announce">
-            <div className="main__status">
-              <p>Upcoming</p>
-              <p className="main__subText">No work due</p>
-            </div>
-            
-            </div>
-          {showInvitePopup && <InvitePopup 
-            invite={classroom.invite} 
-            classroomId={classroomId}
-            showInvitePopup={showInvitePopup} 
-            setShowInvitePopup={setShowInvitePopup}
-          />}
-          <div className="main__announce">
-            <div className="main__status">
-              <p>Grade Structure</p>
+  useEffect(()=>{
+    let total = 0;
+    for (const index in gradeStructure) {
+      total += gradeStructure[index].weight;
+    }
+    setTotalGrade(total)
+  },[gradeStructure])
+  
+  
+  return (
+    <Container>
+      <Paper
+        sx={{
+          position: 'relative',
+          backgroundColor: 'grey.800',
+          color: '#fff',
+          mb: 4,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+          backgroundImage: 'url(/images/defaultClassroomCardBg.jpg)',
+        }}
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            right: 0,
+            left: 0,
+            backgroundColor: 'rgba(0,0,0,.3)',
+          }}
+        />
+        <Grid container>
+          <Grid item md={6}>
+            <Box
+              sx={{
+                position: 'relative',
+                p: { xs: 3, md: 6 },
+                pr: { md: 0 },
+              }}
+            >
+              <Typography variant="h3" color="inherit" gutterBottom>
+                {classroom && classroom.name}
+              </Typography>
+              <Typography variant="h5" color="inherit" paragraph>
+                {classroom && classroom.subject}
+              </Typography>
+            </Box>
+          </Grid>
+        </Grid>
+      </Paper>
+      <Grid container spacing={2}>
+        <Grid item xs={3}>
+          {/* Invite section */}
+          {
+            isTeacher && 
+            <Card sx={{ mb: 2, border: 1, borderColor: 'grey.400' }}>
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  Invite Code
+                </Typography>
+                <Box 
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <Typography variant="body2" color="text.secondary">
+                    {classroom && classroom.invite.slice(0, 25) + '...'}
+                  </Typography>
+                  <IconButton onClick={handleCopyInviteCode}>
+                    <ContentCopy/>
+                  </IconButton>
+                </Box>
+              </CardContent>
+              <CardActions>
+                <Button size="small" onClick={handleOpenInvitePopup}>
+                  Invite
+                </Button>
+              </CardActions>
+            </Card>
+          }
+          {/* Grade Structure Section */}
+          <Card sx={{ border: 1, borderColor: 'grey.400' }}>
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                Grade Structure
+              </Typography>
               {
                 gradeStructure.length < 1 ? 
-                  <p className="main__subText">No Grade Structure</p>
+                  <Typography>No Grade Structure</Typography>
                 :
                   <List>
                     {gradeStructure.map((grade, index) => (
-                      <ListItem 
-                        style={{width:"150px"}}
-                        key={index}
-                        disableGutters
-                        secondaryAction={grade.weight}
-                      >
-                        <ListItemText primary={grade.name} />
-                      </ListItem>
+                        <ListItem 
+                          style={{ width:"100%"}}
+                          key={index}
+                          disableGutters
+                          secondaryAction={`${grade.weight} (${getPercent(grade.weight, totalGrade)}%)`}
+                        >
+                          <ListItemText primary={grade.name} />
+                        </ListItem>
                     ))}
+                    <ListItem 
+                      style={{ width:"100%"}}
+                      key='total'
+                      disableGutters
+                      secondaryAction={`${totalGrade} (100%)`}
+                    >
+                      <ListItemText primary='Total' />
+                    </ListItem>
                   </List>
               }
-            </div>
-          </div>
-        </div>
-        
-      </div>
-    )
-  }
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={9}>
+          <Card sx={{ height: "100%" , border: 1, borderColor: 'grey.400' }}>
+            Classroom Detail Content
+          </Card>
+        </Grid>
+      </Grid>
+      {
+        showInvitePopup && 
+        <InvitePopup 
+          invite={classroom.invite} 
+          classroomId={classroomId}
+          showInvitePopup={showInvitePopup} 
+          setShowInvitePopup={setShowInvitePopup}
+        />
+      }
+    </Container>
+    
+  )
 }
 
 export default ClassroomDetail;

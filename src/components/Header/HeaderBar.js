@@ -15,23 +15,23 @@ import * as Constant from '../../utils/constant'
 const HeaderBar = ({ children }) => {
   const { currentUser, setCurrentUser } = useContext(AuthContext);
 
-  const [isOpenAddMenu, setIsOpenAddMenu] = useState(false); 
+  const [addMenuAnchor, setAddMenuAnchor] = useState(null); 
+  const [notiMenuAnchor, setNotiMenuAnchor] = useState(null);
 
   const [isOpenCreateDialog, setIsOpenCreateDialog] = useState(false);
   const [isOpenJoinDialog, setIsOpenJoinDialog] = useState(false);
 
-  const [isOpenNoti, setIsOpenNoti] = useState(false);
 
-  
+
 
 
   //handle button functions
-  const handleAddButtonClick = () => {
-    setIsOpenAddMenu(true);
+  const handleAddButtonClick = (event) => {
+    setAddMenuAnchor(event.currentTarget);
   }
 
   const handleCloseAddMenu = () => {
-    setIsOpenAddMenu(false);
+    setAddMenuAnchor(null);
   }
 
   const handleCreateButtonClick = () => {
@@ -44,12 +44,12 @@ const HeaderBar = ({ children }) => {
     setIsOpenJoinDialog(true);
   };
 
-  const handleNotiButtonClick = () => {
-    setIsOpenNoti(true);
+  const handleNotiButtonClick = (event) => {
+    setNotiMenuAnchor(event.currentTarget);
   }
 
   const handleCloseNotiMenu = () => {
-    setIsOpenNoti(false);
+    setNotiMenuAnchor(null);
   }
 
   const handleLogoutButtonClick = () => {
@@ -78,7 +78,8 @@ const HeaderBar = ({ children }) => {
             </IconButton>
             {/* Add menu */}
             <Menu
-              open={isOpenAddMenu} 
+              anchorEl={addMenuAnchor}
+              open={Boolean(addMenuAnchor)} 
               onClose={handleCloseAddMenu}
             >
               <MenuItem onClick={handleJoinButtonClick}>Join Class</MenuItem>
@@ -97,7 +98,8 @@ const HeaderBar = ({ children }) => {
             </IconButton>
             {/* Notification menu */}
             <Menu
-              open={isOpenNoti} 
+              anchorEl={notiMenuAnchor}
+              open={Boolean(notiMenuAnchor)} 
               onClose={handleCloseNotiMenu}
             >
               <MenuItem >17 new notifications</MenuItem>

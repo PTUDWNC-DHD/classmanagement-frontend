@@ -4,10 +4,14 @@ import { useLocation } from "react-router-dom";
 import {Container, Paper, Grid, Tab, Box } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 
-import AuthContext from '../contexts/authContext';
+import { Header, ClassroomDetail, MemberList, GradeStructure, GradeTable} from "../components/components";
+
 import { getClassroomDetail, getAllClassroomMembers } from '../services/classroomService';
 
-import { Header, ClassroomDetail, MemberList, GradeStructure, GradeTable} from "../components/components";
+import AuthContext from '../contexts/authContext';
+
+
+
 
 
 
@@ -35,8 +39,8 @@ const ClassroomPage = () => {
 
   // do once after render
   useEffect(() => {
-    callFetchClassroomDetail();
-    callFetchAllClassroomMembers(currentUser.token, classroomId)
+    fetchClassroomDetail();
+    fetchAllClassroomMembers(currentUser.token, classroomId)
   }, [])
 
 
@@ -69,10 +73,11 @@ const ClassroomPage = () => {
   };
 
   // call fetch func
-  const callFetchClassroomDetail = async () => {
+  const fetchClassroomDetail = async () => {
     setIsLoading(true);
     const result = await getClassroomDetail(currentUser.token, classroomId)
     if (result.data) {
+      console.log('classroom detail: ', result.data)
       setClassroom(result.data)
     }
     else if (result.error) {
@@ -80,7 +85,7 @@ const ClassroomPage = () => {
     }
     setIsLoading(false);
   }
-  const callFetchAllClassroomMembers = async (token, classroomId) => {
+  const fetchAllClassroomMembers = async (token, classroomId) => {
     setIsLoading(true);
     const result = await getAllClassroomMembers(token, classroomId);
     if (result.data) {
@@ -95,7 +100,7 @@ const ClassroomPage = () => {
   }
 
   return (
-    <Fragment>
+    <Paper sx={{ height: '100vh'}}>
       <Header />
       <Box sx={{ width: '100%', typography: 'body1' }} >
         <TabContext value={tab}>
@@ -166,7 +171,7 @@ const ClassroomPage = () => {
           </TabPanel>
         </TabContext>
       </Box>
-    </Fragment>
+    </Paper>
   );
 }
 

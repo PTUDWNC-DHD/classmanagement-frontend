@@ -1,4 +1,6 @@
-import { Fragment, useEffect, useContext, useState } from 'react';
+import { useEffect, useContext, useState } from 'react';
+
+import { Paper } from "@mui/material"
 
 import { Header, ClassroomList, LoadingIndicator, ErrorIndicator } from "../components/components";
 
@@ -34,14 +36,14 @@ const HomePage = () => {
 
 
   return (
-    <Fragment>
+    <Paper sx={{ height: '100vh'}}>
       <Header />
       {
         isLoading ? <LoadingIndicator /> :
         hasError ? <ErrorIndicator /> : <ClassroomList classrooms={currentUser.classrooms} />
       }
       
-    </Fragment>
+    </Paper>
   );
   
 }

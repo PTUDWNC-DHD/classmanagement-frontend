@@ -79,7 +79,7 @@ const GradeTable = ({ currentUser, isOwner, isTeacher, classroomId, gradeStructu
       if (fields[index] === 'name') {
         column.renderCell = (params) => {
           if (params.row.userId)
-            return <Link to={`/users/${params.row.userId}`}>{params.value}</Link>
+            return <Link to={`/students/${classroomId}/${params.row.userId}`}>{params.value}</Link>
           else 
             return params.value
         }
@@ -203,8 +203,6 @@ const GradeTable = ({ currentUser, isOwner, isTeacher, classroomId, gradeStructu
   }
 
   const handleCellEditCommit = (params) => {
-    console.log('params: ', params)
-    console.log('debug: ', rows)
     callFetchToSaveGrade(currentUser.token, classroomId, params.id, params.field, params.value)
     //update new grades
     const newGrades = {...grades}

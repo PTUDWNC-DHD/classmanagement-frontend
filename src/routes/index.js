@@ -12,6 +12,7 @@ import RegisterPage from '../pages/RegisterPage'
 import VerifyAccountPage from '../pages/VerifyAccountPage'
 import ResetPasswordPage from "../pages/ResetPasswordPage";
 import ForgotPasswordPage from "../pages/ForgotPasswordPage";
+import StudentGradePage from "../pages/StudentGradePage"
 
 
 
@@ -77,6 +78,12 @@ const AppRouter = ()=>{
         <Route path='/users/:id' element={
           <AuthRequired>
             <UserPage />
+          </AuthRequired>
+        }/>
+
+        <Route path='/students/:classroomId/:studentId' element={
+          <AuthRequired>
+            <StudentGradePage />
           </AuthRequired>
         }/>
 

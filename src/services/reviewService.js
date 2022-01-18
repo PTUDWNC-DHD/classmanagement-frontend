@@ -11,10 +11,10 @@ export const fetchGetReview = async (token, classId, structureId, studentId) => 
             },
         }
     ).then((res) => {
-        console.log("res: ", res)
+        //console.log("res: ", res)
         if (res.status === 200) {
             return res.json().then((result) => {
-                console.log("result: ", result)
+                //console.log("result: ", result)
                 return { data: result }
             })
         }

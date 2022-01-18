@@ -43,7 +43,7 @@ const ClassroomPage = () => {
   // check if current user is owner
   useEffect(()=>{
     if (classroom) {
-      console.log('classroom detail: ', classroom)
+      //console.log('classroom detail: ', classroom)
       setGradeStructure(classroom.gradeStructure)
       if (classroom.ownerId === currentUser.user._id)
         setIsOwner(true);
@@ -147,6 +147,10 @@ const ClassroomPage = () => {
                 <StudentGradeTable
                   classroomId={classroomId}
                   gradeStructure={gradeStructure}
+                  studentId={currentUser.user.studentId}
+                  studentName={currentUser.user.name}
+                  token={currentUser.token}
+                  isTeacher={false}
                 />
               )
             }

@@ -48,13 +48,16 @@ const fetchRegister = (username, fullname, email, password) => {
         }),
     })
         .then((res) => {
-            //console.log('res: ', res)
+            console.log('res: ', res)
             if (res.ok)
                 return res.json().then((result) => {
-                    //console.log('result: ', result)
-                    if (!result)
-                        return { error: Notifications.API_RETURN_NULL_RESULT }
-                    else if (result.errors) return { error: result.errors }
+                    console.log('result: ', result)
+                    if (!result) {
+                      return { error: Notifications.API_RETURN_NULL_RESULT }
+                    }
+                    else if (result.errors && result.errors[0]) {
+                      return { error: result.errors }
+                    }
                     else return { data: result }
                 })
             else return { error: Notifications.REGISTER_FAILED }

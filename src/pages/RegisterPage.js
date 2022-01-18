@@ -36,6 +36,7 @@ const RegisterPage = () => {
       
     }
     else if (result.error) {
+      console.log('register fail: ', result)
       Swal.fire({
         title: "Error",
         text: Notifications.REGISTER_FAILED,

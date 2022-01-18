@@ -35,6 +35,10 @@ const ClassroomDetail = ({ classroomId, classroom, gradeStructure, isTeacher }) 
   }
 
   const handleCopyInviteCode = (e) => {
+    navigator.clipboard.writeText(classroom.invite)
+  }
+
+  const handleCopyInviteLink = () => {
     navigator.clipboard.writeText(process.env.REACT_APP_CLIENT_URL + process.env.REACT_APP_INVITE_LINK + classroom.invite + '/public')
   }
   
@@ -119,6 +123,9 @@ const ClassroomDetail = ({ classroomId, classroom, gradeStructure, isTeacher }) 
                 <Button size="small" onClick={handleOpenInvitePopup}>
                   Invite
                 </Button>
+                <Button size="small" onClick={handleCopyInviteLink}>
+                  Copy Invite Link
+                </Button>
               </CardActions>
             </Card>
           }
@@ -157,8 +164,8 @@ const ClassroomDetail = ({ classroomId, classroom, gradeStructure, isTeacher }) 
           </Card>
         </Grid>
         <Grid item xs={9}>
-          <Card sx={{ height: "100%" , border: 1, borderColor: 'grey.400' }}>
-            Classroom Detail Content
+          <Card sx={{ height: "100%" , border: 1, borderColor: 'grey.400'}}>
+            <Typography sx={{ m: 4}}>Classroom Detail Content</Typography>
           </Card>
         </Grid>
       </Grid>

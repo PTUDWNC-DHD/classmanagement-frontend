@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 import { Container, Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField, Avatar, Typography } from '@mui/material';
 
-import { updateUserAccountInformation } from '../../services/userService'
+import { updateAndGetNewUserDetail } from '../../services/userService'
 
 import AuthContext from '../../contexts/authContext'
 import * as Notifications from '../../utils/notifications'
@@ -24,7 +24,7 @@ const AccountDetail = ({
   const { currentUser, setCurrentUser } = useContext(AuthContext);
   const [canChange, setCanChange] = useState(false);
 
-  console.log('curr: ', currentUser)
+  //console.log('curr: ', currentUser)
 
   const formik = useFormik({
     initialValues: {
@@ -51,22 +51,21 @@ const AccountDetail = ({
   
   const handleSaveDetail = async (values) => {
     const { email, fullname, studentId } = values;
+    const newDetail = {
+      name: fullname,
+      email: email,
+      studentId: studentId
+    }
     
-    const result = await updateUserAccountInformation(currentUser.token, fullname, email, studentId)
+    const result = await updateAndGetNewUserDetail(currentUser.token, newDetail)
     if (result.data) {
       console.log('user: ', result)
-      setCurrentUser(prev => {
-        saveToLocalStorage({
-          ...prev, user: {...result.data}
-        }, Constant.LOCAL_STORAGE_USER)
-        return ({
-          ...prev, user: {...result.data}
-        })
-      })
+      setCurrentUser(result.data);
+      saveToLocalStorage(result.data, Constant.LOCAL_STORAGE_USER)
       
-      setFullname(result.data.name);
-      setEmail(result.data.email);
-      setStudentId(result.data.studentId);
+      setFullname(result.data.user.name);
+      setEmail(result.data.user.email);
+      setStudentId(result.data.user.studentId);
       Swal.fire({
         title: "Success",
         text: Notifications.UPDATE_ACCOUNT_SUCCESS,
@@ -98,7 +97,7 @@ const AccountDetail = ({
             }}
           >
             <Avatar >
-              {fullname?.charAt(0)}
+              {fullname && fullname.charAt(0)}
             </Avatar>
             {
               canEdit && <Typography

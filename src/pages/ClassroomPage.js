@@ -4,7 +4,7 @@ import {  useParams } from "react-router-dom";
 import { Paper, Tab, Box } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 
-import { Header, ClassroomDetail, MemberList, GradeStructure, GradeTable} from "../components/components";
+import { Header, ClassroomDetail, MemberList, GradeStructure, GradeTable, StudentGradeTable} from "../components/components";
 
 import { getClassroomDetail, getAllClassroomMembers } from '../services/classroomService';
 
@@ -43,7 +43,7 @@ const ClassroomPage = () => {
   // check if current user is owner
   useEffect(()=>{
     if (classroom) {
-      console.log('classroom detail: ', classroom)
+      //console.log('classroom detail: ', classroom)
       setGradeStructure(classroom.gradeStructure)
       if (classroom.ownerId === currentUser.user._id)
         setIsOwner(true);
@@ -144,7 +144,15 @@ const ClassroomPage = () => {
                   studentList={students}
                 /> 
               ) : (
-                <div>student view</div>
+                <StudentGradeTable
+                  classroomId={classroomId}
+                  gradeStructure={gradeStructure}
+                  studentId={currentUser.user.studentId}
+                  studentName={currentUser.user.name}
+                  token={currentUser.token}
+                  isTeacher={false}
+                  userId={currentUser.user._id}
+                />
               )
             }
             

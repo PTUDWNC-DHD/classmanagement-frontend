@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 
 import { Box, IconButton, Badge, AppBar, Avatar, Menu, MenuItem, Toolbar, Link, Typography } from "@mui/material";
 import { Add, Logout, Notifications } from "@mui/icons-material";
@@ -9,11 +9,12 @@ import AuthContext from "../../contexts/authContext";
 import { removeFromLocalStorage } from "../../utils/localStorage";
 import * as Constant from '../../utils/constant'
 
-//import "./style.css";
 
 
 const HeaderBar = ({ children }) => {
   const { currentUser, setCurrentUser } = useContext(AuthContext);
+
+  const [notifications, setNotifications] = useState([]);
 
   const [addMenuAnchor, setAddMenuAnchor] = useState(null); 
   const [notiMenuAnchor, setNotiMenuAnchor] = useState(null);
@@ -21,7 +22,14 @@ const HeaderBar = ({ children }) => {
   const [isOpenCreateDialog, setIsOpenCreateDialog] = useState(false);
   const [isOpenJoinDialog, setIsOpenJoinDialog] = useState(false);
 
-
+  useEffect(()=>{
+    const newNotifications = []
+    for (const noti in currentUser.user.notifications) {
+      if (currentUser.user.notifications[noti].isNew)
+        newNotifications.push(currentUser.user.notifications[noti]);
+    }
+    setNotifications(newNotifications);    
+  },[currentUser])
 
 
 
@@ -92,7 +100,7 @@ const HeaderBar = ({ children }) => {
               color="inherit"
               onClick={handleNotiButtonClick}
             >
-              <Badge badgeContent={17} color="success">
+              <Badge badgeContent={notifications.length} color="success">
                 <Notifications size="large" />
               </Badge>
             </IconButton>
@@ -102,7 +110,16 @@ const HeaderBar = ({ children }) => {
               open={Boolean(notiMenuAnchor)} 
               onClose={handleCloseNotiMenu}
             >
-              <MenuItem >17 new notifications</MenuItem>
+              {
+                notifications.length > 0 ? (
+                  notifications.map((noti, index) => (
+                    <MenuItem key={index}>{noti.message}</MenuItem>
+                  ))
+                ) : (
+                  <MenuItem>No notifcation</MenuItem>
+                )
+              }
+              
               
             </Menu>
             {/* Account button */}

@@ -18,10 +18,6 @@ const App = () => {
     }
   })
 
-  useEffect(()=>{
-    console.log('current mode: ', currentMode)
-  },[currentMode])
-
 
   return (
     <ThemeProvider theme={appTheme}>

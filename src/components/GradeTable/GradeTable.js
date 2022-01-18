@@ -29,7 +29,7 @@ const GradeTable = ({ currentUser, isOwner, isTeacher, classroomId, gradeStructu
 
   //state for table
   const [headers, setHeaders] = useState(['ID', 'StudentID', 'Name']);
-  const [fields, setFields] = useState(['id', 'studentId', 'name']);
+  const [fields, setFields] = useState(['index', 'studentId', 'name']);
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
 
@@ -79,7 +79,7 @@ const GradeTable = ({ currentUser, isOwner, isTeacher, classroomId, gradeStructu
       if (fields[index] === 'name') {
         column.renderCell = (params) => {
           if (params.row.userId)
-            return <Link to={`/users/${params.row.userId}`}>{params.value}</Link>
+            return <Link to={`/students/${classroomId}/${params.row.userId}`}>{params.value}</Link>
           else 
             return params.value
         }
@@ -133,7 +133,8 @@ const GradeTable = ({ currentUser, isOwner, isTeacher, classroomId, gradeStructu
         }
         // init row of table
         const row = { 
-          id: rowsData.length + 1,
+          index: rowsData.length + 1,
+          id: studentId,
           studentId: studentId,
           ...studentValues,
           total: totalGrade.toFixed(4)
@@ -202,8 +203,6 @@ const GradeTable = ({ currentUser, isOwner, isTeacher, classroomId, gradeStructu
   }
 
   const handleCellEditCommit = (params) => {
-    console.log('params: ', params)
-    console.log('debug: ', rows)
     callFetchToSaveGrade(currentUser.token, classroomId, params.id, params.field, params.value)
     //update new grades
     const newGrades = {...grades}

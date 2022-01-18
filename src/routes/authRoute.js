@@ -26,8 +26,10 @@ const NonAuthRequired = ({ children }) => {
 const AuthRequired = ({ children }) => {
   const { currentUser, setCurrentUser } = useContext(AuthContext);
   const location = useLocation();
+  let from = '/';
+  if (location.pathname.includes(process.env.REACT_APP_INVITE_LINK))
+    from = location;
 
-  //console.log('location: ', location)
 
   useEffect(()=>{
     const checkIsLoginExpired = async () => {
@@ -44,7 +46,7 @@ const AuthRequired = ({ children }) => {
 
 
   if (!currentUser) {
-    return <Navigate to='/login' />
+    return <Navigate to='/login' state={{ from: from }}/>
   }
 
   return children;

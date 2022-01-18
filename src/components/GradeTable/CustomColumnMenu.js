@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Swal from 'sweetalert2';
 import { Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { GridColumnMenu, GridColumnMenuContainer } from '@mui/x-data-grid';
@@ -6,6 +7,8 @@ import { GridColumnMenu, GridColumnMenuContainer } from '@mui/x-data-grid';
 import { UploadButton } from '../components'
 
 import { uploadStudentGrade, updateGradeStructure } from '../../services/classroomService';
+
+import * as Notifications from "../../utils/notifications"
 
 
 
@@ -64,10 +67,18 @@ const CustomColumnMenu = (
     setIsLoading(true);
     const result = await updateGradeStructure(token, classroomId, newGradeStructure)
     console.log('result finalized: ', result)
-    if (result.data)
+    if (result.data) {
       console.log('finalized successfully !')
-    else if (result.error)
+      Swal.fire({
+        title: "Success",
+        text: Notifications.FINALIZED_GRADE_SUCCESS,
+        icon: "success",
+        button: "Close",
+      })
+    }
+    else if (result.error) {
       setErrorMessage(result.error)
+    }
     setIsLoading(false);
   }
   

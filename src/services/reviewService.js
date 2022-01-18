@@ -11,10 +11,10 @@ export const fetchGetReview = async (token, classId, structureId, studentId) => 
             },
         }
     ).then((res) => {
-        console.log("res: ", res)
+        //console.log("res: ", res)
         if (res.status === 200) {
             return res.json().then((result) => {
-                console.log("result: ", result)
+                //console.log("result: ", result)
                 return { data: result }
             })
         }
@@ -112,14 +112,14 @@ export const fetchPostReview = async (token, classId, structureId, studentId, cu
         console.log("res: ", res)
         if (res.status === 200) {
             return res.json().then((result) => {
-                console.log("result: ", result)
+                //console.log("result: ", result)
                 return { data: result }
             })
         }
         if (res.status === 400) 
         {
             return res.json().then((result) => {
-                console.log("error: ", result)
+                //console.log("error: ", result)
                 return { error: result }
             })
         }
@@ -146,14 +146,14 @@ export const fetchAddMessageToReview = async (token, classId, structureId, stude
         console.log("res: ", res)
         if (res.status === 200) {
             return res.json().then((result) => {
-                console.log("result: ", result)
+                //console.log("result: ", result)
                 return { data: result }
             })
         }
         if (res.status === 400) 
         {
             return res.json().then((result) => {
-                console.log("error: ", result)
+                //console.log("error: ", result)
                 return { error: result }
             })
         }
@@ -177,7 +177,7 @@ export const fetchUpdateGradeToReview = async (token, classId, structureId, stud
             })
         }
     ).then((res) => {
-        console.log("res: ", res)
+        //console.log("res: ", res)
         if (res.status === 200) {
             return res.json().then((result) => {
                 console.log("result: ", result)
@@ -187,7 +187,7 @@ export const fetchUpdateGradeToReview = async (token, classId, structureId, stud
         if (res.status === 400) 
         {
             return res.json().then((result) => {
-                console.log("error: ", result)
+                //console.log("error: ", result)
                 return { error: result }
             })
         }
@@ -211,14 +211,14 @@ export const fetchDeleteReview = async (token, classId, structureId, studentId) 
         console.log("res: ", res)
         if (res.status === 200) {
             return res.json().then((result) => {
-                console.log("result: ", result)
+                //console.log("result: ", result)
                 return { data: result }
             })
         }
         if (res.status === 400) 
         {
             return res.json().then((result) => {
-                console.log("error: ", result)
+                //console.log("error: ", result)
                 return { error: result }
             })
         }

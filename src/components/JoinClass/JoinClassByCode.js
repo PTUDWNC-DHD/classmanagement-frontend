@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
@@ -30,6 +30,13 @@ import { saveToLocalStorage } from '../../utils/localStorage'
 const JoinClassByCode = ({ isOpen, setIsOpen, studentId=""  }) => {
   const { currentUser, setCurrentUser } = useContext(AuthContext);
   const [isAccepted, setIsAccepted] = useState(false);
+  const navigate = useNavigate();
+  const [navigateTo, setNavigateTo] = useState('');
+
+  useEffect(()=>{
+    if (navigateTo)
+      navigate(navigateTo);
+  },[navigateTo])
 
   const formik = useFormik({
     initialValues: {
@@ -50,7 +57,9 @@ const JoinClassByCode = ({ isOpen, setIsOpen, studentId=""  }) => {
 
   const handleJoinClass = async (values) => {
     const { code } = values;
-    const newToken = await handleSaveDetail(values);
+    let newToken = currentUser.token;
+    if (!studentId)
+      newToken = await handleSaveDetail(values);
     if (newToken) {
       const result = await joinClassroom(newToken, code, "public")
       if (result.data) {
@@ -70,7 +79,8 @@ const JoinClassByCode = ({ isOpen, setIsOpen, studentId=""  }) => {
         })
       }
     }
-    
+    setNavigateTo('/')
+    setIsAccepted(false);
     setIsOpen(false);
   }
   
@@ -140,7 +150,7 @@ const JoinClassByCode = ({ isOpen, setIsOpen, studentId=""  }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit" onClick={formik.handleSubmit} disabled={formik.isSubmitting} autoFocus>
+          <Button type="submit" onClick={formik.handleSubmit} disabled={formik.isSubmitting || !isAccepted} autoFocus>
             Join
           </Button>
         </DialogActions>

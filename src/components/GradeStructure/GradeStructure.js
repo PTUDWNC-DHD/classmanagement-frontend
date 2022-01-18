@@ -25,6 +25,7 @@ function GradeStructure({classroomId, gradeStructure, setGradeStructure, isTeach
   const [gradeArray, setGradeArray] = useState(
     gradeStructure.map(grade => {
       return ({
+        _id: grade._id,
         name: grade.name,
         weight: grade.weight
       })
@@ -249,7 +250,7 @@ function GradeStructure({classroomId, gradeStructure, setGradeStructure, isTeach
     }
     else {
       return (gradeArray.map((grade, index)=> (
-        <Container maxWidth='sm' >
+        <Container maxWidth='sm' key={index} >
           <Card sx={{ my: 2, p: 2, border: 1, borderColor: 'grey.400' }}>
             <Box 
               sx={{ 

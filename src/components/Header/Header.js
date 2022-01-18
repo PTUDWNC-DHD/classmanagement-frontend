@@ -1,4 +1,5 @@
 import { Fragment, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { 
   Switch, 
@@ -13,15 +14,18 @@ import {
   IconButton,
   Typography
 } from "@mui/material";
-import { Menu, HomeRounded, CalendarTodayRounded, ArchiveRounded, Settings } from "@mui/icons-material";
+import { Menu, HomeRounded, Class } from "@mui/icons-material";
 
 import HeaderBar from './HeaderBar';
 
 import DisplayContext from "../../contexts/displayContext";
+import AuthContext from "../../contexts/authContext";
 
 
 const Header = () => {
   const { currentMode, setCurrentMode } = useContext(DisplayContext)
+  const { currentUser } = useContext(AuthContext)
+  const navigate = useNavigate();
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
 
   const handleOpenDrawer = () => {
@@ -42,16 +46,13 @@ const Header = () => {
   }
 
   const openHomePage = () => {
-    console.log('open home page')
+    navigate('/')
   }
 
-  const openCalendarPage = () => {
-    console.log('open calendar page')
+  const openClassroom = (id) => {
+    navigate(`/classroom/${id}`)
   }
 
-  const openArchivePage = () => {
-    console.log('open archive page')
-  }
 
   const openSettings = () => {
     console.log('open settings page')
@@ -85,32 +86,19 @@ const Header = () => {
             <ListItemText primary="All classrooms" />
           </ListItemButton>
 
-          <ListItemButton onClick={openCalendarPage}>
-            <ListItemIcon>
-              <CalendarTodayRounded />
-            </ListItemIcon>
-            <ListItemText primary="Calendar" />
-          </ListItemButton>
-
-          <ListItemButton onClick={openArchivePage}>
-            <ListItemIcon>
-              <ArchiveRounded />
-            </ListItemIcon>
-            <ListItemText primary="Archive Classrooms" />
-          </ListItemButton>
-        </List>
-
-        <Divider />
-
-        <List>
-          <ListItemButton onClick={openSettings}>
-            <ListItemIcon>
-              <Settings />
-            </ListItemIcon>
-            <ListItemText primary="Settings" />
-          </ListItemButton>
-        </List>
-
+          {
+            currentUser && currentUser?.classrooms?.map((classroom, index) => {
+              return (
+                <ListItemButton key={index} onClick={e => openClassroom(classroom._id)}>
+                  <ListItemIcon>
+                    <Class />
+                  </ListItemIcon>
+                  <ListItemText primary={classroom.name}/>
+                </ListItemButton>
+              )
+            })
+          }
+          </List>
         <Divider />
 
         <List>

@@ -46,3 +46,5 @@ export const NO_REVIEW = "Student have not review !"
 
 export const UPDATE_REVIEW_SUCESSS = "Update grade review successfully !"
 export const UPDATE_REVIEW_FAILED = "Update grade review failed !"
+
+export const FINALIZED_GRADE_SUCCESS = "Finalized grade successfully !"

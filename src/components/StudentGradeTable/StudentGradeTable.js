@@ -42,7 +42,7 @@ const StudentGradeTable = ({ classroomId, gradeStructure, studentId, studentName
       totalGrade += grade * weight / totalWeight;
     }
     
-    setTotal(totalGrade)
+    setTotal(totalGrade.toFixed(4))
   },[finalizedGrades])
 
   useEffect(()=>{

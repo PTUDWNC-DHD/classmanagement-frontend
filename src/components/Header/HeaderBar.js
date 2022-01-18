@@ -111,10 +111,12 @@ const HeaderBar = ({ children }) => {
               onClose={handleCloseNotiMenu}
             >
               {
-                notifications.length > 0 && (
+                notifications.length > 0 ? (
                   notifications.map((noti, index) => (
                     <MenuItem key={index}>{noti.message}</MenuItem>
                   ))
+                ) : (
+                  <MenuItem>No notifcation</MenuItem>
                 )
               }
               

@@ -1,7 +1,7 @@
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
-import { Avatar, Button, IconButton, TextField, FormControlLabel, Checkbox } from "@mui/material";
+import { Avatar, Button, IconButton, TextField } from "@mui/material";
 import { Link, Grid, Box, Container, Typography } from "@mui/material";
 
 import { Copyright } from '../components'
@@ -69,10 +69,6 @@ const LoginForm = ({ handleLoginByAccount, handleLoginByGoogle}) => {
             onChange={formik.handleChange}
             helperText={formik.touched.password && formik.errors.password}
             error={Boolean(formik.touched.password && formik.errors.password)}
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
           />
           <Button
             type="submit"

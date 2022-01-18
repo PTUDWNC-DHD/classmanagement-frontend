@@ -41,3 +41,8 @@ export const RESET_PASSWORD_FAILED = "Reset password failed !"
 
 export const ADD_REVIEW_SUCCESS = "Add review successfully !"
 export const ADD_REVIEW_FAILED = "Add review failed !"
+export const HAS_ADD_REVIEW = "You can only review once !"
+export const NO_REVIEW = "Student have not review !"
+
+export const UPDATE_REVIEW_SUCESSS = "Update grade review successfully !"
+export const UPDATE_REVIEW_FAILED = "Update grade review failed !"

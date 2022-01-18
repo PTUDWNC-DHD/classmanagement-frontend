@@ -151,6 +151,7 @@ const ClassroomPage = () => {
                   studentName={currentUser.user.name}
                   token={currentUser.token}
                   isTeacher={false}
+                  userId={currentUser.user._id}
                 />
               )
             }

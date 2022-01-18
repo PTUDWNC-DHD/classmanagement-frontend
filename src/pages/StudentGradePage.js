@@ -6,7 +6,6 @@ import {Container, Paper, Grid, Box} from '@mui/material'
 import { Header, StudentGradeTable , LoadingIndicator, ErrorIndicator } from "../components/components";
 
 import { getClassroomDetail, getAllClassroomMembers } from "../services/classroomService";
-import { getUserDetail } from "../services/userService";
 
 import AuthContext from "../contexts/authContext";
 

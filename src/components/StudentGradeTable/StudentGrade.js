@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react'
+import Swal from 'sweetalert2'
 import { 
-  Card,
   Box, 
-  Container, 
   Grid,
   Typography, 
   Button,
   TextField,
-  Divider,
   Accordion,
   AccordionSummary,
   AccordionDetails
@@ -16,13 +14,19 @@ import {
 import ReviewDialog from "./ReviewDialog";
 
 import { fetchAddMessageToReview, fetchGetReview } from "../../services/reviewService";
+import * as Notifications from '../../utils/notifications'
 
 
 const StudentGrade = ({ token, name, value, classroomId, structureId, studentId, userId, isTeacher }) => {
   const [isOpenReviewDialog, setIsOpenReviewDialog] = useState(false);
   const [comment, setComment] = useState('');
-  const [review, setReview] = useState([]);
+  const [review, setReview] = useState('');
+  const [expectGrade, setExpectGrade] = useState(0);
 
+  useEffect(()=>{
+    if (review)
+      setExpectGrade(review.expectedGrade)
+  },[review])
 
   useEffect(()=>{
     callFetchToGetReview();
@@ -41,12 +45,12 @@ const StudentGrade = ({ token, name, value, classroomId, structureId, studentId,
 
   const callFetchToGetReview = async () => {
     const result = await fetchGetReview(token, classroomId, structureId, studentId);
-    
     if (result.data) {
       setReview(result.data);
     } 
     else if (result.error){
-      console.log('get comment err: ', result.error)
+      setReview('');
+      console.log('No comment in review: ', result.error)
     }
   }
 
@@ -55,7 +59,25 @@ const StudentGrade = ({ token, name, value, classroomId, structureId, studentId,
   }
 
   const handleOpenReview = () => {
-    setIsOpenReviewDialog(true);
+    if (review && !isTeacher) {
+      Swal.fire({
+        title: "Error",
+        text: Notifications.HAS_ADD_REVIEW,
+        icon: "error",
+        button: "Close",
+      })
+    }
+    else if (isTeacher && !review) {
+      Swal.fire({
+        title: "Error",
+        text: Notifications.NO_REVIEW,
+        icon: "error",
+        button: "Close",
+      })
+    }
+    else {
+      setIsOpenReviewDialog(true);
+    }
   }
 
   const checkCommentSender = (sender) => {
@@ -88,13 +110,9 @@ const StudentGrade = ({ token, name, value, classroomId, structureId, studentId,
             <Grid item xs={2}>
               <Typography variant='h6'>{`${value} /10`}</Typography>
             </Grid>
-            {
-              !isTeacher && (
-                <Grid item xs={2}>
-                  <Button onClick={handleOpenReview}>Review</Button>
-                </Grid>
-              )
-            }
+            <Grid item xs={2}>
+              <Button onClick={handleOpenReview}>{isTeacher ? 'View Review' : 'Add Review'}</Button>
+            </Grid>
             
           </Grid>
         </AccordionSummary>
@@ -139,6 +157,8 @@ const StudentGrade = ({ token, name, value, classroomId, structureId, studentId,
         structureId={structureId} 
         studentId={studentId} 
         currentGrade={value}
+        review={review}
+        isTeacher={isTeacher}
       />
     </Box>
   )

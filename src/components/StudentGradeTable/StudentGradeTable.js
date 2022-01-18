@@ -6,9 +6,6 @@ import {
   Container, 
   Grid,
   Typography, 
-  Button,
-  TextField,
-  Divider,
 } from "@mui/material";
 
 
@@ -18,11 +15,10 @@ import { getAllStudentGrades } from '../../services/classroomService';
 
 
 const StudentGradeTable = ({ classroomId, gradeStructure, studentId, studentName, token, isTeacher, userId}) => {
-  const [grades, setGrades] = useState();
+  const [grades, setGrades] = useState('');
   const [finalizedGrades, setFinalizedGrades] = useState([]);
   const [total, setTotal] = useState(0);
 
-  
   const [errorMessage, setErrorMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 

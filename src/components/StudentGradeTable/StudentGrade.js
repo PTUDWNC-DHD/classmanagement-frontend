@@ -18,7 +18,7 @@ import ReviewDialog from "./ReviewDialog";
 import { fetchAddMessageToReview, fetchGetReview } from "../../services/reviewService";
 
 
-const StudentGrade = ({ token, name, value, classroomId, structureId, studentId, userId, isTeacher, weight }) => {
+const StudentGrade = ({ token, name, value, classroomId, structureId, studentId, userId, isTeacher }) => {
   const [isOpenReviewDialog, setIsOpenReviewDialog] = useState(false);
   const [comment, setComment] = useState('');
   const [review, setReview] = useState([]);
@@ -86,7 +86,7 @@ const StudentGrade = ({ token, name, value, classroomId, structureId, studentId,
               <Typography variant='h6'>{name}</Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography variant='h6'>{`${value}/${weight}`}</Typography>
+              <Typography variant='h6'>{`${value} /10`}</Typography>
             </Grid>
             {
               !isTeacher && (

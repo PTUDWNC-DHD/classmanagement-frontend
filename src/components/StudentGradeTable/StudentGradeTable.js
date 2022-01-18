@@ -21,7 +21,6 @@ const StudentGradeTable = ({ classroomId, gradeStructure, studentId, studentName
   const [grades, setGrades] = useState();
   const [finalizedGrades, setFinalizedGrades] = useState([]);
   const [total, setTotal] = useState(0);
-  const [weights, setWeights] = useState([]);
 
   
   const [errorMessage, setErrorMessage] = useState(null);
@@ -31,25 +30,23 @@ const StudentGradeTable = ({ classroomId, gradeStructure, studentId, studentName
   useEffect(()=>{
     let totalGrade = 0;
     let totalWeight = 0;
-    const newWeights = [];
+    for (const id in gradeStructure) {
+      totalWeight += gradeStructure[id].weight;
+    }
     for (const index in finalizedGrades) {
       const gradeId = finalizedGrades[index].structureId;
       const grade = finalizedGrades[index].value;
       let weight = 0;
-      totalWeight = 0;
       for (const id in gradeStructure) {
-        totalWeight += gradeStructure[id].weight;
         if (gradeStructure[id]._id === gradeId) {
           weight = gradeStructure[id].weight;
-          newWeights.push(weight);
+          break;
         }
       }
       totalGrade += grade * weight / totalWeight;
     }
     
-    newWeights.push(totalWeight);
     setTotal(totalGrade)
-    setWeights(newWeights)
   },[finalizedGrades])
 
   useEffect(()=>{
@@ -108,7 +105,7 @@ const StudentGradeTable = ({ classroomId, gradeStructure, studentId, studentName
               <Typography variant='h5'>{'Total grade'}</Typography>
             </Grid>
             <Grid item xs={4}>
-            <Typography variant='h5'>{`${total}/${weights[weights.length -1]}`}</Typography>
+            <Typography variant='h5'>{`${total} /10`}</Typography>
             </Grid>
           </Grid>
         </Card>
@@ -125,7 +122,6 @@ const StudentGradeTable = ({ classroomId, gradeStructure, studentId, studentName
                 studentId={studentId}
                 isTeacher={isTeacher}
                 userId={userId}
-                weight={weights[index]}
               />
             )
           })

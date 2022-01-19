@@ -8,7 +8,6 @@ const sendInvitation = (token, emails, classroomId, isPublic, isStudent) => {
       'Authorization': 'Bearer '+ token,
       'Content-Type': 'application/json',
     },
-    mode: "no-cors",
     body: JSON.stringify({
       to: emails,
       classId: classroomId,

@@ -178,10 +178,14 @@ const GradeTable = ({ currentUser, isOwner, isTeacher, classroomId, gradeStructu
   const callFetchToSaveGrade = async (token, classroomId, studentId, gradeId, score) => {
     setIsLoading(true);
     const result = await saveStudentGrade(token, classroomId, studentId, gradeId, score) 
-    console.log('save result: ', studentId)   
-    if (result.error)
+    //console.log('save result: ', studentId)   
+    if (result.error) {
       setErrorMessage(result.error)
+      setIsLoading(false);
+      return false;
+    }
     setIsLoading(false);
+    return true;
   }
 
   const callFetchToUploadStudentList = async (token, classroomId, file) => {
@@ -202,14 +206,23 @@ const GradeTable = ({ currentUser, isOwner, isTeacher, classroomId, gradeStructu
     callFetchToUploadStudentList(currentUser.token, classroomId, file)
   }
 
-  const handleCellEditCommit = (params) => {
-    callFetchToSaveGrade(currentUser.token, classroomId, params.id, params.field, params.value)
+  const handleCellEditCommit = async (params) => {
+    const result = await callFetchToSaveGrade(currentUser.token, classroomId, params.id, params.field, params.value)
     //update new grades
-    const newGrades = {...grades}
-    const studentIdToUpdate = getStudentId(params.id)
-    if (studentIdToUpdate)
-      newGrades[studentIdToUpdate][params.field] = parseFloat(params.value)
-    setGrades(newGrades)
+    if (result === true) {
+      const newGrades = {...grades}
+      const studentIdToUpdate = getStudentId(params.id)
+      if (studentIdToUpdate)
+        newGrades[studentIdToUpdate][params.field] = parseFloat(params.value)
+      setGrades(newGrades)
+    }
+    else {
+      const newGrades = {...grades}
+      const studentIdToUpdate = getStudentId(params.id)
+      if (studentIdToUpdate)
+        newGrades[studentIdToUpdate][params.field] = grades[studentIdToUpdate][params.field]
+      setGrades(newGrades)
+    }
   }
 
   const getStudentId = (rowId) => {
